@@ -153,6 +153,9 @@ export const door = defineRecipe({
     if (p.kind === 'knock') {
       ls = [];
       const gap = lin(210, 130, p.force);
+      // A door is a large, heavily damped slab: same spot every knock (moving the strike point
+      // changes the pitch of each knock), short ring, and a non-pitched thump. A lightly damped
+      // wooden mode plus a sine sweep sounds like a hollow tube.
       for (let i = 0; i < Math.round(p.knocks); i++) {
         const t = r0(i * gap + (i % 2) * 12);
         const accent = i === 0 ? 0 : -1.5 - (i % 2);
@@ -160,23 +163,24 @@ export const door = defineRecipe({
           {
             id: `knock${i + 1}`,
             start_ms: t,
-            source: { type: 'modal', material: mat, size: r1(0.55 + 0.4 * p.size), damping: mat === 'metal' ? 0.5 : 0.15, strike: { hardness: r1(0.35 + 0.4 * p.force), position: r1(0.22 + 0.05 * i) }, mode_count: 30 },
+            source: { type: 'modal', material: mat, size: r1(0.45 + 0.3 * p.size), damping: mat === 'metal' ? 0.55 : 0.72, strike: { hardness: r1(0.4 + 0.4 * p.force), position: 0.27 }, mode_count: 40 },
             gain_db: accent,
           },
           {
             id: `knuckle${i + 1}`,
             start_ms: t,
             source: { type: 'noise', color: 'pink' },
-            amp: env([[0, 1], [9, 0]]),
-            gain_db: -4 + accent,
-            fx: [{ type: 'filter', mode: 'bandpass', hz: r0(lg(1400, 3200, p.force)), q: 0.7 }],
+            amp: env([[0, 1], [5, 0]]),
+            gain_db: -6 + accent,
+            fx: [{ type: 'filter', mode: 'bandpass', hz: r0(lg(1800, 3600, p.force)), q: 0.7 }],
           },
           {
-            id: `panel${i + 1}`,
+            id: `thump${i + 1}`,
             start_ms: t,
-            source: { type: 'osc', hz: env([[0, r0(lg(190, 120, p.size))], [30, r0(lg(110, 70, p.size))]]) },
-            amp: env([[0, 0], [2, 1], [r0(60 + 80 * p.size), 0]]),
-            gain_db: -15 + accent,
+            source: { type: 'noise', color: 'brown' },
+            amp: env([[0, 0], [1, 1], [r0(35 + 40 * p.size), 0]]),
+            gain_db: -4 + accent,
+            fx: [{ type: 'filter', mode: 'lowpass', hz: r0(lg(420, 220, p.size)), q: 0.7 }],
           },
         );
       }
@@ -197,38 +201,23 @@ export const door = defineRecipe({
       ];
     } else {
       const T = p.length_ms;
-      const f = lg(160, 55, p.size);
-      // Stick-slip friction: an unsteady pulse train exciting the door's resonances.
+      const f = lg(220, 90, p.size);
+      // Stick-slip friction: the hinge sticks and slips in segments, so the tick rate sits on a
+      // plateau, jumps, and briefly stops while the hinge sticks. Each tick rings the door body.
+      // A smoothly gliding buzz reads as a voice (kazoo, frog, groan), so avoid glides and
+      // vowel filters.
+      const seg = (t0: number, t1: number, k: number): [number, number][] => [[r0(T * t0), r0(f * k)], [r0(T * t1), r0(f * k * 1.04)]];
+      const rate = env([...seg(0, 0.18, 0.25), ...seg(0.2, 0.42, 0.9), ...seg(0.44, 0.62, 0.65), ...seg(0.64, 0.9, 1.15), ...seg(0.92, 1, 0.3)]);
+      const stick = env([[0, 0], [r0(T * 0.02), 1], [r0(T * 0.18), 0.9], [r0(T * 0.19), 0.1], [r0(T * 0.21), 1], [r0(T * 0.42), 0.8], [r0(T * 0.43), 0.15], [r0(T * 0.45), 1], [r0(T * 0.62), 0.9], [r0(T * 0.63), 0.1], [r0(T * 0.65), 1], [r0(T * 0.9), 0.7], [r0(T * 0.91), 0.1], [r0(T * 0.93), 0.6], [r0(T), 0]]);
       ls = [
         {
           id: 'hinge',
-          source: {
-            type: 'osc',
-            shape: 'pulse',
-            pulse_width: 0.12,
-            hz: env([[0, r0(f * 0.5)], [r0(T * 0.35), r0(f * 1.5)], [r0(T * 0.7), r0(f)], [r0(T), r0(f * 0.4)]], 'smooth'),
-            pitch_semitones: { random: { rate_hz: 11, depth: 3 }, base: 0 },
-          },
-          amp: env([[0, 0], [r0(T * 0.15), 1], [r0(T * 0.8), 0.7], [r0(T), 0]], 'smooth'),
+          source: { type: 'particles', kind: 'click', rate_hz: rate, regularity: 0.85, hz: [2000, 6000], decay_ms: [0.3, 1], gain_jitter_db: 4, spread: 0.1 },
+          amp: stick,
           fx: [
-            { type: 'filter', mode: 'bandpass', hz: { random: { rate_hz: 5, depth: 350 }, base: mat === 'metal' ? 2100 : 1100 }, q: 5 },
-            { type: 'comb', hz: mat === 'metal' ? 640 : 310, feedback: 0.8, mix: 0.5 },
-            { type: 'shaper', drive_db: 10 },
+            { type: 'resonator', material: mat, size: mat === 'metal' ? 0.4 : r1(0.1 + 0.3 * p.size), damping: mat === 'metal' ? 0.6 : 0.1 },
+            { type: 'filter', mode: 'highpass', hz: 200 },
           ],
-        },
-        {
-          id: 'groan',
-          source: { type: 'osc', shape: 'saw', hz: env([[0, r0(f * 0.5)], [r0(T * 0.35), r0(f * 1.5)], [r0(T), r0(f * 0.4)]], 'smooth'), pitch_semitones: { random: { rate_hz: 7, depth: 2 }, base: 0 } },
-          amp: env([[0, 0], [r0(T * 0.2), 1], [r0(T), 0]], 'smooth'),
-          gain_db: -10,
-          fx: [{ type: 'formant', vowel: 'o', mix: 0.8 }, { type: 'filter', hz: 1800 }],
-        },
-        {
-          id: 'scrape',
-          source: { type: 'noise', color: 'crackle', density_hz: { random: { rate_hz: 9, depth: 900 }, base: 1500 } },
-          amp: env([[0, 0], [r0(T * 0.2), 1], [r0(T), 0]], 'smooth'),
-          gain_db: 8,
-          fx: [{ type: 'filter', mode: 'bandpass', hz: mat === 'metal' ? 5200 : 3400, q: 1 }],
         },
       ];
     }
@@ -243,7 +232,7 @@ export const door = defineRecipe({
           ...room(p.wetness, 0.35, 350 + 900 * p.wetness),
           { type: 'limiter' },
         ],
-        normalize: { lufs: p.kind === 'creak' ? -20 : -18 },
+        normalize: { lufs: p.kind === 'close' ? -18 : p.kind === 'knock' ? -21 : -20 },
       },
     };
   },
