@@ -1,4 +1,5 @@
 import { stft } from '../dsp/fft.js';
+import { resample } from '../dsp/filters.js';
 import { round, toMono, type Stereo } from '../util.js';
 import { analyze, BANDS, type Report } from './report.js';
 
@@ -71,8 +72,10 @@ export interface Comparison {
   summary: string[];
 }
 
-export function compare(a: Stereo | Float32Array[], srA: number, b: Stereo | Float32Array[], srB: number): Comparison {
-  if (srA !== srB) throw new Error(`Sample rates differ (${srA} vs ${srB}); resample one file first.`);
+export function compare(a: Stereo | Float32Array[], srA: number, bIn: Stereo | Float32Array[], srB: number): Comparison {
+  // Bring B to A's rate so recordings (often 44.1 or 96 kHz) can be compared with renders (48 kHz).
+  const b = srA === srB ? bIn : bIn.map((c) => resample(c, srA / srB));
+  srB = srA;
   const ra = analyze(a, srA);
   const rb = analyze(b, srB);
   const monoOf = (c: Float32Array[]) => (c.length >= 2 ? toMono([c[0]!, c[1]!]) : c[0]!);

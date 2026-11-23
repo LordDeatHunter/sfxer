@@ -27,5 +27,5 @@ bun sfx analyze sounds/cc0/<file>.ogg --png                               # afte
 2. **Analyse each** with `sfx analyze --png` and look at the spectrogram: envelope shape (swell vs hit), where the energy sits, tonal vs noisy, discrete events vs a stream, pitch movement.
 3. **Calibrate the judge** on the references: `sfx judge ref.ogg --prompt "..."`. If the real recordings do not MATCH a prompt, that prompt is not a fair target; pick one they do match. Note the AudioSet labels they get ("crunch", "tearing", ...); those are the qualities to reproduce.
 4. **Break the sound into components** and build them from sfxer sources. Add an engine feature if a component cannot be made (e.g. the `bubble` particle kind came from this). A/B small variants side by side and judge them across several seeds, not just one.
-5. **Compare** your render against a reference with `sfx compare ref.ogg mine.wav` for measured differences (resample first if the sample rates differ).
+5. **Compare** your render against a reference with `sfx compare ref.ogg mine.wav` for measured differences (different sample rates are handled).
 6. Write what you learned (what each component is, and what misleads the judge) into the recipe's comments and `skill/SKILL.md`.

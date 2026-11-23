@@ -243,6 +243,9 @@ describe('tools', () => {
     const c = compare(wood, SR, metal, SR);
     expect(c.similarity).toBeLessThan(60);
     expect(c.summary.join(' ')).toMatch(/brighter/);
+    // Different sample rates are resampled rather than rejected.
+    const wood96 = wood.map((ch) => Float32Array.from({ length: ch.length * 2 }, (_, i) => ch[i >> 1]!));
+    expect(compare(wood, SR, wood96, SR * 2).similarity).toBeGreaterThan(90);
   });
 
   it('match approximates a sound deterministically', () => {
