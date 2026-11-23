@@ -38,11 +38,12 @@ export const impact = defineRecipe({
           fx: [{ type: 'filter', mode: 'bandpass', hz: r0(lg(1200, 7000, 0.5 * p.hardness + 0.5 * p.brightness) * lg(1.5, 0.6, p.size)), q: 0.7 }],
         },
         p.weight > 0.02 && {
+          // Low-passed noise rather than a swept sine, which turns any hit into a kick drum.
           id: 'thump',
-          source: { type: 'osc', shape: 'sine', hz: env([[0, r0(sub * 2.4)], [30, r0(sub)]]) },
-          amp: env([[0, 0], [2, 1], [r0(70 + p.size * 220), 0]]),
-          gain_db: r1(-28 + p.weight * 20),
-          fx: [{ type: 'shaper', drive_db: 6 }],
+          source: { type: 'noise', color: 'brown' },
+          amp: env([[0, 0], [1, 1], [r0(50 + p.size * 180), 0]]),
+          gain_db: r1(-22 + p.weight * 18),
+          fx: [{ type: 'filter', mode: 'lowpass', hz: r0(sub * 3), q: 0.8 }, { type: 'shaper', drive_db: 6 }],
         },
         p.rattle > 0.02 && {
           id: 'rattle',
@@ -112,7 +113,7 @@ export const whoosh = defineRecipe({
           id: 'hiss',
           source: { type: 'noise', color: 'white' },
           amp: env([[r0(T * 0.15), 0], [pk, 1], [r0(Math.min(T, pk + T * 0.3)), 0]], 'smooth'),
-          gain_db: r1(-20 + p.brightness * 12),
+          gain_db: r1(-26 + p.brightness * 12),
           pan,
           fx: [{ type: 'filter', mode: 'highpass', hz: env([[0, 2500], [pk, r0(lg(4000, 9000, p.speed))], [r0(T), 3000]]), q: 0.8 }],
         },
