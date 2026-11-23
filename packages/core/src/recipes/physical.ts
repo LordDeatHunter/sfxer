@@ -144,8 +144,11 @@ export const explosion = defineRecipe({
     distance_m: distance(),
   }),
   build: (p, seed) => {
-    const T = 500 + 2300 * p.size;
-    const f = lg(110, 38, p.size);
+    const T = 700 + 2800 * p.size;
+    // No pitched sweeps: a swept sine under a noise burst is a kick drum, and a clipped
+    // white-noise crack on its own is a gunshot. A blast is turbulent broadband noise whose
+    // highs die first, rolling on as uneven low rumble.
+    const turbulence = (rate: number, depth: number) => ({ type: 'gain' as const, db: { random: { rate_hz: rate, depth }, base: 0 } });
     return {
       name: 'explosion',
       seed,
@@ -153,38 +156,45 @@ export const explosion = defineRecipe({
         {
           id: 'crack',
           source: { type: 'noise', color: 'white' },
-          amp: env([[0, 0], [1, 1], [25, 0.3], [r0(120 + 160 * p.size), 0]]),
-          gain_db: r1(-6 + p.crack * 8),
+          amp: env([[0, 0], [0.5, 1], [6, 0.35], [r0(50 + 70 * p.size), 0]]),
+          gain_db: r1(-12 + p.crack * 8),
           fx: [
-            { type: 'filter', mode: 'highpass', hz: r0(lg(500, 1600, p.brightness)), q: 0.7 },
-            { type: 'shaper', drive_db: 14, curve: 'hard' },
+            { type: 'filter', mode: 'highpass', hz: r0(lg(300, 1000, p.brightness)), q: 0.6 },
+            { type: 'shaper', drive_db: 8 },
           ],
-        },
-        {
-          id: 'boom',
-          source: { type: 'osc', shape: 'sine', hz: env([[0, r0(f * 3)], [90, r0(f * 1.3)], [r0(T * 0.6), r0(f * 0.7)]]) },
-          amp: env([[0, 0], [4, 1], [r0(T * 0.7), 0]]),
-          gain_db: r1(-9 + p.size * 5),
-          fx: [{ type: 'shaper', drive_db: 12 }],
         },
         {
           id: 'blast',
           source: { type: 'noise', color: 'pink' },
-          amp: env([[0, 0], [2, 1], [r0(T * 0.5), 0]]),
-          gain_db: 1,
+          amp: env([[0, 0], [3, 1], [r0(T * 0.12), 0.6], [r0(T * 0.55), 0]]),
+          gain_db: 5,
           fx: [
-            { type: 'filter', mode: 'lowpass', hz: env([[0, r0(lg(5000, 12000, p.brightness))], [r0(T * 0.35), 500]]), q: 0.8, slope: 24 },
-            { type: 'shaper', drive_db: 10 },
+            { type: 'filter', mode: 'lowpass', hz: env([[0, r0(lg(7000, 14000, p.brightness))], [r0(T * 0.15), 3000], [r0(T * 0.5), 400]]), q: 0.6, slope: 24 },
+            turbulence(40, 5),
+            { type: 'shaper', drive_db: 12 },
+          ],
+        },
+        {
+          id: 'body',
+          source: { type: 'noise', color: 'brown' },
+          amp: env([[0, 0], [6, 1], [r0(T * 0.25), 0.7], [r0(T * 0.75), 0]]),
+          gain_db: r1(-6 + p.size * 4),
+          fx: [
+            { type: 'filter', mode: 'lowpass', hz: env([[0, r0(lg(500, 260, p.size))], [r0(T * 0.6), 80]]), q: 0.8, slope: 24 },
+            turbulence(12, 6),
+            { type: 'shaper', drive_db: 14 },
           ],
         },
         {
           id: 'rumble',
+          start_ms: r0(T * 0.08),
           source: { type: 'noise', color: 'brown' },
-          amp: env([[0, 0], [40, 1], [r0(T * 0.3), 0.5], [r0(T), 0]]),
-          gain_db: -6,
+          amp: env([[0, 0], [r0(T * 0.15), 1], [r0(T * 0.5), 0.55], [r0(T * 0.92), 0]], 'smooth'),
+          gain_db: -8,
           fx: [
-            { type: 'filter', mode: 'lowpass', hz: env([[0, 1800], [r0(T * 0.3), 500], [r0(T), 90]]), q: 1 },
-            { type: 'shaper', drive_db: 16 },
+            { type: 'filter', mode: 'lowpass', hz: { random: { rate_hz: 3, depth: 60 }, base: r0(lg(220, 130, p.size)) }, q: 0.9 },
+            turbulence(5, 8),
+            { type: 'shaper', drive_db: 10 },
           ],
         },
         p.debris > 0.02 && {
@@ -195,8 +205,9 @@ export const explosion = defineRecipe({
             kind: 'burst',
             rate_hz: env([[0, 2], [r0(180 + 200 * p.size), r0(40 + 220 * p.debris)], [r0(T * 0.9), 1]]),
             hz: [r0(lg(500, 200, p.size)), r0(lg(7000, 4000, p.size))],
-            decay_ms: [4, r0(40 + 60 * p.size)],
+            decay_ms: [2, r0(20 + 30 * p.size)],
             gain_jitter_db: 18,
+            q: 0.8,
             spread: 0.9,
           },
           amp: env([[0, 1], [r0(T * 0.9), 0]], 'linear'),
