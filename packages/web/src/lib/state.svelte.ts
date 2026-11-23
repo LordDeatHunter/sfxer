@@ -14,7 +14,7 @@ interface AppState {
   error: string;
   busy: boolean;
   autoplay: boolean;
-  /** Repeat playback. Starts on for patches made as loops, but works for any sound. */
+  /** Repeat playback. A listening preference: it stays as the user set it when switching sounds. */
   loop: boolean;
   /** Index of the soloed layer, or -1. */
   solo: number;
@@ -78,7 +78,6 @@ export function touch(): void {
 
 export function setPatch(patch: PatchInput, andPlay = app.autoplay): void {
   app.patch = normalise(patch);
-  app.loop = patch.master?.loop === true;
   app.solo = -1;
   clearTimeout(timer);
   void renderNow(andPlay);
