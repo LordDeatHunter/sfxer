@@ -1,0 +1,8 @@
+{
+  "mcpServers": {
+    "sfxer": {
+      "command": "bun",
+      "args": ["packages/mcp/dist/main.js"]
+    }
+  }
+}
