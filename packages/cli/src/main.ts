@@ -1,5 +1,6 @@
 #!/usr/bin/env node
-import { mkdirSync, readdirSync, readFileSync, statSync, writeFileSync } from 'node:fs';
+import { existsSync, mkdirSync, readdirSync, readFileSync, statSync, writeFileSync } from 'node:fs';
+import { createServer } from 'node:http';
 import { basename, dirname, extname, join, relative, resolve } from 'node:path';
 import { parseArgs } from 'node:util';
 import {
@@ -42,7 +43,9 @@ Workflow: pick a recipe -> render -> read the report -> edit the patch JSON -> r
   sfx validate <patch.json>                     check a patch without rendering
   sfx docs [node]                               reference for everything, or one source/effect/recipe
   sfx schema [node]                             JSON Schema
-  sfx audition <dir|files...> [-o page.html]    build a listening page for a human
+  sfx audition <dir|files...> [-o page.html] [--serve] [--port 5180]
+                                                build a listening page for a human; --serve hosts it
+                                                with thumbs up/down + notes saved to ratings.json
 
 Every command accepts --json for machine-readable output.`;
 
@@ -61,6 +64,8 @@ const { values, positionals } = parseArgs({
     prompt: { type: 'string' },
     alt: { type: 'string', multiple: true },
     top: { type: 'string' },
+    serve: { type: 'boolean' },
+    port: { type: 'string' },
     help: { type: 'boolean', short: 'h' },
   },
 });
@@ -75,7 +80,7 @@ const need = (index: number, what: string): string => {
   return v;
 };
 
-const numberOpt = (name: 'seed' | 'count' | 'amount' | 'bits' | 'top', fallback: number): number => {
+const numberOpt = (name: 'seed' | 'count' | 'amount' | 'bits' | 'top' | 'port', fallback: number): number => {
   const raw = values[name];
   if (raw === undefined) return fallback;
   const n = Number(raw);
@@ -213,20 +218,104 @@ function cmdAudition(): void {
     const mono = a.channels[0]!;
     const png = encodePng(spectrogram(mono, a.sampleRate)).toString('base64');
     const src = relative(dirname(resolve(out)), resolve(f)).replace(/\\/g, '/');
-    return `<section><h2>${esc(basename(f))}</h2><audio controls preload="none" src="${esc(src)}"></audio>
+    return `<section data-file="${esc(src)}"><h2>${esc(basename(f))}</h2><audio controls preload="none" src="${esc(src)}"></audio>
 <img alt="spectrogram" src="data:image/png;base64,${png}">
 <p>${r.duration_ms} ms &middot; ${r.level.lufs} LUFS &middot; centroid ${r.spectrum.centroid_hz} Hz</p>
-${r.warnings.map((w) => `<p class="warn">${esc(w)}</p>`).join('')}</section>`;
+${r.warnings.map((w) => `<p class="warn">${esc(w)}</p>`).join('')}
+<div class="rate"><button data-r="1" title="Good">&#128077;</button><button data-r="-1" title="Bad">&#128078;</button>
+<input placeholder="What's off? (e.g. too clicky, reads as a laser, tail too long)"><span class="state"></span></div></section>`;
   });
   writeFileSync(
     out,
     `<!doctype html><meta charset="utf-8"><title>sfxer audition</title>
 <style>body{font:14px system-ui;background:#14141c;color:#ddd;max-width:960px;margin:2rem auto;padding:0 1rem}
 section{margin:0 0 2rem;padding:1rem;background:#1d1d29;border-radius:8px}h2{margin:0 0 .5rem;font-size:1rem}
-audio{width:100%}img{width:100%;margin-top:.5rem;border-radius:4px}.warn{color:#f0b060;margin:.2rem 0}</style>
-<h1>sfxer audition (${files.length} sounds)</h1>${cards.join('\n')}`,
+audio{width:100%}img{width:100%;margin-top:.5rem;border-radius:4px}.warn{color:#f0b060;margin:.2rem 0}
+.rate{display:flex;gap:.5rem;align-items:center;margin-top:.5rem}.rate button{font-size:1.1rem;background:#2a2a3a;border:2px solid transparent;border-radius:6px;padding:.2rem .6rem;cursor:pointer}
+.rate button.on[data-r="1"]{border-color:#5c5}.rate button.on[data-r="-1"]{border-color:#e55}.rate input{flex:1;background:#14141c;color:#ddd;border:1px solid #333;border-radius:6px;padding:.4rem}
+.state{color:#888;font-size:12px;min-width:5rem}.hint{color:#f0b060}</style>
+<h1>sfxer audition (${files.length} sounds)</h1><p class="hint" id="hint" hidden>Opened as a file: ratings are not saved. Run <code>sfx audition ... --serve</code> to rate.</p>
+${cards.join('\n')}
+<script>
+const api = location.protocol.startsWith('http');
+if (!api) document.getElementById('hint').hidden = false;
+const save = async (sec, patch) => {
+  const st = sec.querySelector('.state');
+  if (!api) { st.textContent = 'not saved'; return; }
+  const r = await fetch('/rate', { method: 'POST', headers: { 'content-type': 'application/json' }, body: JSON.stringify({ file: sec.dataset.file, ...patch }) });
+  st.textContent = r.ok ? 'saved' : 'error';
+};
+const show = (sec, rating) => sec.querySelectorAll('button').forEach((b) => b.classList.toggle('on', Number(b.dataset.r) === rating));
+document.querySelectorAll('section[data-file]').forEach((sec) => {
+  sec.querySelectorAll('button').forEach((b) => b.onclick = () => {
+    const cur = sec.querySelector('button.on');
+    const rating = cur === b ? 0 : Number(b.dataset.r);
+    show(sec, rating); save(sec, { rating });
+  });
+  const inp = sec.querySelector('input');
+  inp.onchange = () => save(sec, { note: inp.value });
+});
+if (api) fetch('/ratings').then((r) => r.json()).then((all) => {
+  document.querySelectorAll('section[data-file]').forEach((sec) => {
+    const x = all[sec.dataset.file]; if (!x) return;
+    show(sec, x.rating); sec.querySelector('input').value = x.note || '';
+    sec.querySelector('.state').textContent = x.stale ? 'rated an older render' : 'rated';
+  });
+});
+</script>`,
   );
   print(`wrote ${out} (${files.length} sounds)`, { file: out, count: files.length });
+  if (values.serve) serveAudition(out, files);
+}
+
+interface Rating {
+  rating: number;
+  note: string;
+  at: string;
+  /** mtime of the audio when rated; differs from the file's current mtime once it is re-rendered. */
+  mtime_ms: number;
+}
+
+/** Serve the audition page and its audio, and record ratings to ratings.json next to the page. */
+function serveAudition(page: string, files: string[]): void {
+  const root = dirname(resolve(page));
+  const store = join(root, 'ratings.json');
+  const audio = new Map(files.map((f) => [relative(root, resolve(f)).replace(/\\/g, '/'), resolve(f)]));
+  const load = (): Record<string, Rating> => (existsSync(store) ? (JSON.parse(readFileSync(store, 'utf8')) as Record<string, Rating>) : {});
+  const types: Record<string, string> = { '.wav': 'audio/wav', '.ogg': 'audio/ogg', '.mp3': 'audio/mpeg', '.flac': 'audio/flac' };
+  const port = numberOpt('port', 5180);
+  createServer((req, res) => {
+    const url = decodeURIComponent((req.url ?? '/').split('?')[0]!);
+    const json = (code: number, body: unknown) => res.writeHead(code, { 'content-type': 'application/json' }).end(JSON.stringify(body));
+    if (req.method === 'GET' && url === '/') return res.writeHead(200, { 'content-type': 'text/html; charset=utf-8' }).end(readFileSync(page));
+    if (req.method === 'GET' && url === '/ratings') {
+      const all = load();
+      const view = Object.fromEntries(Object.entries(all).map(([k, v]) => [k, { ...v, stale: audio.has(k) && statSync(audio.get(k)!).mtimeMs !== v.mtime_ms }]));
+      return json(200, view);
+    }
+    if (req.method === 'POST' && url === '/rate') {
+      let body = '';
+      req.on('data', (c: Buffer) => (body += c.toString()));
+      req.on('end', () => {
+        try {
+          const msg = JSON.parse(body) as { file: string; rating?: number; note?: string };
+          const path = audio.get(msg.file);
+          if (!path) return json(404, { error: 'unknown file' });
+          const all = load();
+          const prev = all[msg.file] ?? { rating: 0, note: '' };
+          all[msg.file] = { rating: msg.rating ?? prev.rating, note: msg.note ?? prev.note, at: new Date().toISOString(), mtime_ms: statSync(path).mtimeMs };
+          writeFileSync(store, `${JSON.stringify(all, null, 2)}\n`);
+          json(200, { ok: true });
+        } catch (e) {
+          json(400, { error: (e as Error).message });
+        }
+      });
+      return;
+    }
+    const file = audio.get(url.slice(1));
+    if (req.method === 'GET' && file) return res.writeHead(200, { 'content-type': types[extname(file).toLowerCase()] ?? 'application/octet-stream' }).end(readFileSync(file));
+    json(404, { error: 'not found' });
+  }).listen(port, '127.0.0.1', () => process.stdout.write(`listening on http://localhost:${port}  (ratings -> ${store}, Ctrl+C to stop)\n`));
 }
 
 const commands: Record<string, () => void> = {

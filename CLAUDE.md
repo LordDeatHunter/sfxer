@@ -24,7 +24,7 @@ Web type-check alone: `bun x svelte-check --tsconfig ./tsconfig.json` from `pack
 
 The CLI and MCP server run from `dist/`, so rebuild after changing core before using them. `.mcp.json` registers the MCP server (`sfxer`) for Claude Code; after a rebuild it needs `/mcp` reconnect to pick up changes. The web app aliases `@sfxer/core` to `packages/core/src/index.ts` in `vite.config.ts`, so core edits hot-reload there.
 
-`scripts/make_examples.py` regenerates `examples/*.json` (one per recipe/kind) through the built CLI. `scripts/make_audition.py` produces the audition page. `out/` is scratch output and is gitignored.
+`scripts/make_examples.py` regenerates `examples/*.json` (one per recipe/kind) through the built CLI. `scripts/make_audition.py [--serve]` produces the audition page; with `--serve` (or `sfx audition ... --serve`) it is hosted on localhost:5180 with thumbs up/down and notes saved to `ratings.json` next to the page (`out/audition/ratings.json`). Read that file for the user's verdicts; `mtime_ms` that no longer matches the WAV means the rating is for an older render. `out/` is scratch output and is gitignored.
 
 ## Architecture
 

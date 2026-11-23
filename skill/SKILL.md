@@ -92,4 +92,6 @@ Use `--alt` to ask a narrow question: `sfx judge hit.wav --prompt metal --alt wo
 
 Treat it as one strong opinion, not ground truth: the models were trained on recorded audio, so they are harsh on stylised or retro sounds that are intentionally synthetic. A MISMATCH on a realistic target is a real problem; on a deliberately 8-bit coin it may not be. Short sounds (< 100 ms) are harder for both models. Needs `uv sync --project judge` once (~1.5 GB of models, CPU).
 
+A human verdict beats both: `sfx audition dir --serve` hosts a page where the user rates each sound; read `ratings.json` next to the page (`rating` 1/-1, `note`, and `mtime_ms` to tell whether it rated the current render).
+
 If you can view images, open the PNG: a good effect shows a clear vertical edge at the start, energy across the spectrum, and visible movement over time. A horizontal line or two on a black background is a beep.

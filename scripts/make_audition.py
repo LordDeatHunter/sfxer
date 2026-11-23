@@ -1,5 +1,6 @@
 """Render every patch in examples/ to out/audition/ and build a listening page.
-Only writes inside out/audition/. Run: python scripts/make_audition.py"""
+Only writes inside out/audition/. Run: python scripts/make_audition.py [--serve]
+--serve hosts the page with thumbs up/down + notes, saved to out/audition/ratings.json."""
 import pathlib
 import subprocess
 import sys
@@ -25,3 +26,7 @@ page = dest / "audition.html"
 r = subprocess.run(["bun", cli, "audition", str(dest), "-o", str(page)], capture_output=True, text=True, encoding="utf-8")
 print(r.stdout.strip() or r.stderr.strip())
 print(f"{warned} of the sounds carry warnings (listed above)")
+
+if "--serve" in sys.argv:
+    # Host the page with rating buttons; ratings are kept in out/audition/ratings.json across rebuilds.
+    subprocess.run(["bun", cli, "audition", str(dest), "-o", str(page), "--serve"])
