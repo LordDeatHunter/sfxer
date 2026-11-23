@@ -31,6 +31,14 @@ EXAMPLES = {
     "door_creak": ["door", "-p", "kind=creak"],
     "ambience_rain": ["ambience_loop", "-p", "kind=rain"],
     "ambience_fire": ["ambience_loop", "-p", "kind=fire"],
+    "gore_squish": ["gore", "-p", "kind=squish"],
+    "gore_splat": ["gore", "-p", "kind=splat"],
+    "gore_squelch": ["gore", "-p", "kind=squelch"],
+    "gore_slime": ["gore", "-p", "kind=slime", "-p", "viscosity=0.8"],
+    "gore_stab": ["gore", "-p", "kind=stab"],
+    "gore_crunch": ["gore", "-p", "kind=crunch"],
+    "gore_gib": ["gore", "-p", "kind=gib"],
+    "gore_drip": ["gore", "-p", "kind=drip"],
 }
 
 failed = 0

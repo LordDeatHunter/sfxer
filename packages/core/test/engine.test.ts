@@ -204,6 +204,20 @@ describe('recipes', () => {
     expect(rep('impact', { material: 'metal' }).shape.decay_ms).toBeGreaterThan(rep('impact', { material: 'wood' }).shape.decay_ms * 2);
     expect(rep('impact', { size: 0.1 }).spectrum.centroid_hz).toBeGreaterThan(rep('impact', { size: 0.9 }).spectrum.centroid_hz);
     expect(rep('explosion').spectrum.noisiness).toBeGreaterThan(rep('ui', { kind: 'confirm' }).spectrum.noisiness);
+    expect(rep('gore', { kind: 'slime', viscosity: 0 }).spectrum.centroid_hz).toBeGreaterThan(rep('gore', { kind: 'slime', viscosity: 1 }).spectrum.centroid_hz);
+    expect(rep('gore', { kind: 'squish' }).shape.attack_ms).toBeGreaterThan(rep('gore', { kind: 'splat' }).shape.attack_ms); // swells vs hits
+  });
+
+  it('bubble particles rise in pitch with chirp_semitones', () => {
+    const centroid = (chirp: number) => {
+      const r = render(parsePatch({
+        layers: [{ source: { type: 'particles', kind: 'bubble', rate_hz: 40, hz: [800, 800], decay_ms: [40, 40], chirp_semitones: chirp, gain_jitter_db: 0 }, amp: { env: [[0, 1], [400, 1], [450, 0]] } }],
+        master: { normalize: false },
+      }));
+      return analyze(r.channels, SR).spectrum.centroid_hz;
+    };
+    // Energy-weighted: most of the rise happens as the blip decays, so the centroid moves ~1.25x.
+    expect(centroid(12)).toBeGreaterThan(centroid(0) * 1.15);
   });
 
   it('rejects bad recipe parameters helpfully', () => {

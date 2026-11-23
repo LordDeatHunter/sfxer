@@ -1,6 +1,6 @@
 ---
 name: sfxer
-description: Design sound effects (impacts, whooshes, explosions, UI sounds, footsteps, pickups, magic, sci-fi, mechanisms, ambience loops) as layered JSON patches and render them to WAV with the `sfx` CLI or the sfxer MCP tools. Use whenever a project needs a sound effect made, improved or varied.
+description: Design sound effects (impacts, whooshes, explosions, UI sounds, footsteps, pickups, magic, sci-fi, mechanisms, ambience loops, wet/gore/slime) as layered JSON patches and render them to WAV with the `sfx` CLI or the sfxer MCP tools. Use whenever a project needs a sound effect made, improved or varied.
 ---
 
 # sfxer: making sound effects that do not sound like chiptune beeps
@@ -46,7 +46,7 @@ With MCP the same steps are tools: `list_recipes`, `expand_recipe`, `render` (ta
 - Each layer gets its own random stream, so two identical `modal` layers still differ in pitch. For repeated hits on one object (knocks, steps), give the layers the same layer-level `seed` and vary them with strike, gain or filter instead.
 - Validation errors name the JSON path and suggest the fix. Out-of-range values are errors, never silently clamped.
 
-Sources: `modal` (struck objects: the workhorse), `particles` (many tiny events: debris, crackle, rain, sparkle), `noise`, `osc`, `fm`, `pluck`, `impulse`, `sample` and `granular` (user WAV files).
+Sources: `modal` (struck objects: the workhorse), `particles` (many tiny events: debris, crackle, rain, sparkle; `kind: "bubble"` with `chirp_semitones` for liquid), `noise`, `osc`, `fm`, `pluck`, `impulse`, `sample` and `granular` (user WAV files).
 Effects: `filter`, `eq`, `comb`, `formant`, `shaper`, `crush`, `chorus`, `delay`, `reverb`, `convolve`, `transient`, `compressor`, `limiter`, `width`, `pitch`, `gain`, `distance`.
 Run `sfx docs <name>` before using one you have not used yet.
 
@@ -65,7 +65,8 @@ Run `sfx docs <name>` before using one you have not used yet.
 7. **Put it in a space.** Reverb `mix` 0.08-0.2 removes the "generated in a vacuum" feel; `convolve` with `box` or `tube` puts a sound inside an object; `distance` pushes it away.
 8. **No swept sines under hits.** A sine dropping in pitch under a hit is a kick drum: it turns explosions, footsteps and knocks into drums. Use low-passed brown noise for weight instead. Likewise, a smoothly gliding buzz through a `formant` filter reads as a voice (kazoo, frog, groan).
 9. **Excite bodies.** The `resonator` effect rings a material body (same model as `modal`) with any input: friction, scraping, rolling. `particles` with `regularity` near 1 makes an evenly spaced tick train whose `rate_hz` acts like a pitch (ratchets, engines, hinges).
-10. **Finish it.** A touch of `shaper` (3-6 dB) on the master glues layers; `transient` adds punch; leave `normalize` on.
+10. **Wet sounds** (the `gore` recipe: squish, splat, squelch, slime, stab, crunch, gib, drip): liquid is `bubble` particles (a blip that rises in pitch, `chirp_semitones` 4-10); a squelch is a jittering pink-noise bandpass with fast irregular level flutter (`gain` with `random` at ~70 Hz) plus a dense film of tiny high bubbles, under a *swell*, not a hit. Loud tonal bubbles read as "magic spell", a steady dense crackle as "electric zap", a smooth narrow noise band as a whoosh; skip master saturation on soft wet sounds.
+11. **Finish it.** A touch of `shaper` (3-6 dB) on the master glues layers; `transient` adds punch; leave `normalize` on.
 
 ## Reading the report
 
@@ -96,5 +97,9 @@ Use `--alt` to ask a narrow question: `sfx judge hit.wav --prompt metal --alt wo
 Treat it as one strong opinion, not ground truth: the models were trained on recorded audio, so they are harsh on stylised or retro sounds that are intentionally synthetic. A MISMATCH on a realistic target is a real problem; on a deliberately 8-bit coin it may not be. Short sounds (< 100 ms) are harder for both models. Needs `uv sync --project judge` once (~1.5 GB of models, CPU).
 
 A human verdict beats both: `sfx audition dir --serve` hosts a page where the user rates each sound; read `ratings.json` next to the page (`rating` 1/-1, `note`, and `mtime_ms` to tell whether it rated the current render).
+
+## Reference recordings (CC0 only)
+
+To learn how a real sound is built, fetch reference recordings with `bun run freesound search|fetch|get` (see `.claude/skills/cc0-references/SKILL.md`). **Only CC0 (public domain) sounds, ever**; the fetcher enforces it. Use them to measure and compare (`sfx analyze --png`, `sfx compare`, `sfx judge` to calibrate a prompt), never as `sample`/`granular` sources in shipped patches.
 
 If you can view images, open the PNG: a good effect shows a clear vertical edge at the start, energy across the spectrum, and visible movement over time. A horizontal line or two on a black background is a beep.

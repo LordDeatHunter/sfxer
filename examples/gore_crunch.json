@@ -1,0 +1,505 @@
+{
+  "name": "gore_crunch",
+  "seed": 1,
+  "layers": [
+    {
+      "id": "snap1_crack",
+      "start_ms": 0,
+      "source": {
+        "type": "noise",
+        "color": "white"
+      },
+      "amp": {
+        "env": [
+          [
+            0,
+            1
+          ],
+          [
+            2,
+            0.5
+          ],
+          [
+            9,
+            0
+          ]
+        ],
+        "curve": "exp"
+      },
+      "gain_db": 0,
+      "fx": [
+        {
+          "type": "filter",
+          "mode": "bandpass",
+          "hz": 2600,
+          "q": 0.9
+        }
+      ]
+    },
+    {
+      "id": "snap1_fibres",
+      "start_ms": 0,
+      "source": {
+        "type": "particles",
+        "kind": "burst",
+        "rate_hz": 700,
+        "hz": [
+          900,
+          7000
+        ],
+        "decay_ms": [
+          0.5,
+          3
+        ],
+        "q": 0.8,
+        "gain_jitter_db": 16,
+        "spread": 0.3
+      },
+      "amp": {
+        "env": [
+          [
+            0,
+            1
+          ],
+          [
+            28,
+            0
+          ]
+        ],
+        "curve": "linear"
+      },
+      "gain_db": -4
+    },
+    {
+      "id": "snap1_body",
+      "start_ms": 0,
+      "source": {
+        "type": "modal",
+        "material": "wood",
+        "size": 0.25,
+        "damping": 0.7,
+        "strike": {
+          "hardness": 1,
+          "position": 0.3
+        }
+      },
+      "gain_db": -3
+    },
+    {
+      "id": "snap2_crack",
+      "start_ms": 59,
+      "source": {
+        "type": "noise",
+        "color": "white"
+      },
+      "amp": {
+        "env": [
+          [
+            0,
+            1
+          ],
+          [
+            2,
+            0.5
+          ],
+          [
+            9,
+            0
+          ]
+        ],
+        "curve": "exp"
+      },
+      "gain_db": -4,
+      "fx": [
+        {
+          "type": "filter",
+          "mode": "bandpass",
+          "hz": 3400,
+          "q": 0.9
+        }
+      ]
+    },
+    {
+      "id": "snap2_fibres",
+      "start_ms": 59,
+      "source": {
+        "type": "particles",
+        "kind": "burst",
+        "rate_hz": 700,
+        "hz": [
+          900,
+          7000
+        ],
+        "decay_ms": [
+          0.5,
+          3
+        ],
+        "q": 0.8,
+        "gain_jitter_db": 16,
+        "spread": 0.3
+      },
+      "amp": {
+        "env": [
+          [
+            0,
+            1
+          ],
+          [
+            28,
+            0
+          ]
+        ],
+        "curve": "linear"
+      },
+      "gain_db": -8
+    },
+    {
+      "id": "snap2_body",
+      "start_ms": 59,
+      "source": {
+        "type": "modal",
+        "material": "wood",
+        "size": 0.25,
+        "damping": 0.7,
+        "strike": {
+          "hardness": 1,
+          "position": 0.3
+        }
+      },
+      "gain_db": -7
+    },
+    {
+      "id": "snap3_crack",
+      "start_ms": 113,
+      "source": {
+        "type": "noise",
+        "color": "white"
+      },
+      "amp": {
+        "env": [
+          [
+            0,
+            1
+          ],
+          [
+            2,
+            0.5
+          ],
+          [
+            9,
+            0
+          ]
+        ],
+        "curve": "exp"
+      },
+      "gain_db": -2,
+      "fx": [
+        {
+          "type": "filter",
+          "mode": "bandpass",
+          "hz": 2000,
+          "q": 0.9
+        }
+      ]
+    },
+    {
+      "id": "snap3_fibres",
+      "start_ms": 113,
+      "source": {
+        "type": "particles",
+        "kind": "burst",
+        "rate_hz": 700,
+        "hz": [
+          900,
+          7000
+        ],
+        "decay_ms": [
+          0.5,
+          3
+        ],
+        "q": 0.8,
+        "gain_jitter_db": 16,
+        "spread": 0.3
+      },
+      "amp": {
+        "env": [
+          [
+            0,
+            1
+          ],
+          [
+            28,
+            0
+          ]
+        ],
+        "curve": "linear"
+      },
+      "gain_db": -6
+    },
+    {
+      "id": "snap3_body",
+      "start_ms": 113,
+      "source": {
+        "type": "modal",
+        "material": "wood",
+        "size": 0.25,
+        "damping": 0.7,
+        "strike": {
+          "hardness": 1,
+          "position": 0.3
+        }
+      },
+      "gain_db": -5
+    },
+    {
+      "id": "squelch",
+      "start_ms": 0,
+      "source": {
+        "type": "noise",
+        "color": "pink"
+      },
+      "amp": {
+        "env": [
+          [
+            0,
+            0
+          ],
+          [
+            42,
+            1
+          ],
+          [
+            209,
+            0.5
+          ],
+          [
+            376,
+            0.08
+          ],
+          [
+            418,
+            0
+          ]
+        ],
+        "curve": "smooth"
+      },
+      "gain_db": -6,
+      "fx": [
+        {
+          "type": "filter",
+          "mode": "bandpass",
+          "hz": {
+            "random": {
+              "rate_hz": 28,
+              "depth": 1008
+            },
+            "base": 1833
+          },
+          "q": 1.8
+        },
+        {
+          "type": "gain",
+          "db": {
+            "random": {
+              "rate_hz": 70,
+              "depth": 9
+            },
+            "base": 0
+          }
+        }
+      ]
+    },
+    {
+      "id": "film",
+      "start_ms": 0,
+      "source": {
+        "type": "particles",
+        "kind": "bubble",
+        "rate_hz": {
+          "random": {
+            "rate_hz": 9,
+            "depth": 250
+          },
+          "base": 250
+        },
+        "hz": [
+          1375,
+          8249
+        ],
+        "decay_ms": [
+          0.8,
+          4
+        ],
+        "chirp_semitones": 5,
+        "gain_jitter_db": 18,
+        "spread": 0.7
+      },
+      "amp": {
+        "env": [
+          [
+            0,
+            0
+          ],
+          [
+            42,
+            1
+          ],
+          [
+            209,
+            0.5
+          ],
+          [
+            376,
+            0.08
+          ],
+          [
+            418,
+            0
+          ]
+        ],
+        "curve": "smooth"
+      },
+      "gain_db": -8
+    },
+    {
+      "id": "gloop",
+      "start_ms": 0,
+      "source": {
+        "type": "particles",
+        "kind": "bubble",
+        "rate_hz": {
+          "random": {
+            "rate_hz": 5,
+            "depth": 36
+          },
+          "base": 30
+        },
+        "hz": [
+          433,
+          1733
+        ],
+        "decay_ms": [
+          8,
+          30
+        ],
+        "chirp_semitones": 7.1,
+        "gain_jitter_db": 12,
+        "spread": 0.5
+      },
+      "amp": {
+        "env": [
+          [
+            0,
+            0
+          ],
+          [
+            42,
+            1
+          ],
+          [
+            209,
+            0.5
+          ],
+          [
+            376,
+            0.08
+          ],
+          [
+            418,
+            0
+          ]
+        ],
+        "curve": "smooth"
+      },
+      "gain_db": -20
+    },
+    {
+      "id": "meat",
+      "start_ms": 0,
+      "source": {
+        "type": "noise",
+        "color": "brown"
+      },
+      "amp": {
+        "env": [
+          [
+            0,
+            0
+          ],
+          [
+            2,
+            1
+          ],
+          [
+            51,
+            0.5
+          ],
+          [
+            146,
+            0
+          ]
+        ],
+        "curve": "exp"
+      },
+      "gain_db": -17,
+      "fx": [
+        {
+          "type": "filter",
+          "mode": "lowpass",
+          "hz": {
+            "env": [
+              [
+                0,
+                466
+              ],
+              [
+                146,
+                148
+              ]
+            ],
+            "curve": "exp"
+          },
+          "q": 0.9
+        },
+        {
+          "type": "shaper",
+          "drive_db": 9
+        }
+      ]
+    }
+  ],
+  "master": {
+    "fx": [
+      {
+        "type": "eq",
+        "mid_db": -3,
+        "mid_hz": 900,
+        "mid_q": 0.8,
+        "high_db": 5,
+        "high_hz": 4000,
+        "low_db": 1
+      },
+      {
+        "type": "compressor",
+        "threshold_db": -20,
+        "ratio": 3,
+        "attack_ms": 4,
+        "release_ms": 120
+      },
+      {
+        "type": "reverb",
+        "size": 0.22,
+        "decay_ms": 322,
+        "damping": 0.45,
+        "predelay_ms": 6,
+        "mix": 0.054
+      },
+      {
+        "type": "limiter"
+      }
+    ],
+    "normalize": {
+      "lufs": -18
+    }
+  }
+}

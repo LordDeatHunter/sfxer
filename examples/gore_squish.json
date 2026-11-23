@@ -1,0 +1,380 @@
+{
+  "name": "gore_squish",
+  "seed": 1,
+  "layers": [
+    {
+      "id": "squelch",
+      "start_ms": 0,
+      "source": {
+        "type": "noise",
+        "color": "pink"
+      },
+      "amp": {
+        "env": [
+          [
+            0,
+            0
+          ],
+          [
+            116,
+            1
+          ],
+          [
+            271,
+            0.3
+          ],
+          [
+            349,
+            0.05
+          ],
+          [
+            387,
+            0
+          ]
+        ],
+        "curve": "smooth"
+      },
+      "gain_db": 0,
+      "fx": [
+        {
+          "type": "filter",
+          "mode": "bandpass",
+          "hz": {
+            "random": {
+              "rate_hz": 28,
+              "depth": 1008
+            },
+            "base": 1833
+          },
+          "q": 1.8
+        },
+        {
+          "type": "gain",
+          "db": {
+            "random": {
+              "rate_hz": 70,
+              "depth": 9
+            },
+            "base": 0
+          }
+        }
+      ]
+    },
+    {
+      "id": "film",
+      "start_ms": 0,
+      "source": {
+        "type": "particles",
+        "kind": "bubble",
+        "rate_hz": {
+          "random": {
+            "rate_hz": 9,
+            "depth": 316
+          },
+          "base": 316
+        },
+        "hz": [
+          1375,
+          8249
+        ],
+        "decay_ms": [
+          0.8,
+          4
+        ],
+        "chirp_semitones": 5,
+        "gain_jitter_db": 18,
+        "spread": 0.7
+      },
+      "amp": {
+        "env": [
+          [
+            0,
+            0
+          ],
+          [
+            116,
+            1
+          ],
+          [
+            271,
+            0.3
+          ],
+          [
+            349,
+            0.05
+          ],
+          [
+            387,
+            0
+          ]
+        ],
+        "curve": "smooth"
+      },
+      "gain_db": -2
+    },
+    {
+      "id": "gloop",
+      "start_ms": 0,
+      "source": {
+        "type": "particles",
+        "kind": "bubble",
+        "rate_hz": {
+          "random": {
+            "rate_hz": 5,
+            "depth": 63
+          },
+          "base": 53
+        },
+        "hz": [
+          347,
+          1386
+        ],
+        "decay_ms": [
+          8,
+          30
+        ],
+        "chirp_semitones": 7.1,
+        "gain_jitter_db": 12,
+        "spread": 0.5
+      },
+      "amp": {
+        "env": [
+          [
+            0,
+            0
+          ],
+          [
+            116,
+            1
+          ],
+          [
+            271,
+            0.3
+          ],
+          [
+            349,
+            0.05
+          ],
+          [
+            387,
+            0
+          ]
+        ],
+        "curve": "smooth"
+      },
+      "gain_db": 0
+    },
+    {
+      "id": "body",
+      "start_ms": 0,
+      "source": {
+        "type": "noise",
+        "color": "white"
+      },
+      "amp": {
+        "env": [
+          [
+            0,
+            0
+          ],
+          [
+            81,
+            1
+          ],
+          [
+            163,
+            0.3
+          ],
+          [
+            232,
+            0
+          ]
+        ],
+        "curve": "smooth"
+      },
+      "gain_db": -19,
+      "fx": [
+        {
+          "type": "filter",
+          "mode": "bandpass",
+          "hz": {
+            "env": [
+              [
+                0,
+                178
+              ],
+              [
+                81,
+                296
+              ],
+              [
+                232,
+                222
+              ]
+            ],
+            "curve": "smooth"
+          },
+          "q": 1
+        },
+        {
+          "type": "gain",
+          "db": {
+            "random": {
+              "rate_hz": 11,
+              "depth": 5
+            },
+            "base": 0
+          }
+        }
+      ]
+    },
+    {
+      "id": "cracks",
+      "start_ms": 77,
+      "source": {
+        "type": "particles",
+        "kind": "burst",
+        "rate_hz": {
+          "env": [
+            [
+              0,
+              76
+            ],
+            [
+              97,
+              26
+            ],
+            [
+              194,
+              3
+            ]
+          ],
+          "curve": "exp"
+        },
+        "hz": [
+          700,
+          5000
+        ],
+        "decay_ms": [
+          2,
+          10
+        ],
+        "q": 0.9,
+        "gain_jitter_db": 14,
+        "spread": 0.3
+      },
+      "amp": {
+        "env": [
+          [
+            0,
+            1
+          ],
+          [
+            116,
+            0.6
+          ],
+          [
+            194,
+            0
+          ]
+        ],
+        "curve": "exp"
+      },
+      "gain_db": -10.4
+    },
+    {
+      "id": "splinters",
+      "start_ms": 77,
+      "source": {
+        "type": "particles",
+        "kind": "click",
+        "rate_hz": {
+          "env": [
+            [
+              0,
+              200
+            ],
+            [
+              194,
+              5
+            ]
+          ],
+          "curve": "exp"
+        },
+        "hz": [
+          2000,
+          8000
+        ],
+        "decay_ms": [
+          0.3,
+          1.5
+        ],
+        "gain_jitter_db": 18,
+        "spread": 0.4
+      },
+      "amp": {
+        "env": [
+          [
+            0,
+            1
+          ],
+          [
+            194,
+            0
+          ]
+        ],
+        "curve": "linear"
+      },
+      "gain_db": -18.4
+    },
+    {
+      "id": "bone",
+      "start_ms": 77,
+      "source": {
+        "type": "modal",
+        "material": "wood",
+        "size": 0.12,
+        "damping": 0.75,
+        "strike": {
+          "hardness": 0.9,
+          "position": 0.3
+        }
+      },
+      "gain_db": -14.4
+    }
+  ],
+  "master": {
+    "fx": [
+      {
+        "type": "eq",
+        "mid_db": -3,
+        "mid_hz": 900,
+        "mid_q": 0.8,
+        "high_db": 5,
+        "high_hz": 4000,
+        "low_db": 1
+      },
+      {
+        "type": "compressor",
+        "threshold_db": -20,
+        "ratio": 3,
+        "attack_ms": 4,
+        "release_ms": 120
+      },
+      {
+        "type": "reverb",
+        "size": 0.22,
+        "decay_ms": 322,
+        "damping": 0.45,
+        "predelay_ms": 6,
+        "mix": 0.054
+      },
+      {
+        "type": "limiter"
+      }
+    ],
+    "normalize": {
+      "lufs": -20
+    }
+  }
+}

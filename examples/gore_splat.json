@@ -1,0 +1,471 @@
+{
+  "name": "gore_splat",
+  "seed": 1,
+  "layers": [
+    {
+      "id": "slap",
+      "start_ms": 0,
+      "source": {
+        "type": "noise",
+        "color": "white"
+      },
+      "amp": {
+        "env": [
+          [
+            0,
+            1
+          ],
+          [
+            12,
+            0.4
+          ],
+          [
+            39,
+            0
+          ]
+        ],
+        "curve": "exp"
+      },
+      "gain_db": -2,
+      "fx": [
+        {
+          "type": "filter",
+          "mode": "bandpass",
+          "hz": {
+            "env": [
+              [
+                0,
+                3536
+              ],
+              [
+                39,
+                1768
+              ]
+            ],
+            "curve": "exp"
+          },
+          "q": 0.8
+        }
+      ]
+    },
+    {
+      "id": "meat",
+      "start_ms": 0,
+      "source": {
+        "type": "noise",
+        "color": "brown"
+      },
+      "amp": {
+        "env": [
+          [
+            0,
+            0
+          ],
+          [
+            2,
+            1
+          ],
+          [
+            54,
+            0.5
+          ],
+          [
+            153,
+            0
+          ]
+        ],
+        "curve": "exp"
+      },
+      "gain_db": -9,
+      "fx": [
+        {
+          "type": "filter",
+          "mode": "lowpass",
+          "hz": {
+            "env": [
+              [
+                0,
+                466
+              ],
+              [
+                153,
+                148
+              ]
+            ],
+            "curve": "exp"
+          },
+          "q": 0.9
+        },
+        {
+          "type": "shaper",
+          "drive_db": 9
+        }
+      ]
+    },
+    {
+      "id": "spray",
+      "start_ms": 2,
+      "source": {
+        "type": "particles",
+        "kind": "burst",
+        "rate_hz": {
+          "env": [
+            [
+              0,
+              1840
+            ],
+            [
+              104,
+              320
+            ],
+            [
+              414,
+              2
+            ]
+          ],
+          "curve": "exp"
+        },
+        "hz": [
+          1200,
+          7071
+        ],
+        "decay_ms": [
+          1,
+          9
+        ],
+        "q": 1.6,
+        "gain_jitter_db": 18,
+        "spread": 0.8
+      },
+      "amp": {
+        "env": [
+          [
+            0,
+            1
+          ],
+          [
+            414,
+            0
+          ]
+        ],
+        "curve": "linear"
+      },
+      "gain_db": -2
+    },
+    {
+      "id": "wet",
+      "start_ms": 0,
+      "source": {
+        "type": "particles",
+        "kind": "burst",
+        "rate_hz": {
+          "env": [
+            [
+              0,
+              1549
+            ],
+            [
+              177,
+              250
+            ],
+            [
+              592,
+              20
+            ]
+          ],
+          "curve": "exp"
+        },
+        "hz": [
+          1375,
+          10998
+        ],
+        "decay_ms": [
+          0.5,
+          3
+        ],
+        "q": 0.8,
+        "gain_jitter_db": 18,
+        "spread": 0.7
+      },
+      "amp": {
+        "env": [
+          [
+            0,
+            1
+          ],
+          [
+            355,
+            0.8
+          ],
+          [
+            592,
+            0
+          ]
+        ],
+        "curve": "smooth"
+      },
+      "gain_db": -3
+    },
+    {
+      "id": "squish",
+      "start_ms": 8,
+      "source": {
+        "type": "noise",
+        "color": "pink"
+      },
+      "amp": {
+        "env": [
+          [
+            0,
+            0
+          ],
+          [
+            30,
+            1
+          ],
+          [
+            116,
+            0.6
+          ],
+          [
+            212,
+            0
+          ]
+        ],
+        "curve": "smooth"
+      },
+      "gain_db": -6,
+      "fx": [
+        {
+          "type": "filter",
+          "mode": "bandpass",
+          "hz": {
+            "random": {
+              "rate_hz": 30,
+              "depth": 1008
+            },
+            "base": 1833
+          },
+          "q": 1.8
+        },
+        {
+          "type": "gain",
+          "db": {
+            "random": {
+              "rate_hz": 48,
+              "depth": 9
+            },
+            "base": 0
+          }
+        }
+      ]
+    },
+    {
+      "id": "drips",
+      "start_ms": 30,
+      "source": {
+        "type": "particles",
+        "kind": "bubble",
+        "rate_hz": {
+          "env": [
+            [
+              0,
+              63
+            ],
+            [
+              237,
+              15
+            ],
+            [
+              592,
+              2
+            ]
+          ],
+          "curve": "exp"
+        },
+        "hz": [
+          433,
+          2079
+        ],
+        "decay_ms": [
+          7.1,
+          30
+        ],
+        "chirp_semitones": 7.1,
+        "gain_jitter_db": 12,
+        "spread": 0.8
+      },
+      "amp": {
+        "env": [
+          [
+            0,
+            1
+          ],
+          [
+            355,
+            0.6
+          ],
+          [
+            532,
+            0.08
+          ],
+          [
+            592,
+            0
+          ]
+        ],
+        "curve": "linear"
+      },
+      "gain_db": -14
+    },
+    {
+      "id": "cracks",
+      "start_ms": 2,
+      "source": {
+        "type": "particles",
+        "kind": "burst",
+        "rate_hz": {
+          "env": [
+            [
+              0,
+              76
+            ],
+            [
+              49,
+              26
+            ],
+            [
+              98,
+              3
+            ]
+          ],
+          "curve": "exp"
+        },
+        "hz": [
+          700,
+          5000
+        ],
+        "decay_ms": [
+          2,
+          10
+        ],
+        "q": 0.9,
+        "gain_jitter_db": 14,
+        "spread": 0.3
+      },
+      "amp": {
+        "env": [
+          [
+            0,
+            1
+          ],
+          [
+            59,
+            0.6
+          ],
+          [
+            98,
+            0
+          ]
+        ],
+        "curve": "exp"
+      },
+      "gain_db": -8.4
+    },
+    {
+      "id": "splinters",
+      "start_ms": 2,
+      "source": {
+        "type": "particles",
+        "kind": "click",
+        "rate_hz": {
+          "env": [
+            [
+              0,
+              200
+            ],
+            [
+              98,
+              5
+            ]
+          ],
+          "curve": "exp"
+        },
+        "hz": [
+          2000,
+          8000
+        ],
+        "decay_ms": [
+          0.3,
+          1.5
+        ],
+        "gain_jitter_db": 18,
+        "spread": 0.4
+      },
+      "amp": {
+        "env": [
+          [
+            0,
+            1
+          ],
+          [
+            98,
+            0
+          ]
+        ],
+        "curve": "linear"
+      },
+      "gain_db": -16.4
+    },
+    {
+      "id": "bone",
+      "start_ms": 2,
+      "source": {
+        "type": "modal",
+        "material": "wood",
+        "size": 0.12,
+        "damping": 0.75,
+        "strike": {
+          "hardness": 0.9,
+          "position": 0.3
+        }
+      },
+      "gain_db": -12.4
+    }
+  ],
+  "master": {
+    "fx": [
+      {
+        "type": "eq",
+        "high_db": 0,
+        "low_db": 1
+      },
+      {
+        "type": "compressor",
+        "threshold_db": -20,
+        "ratio": 3,
+        "attack_ms": 4,
+        "release_ms": 120
+      },
+      {
+        "type": "shaper",
+        "drive_db": 4,
+        "mix": 0.4
+      },
+      {
+        "type": "reverb",
+        "size": 0.22,
+        "decay_ms": 322,
+        "damping": 0.45,
+        "predelay_ms": 6,
+        "mix": 0.054
+      },
+      {
+        "type": "limiter"
+      }
+    ],
+    "normalize": {
+      "lufs": -18
+    }
+  }
+}

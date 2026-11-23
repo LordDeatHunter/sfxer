@@ -1,0 +1,169 @@
+{
+  "name": "gore_drip",
+  "seed": 1,
+  "layers": [
+    {
+      "id": "drop",
+      "source": {
+        "type": "osc",
+        "hz": {
+          "env": [
+            [
+              0,
+              810
+            ],
+            [
+              8,
+              1175
+            ],
+            [
+              42,
+              1296
+            ]
+          ],
+          "curve": "exp"
+        }
+      },
+      "amp": {
+        "env": [
+          [
+            0,
+            0
+          ],
+          [
+            1,
+            1
+          ],
+          [
+            42,
+            0
+          ]
+        ],
+        "curve": "exp"
+      }
+    },
+    {
+      "id": "splash",
+      "start_ms": 0,
+      "source": {
+        "type": "noise",
+        "color": "white"
+      },
+      "amp": {
+        "env": [
+          [
+            0,
+            1
+          ],
+          [
+            2,
+            0.4
+          ],
+          [
+            6,
+            0
+          ]
+        ],
+        "curve": "exp"
+      },
+      "gain_db": -14,
+      "fx": [
+        {
+          "type": "filter",
+          "mode": "bandpass",
+          "hz": {
+            "env": [
+              [
+                0,
+                4243
+              ],
+              [
+                6,
+                2121
+              ]
+            ],
+            "curve": "exp"
+          },
+          "q": 0.8
+        }
+      ]
+    },
+    {
+      "id": "spatter",
+      "start_ms": 4,
+      "source": {
+        "type": "particles",
+        "kind": "bubble",
+        "rate_hz": 70,
+        "hz": [
+          1134,
+          2430
+        ],
+        "decay_ms": [
+          3,
+          10
+        ],
+        "chirp_semitones": 6,
+        "gain_jitter_db": 12,
+        "spread": 0.6
+      },
+      "amp": {
+        "env": [
+          [
+            0,
+            1
+          ],
+          [
+            36,
+            0.6
+          ],
+          [
+            54,
+            0.08
+          ],
+          [
+            60,
+            0
+          ]
+        ],
+        "curve": "linear"
+      },
+      "gain_db": -20
+    }
+  ],
+  "master": {
+    "fx": [
+      {
+        "type": "eq",
+        "high_db": 0,
+        "low_db": 1
+      },
+      {
+        "type": "compressor",
+        "threshold_db": -20,
+        "ratio": 3,
+        "attack_ms": 4,
+        "release_ms": 120
+      },
+      {
+        "type": "shaper",
+        "drive_db": 4,
+        "mix": 0.4
+      },
+      {
+        "type": "reverb",
+        "size": 0.22,
+        "decay_ms": 322,
+        "damping": 0.45,
+        "predelay_ms": 6,
+        "mix": 0.054
+      },
+      {
+        "type": "limiter"
+      }
+    ],
+    "normalize": {
+      "lufs": -22
+    }
+  }
+}
