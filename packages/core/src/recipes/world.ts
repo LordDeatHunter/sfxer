@@ -263,11 +263,26 @@ export const ambience_loop = defineRecipe({
         ];
         break;
       case 'fire':
+        // Mostly a low, fluttering roar, with crackles that come in clusters (wood splitting)
+        // and have some body. A steady high hiss under evenly spread one-cycle ticks is static.
         ls = [
-          { id: 'roar', source: { type: 'noise', color: 'brown' }, amp: { random: { rate_hz: 3, depth: 0.3 }, base: 0.65 }, gain_db: -8, fx: [{ type: 'filter', hz: { random: { rate_hz: 2, depth: 150 }, base: r0(lg(250, 700, i)) }, q: 0.9 }] },
-          { id: 'crackle', source: { type: 'particles', kind: 'click', rate_hz: { random: { rate_hz: 1.5, depth: r1(lg(3, 20, i)) }, base: r1(lg(5, 34, i)) }, hz: [900, 6000], decay_ms: [1, 8], gain_jitter_db: 24, spread: 0.8 }, gain_db: 9 },
-          { id: 'pops', source: { type: 'particles', kind: 'burst', rate_hz: r1(lg(1, 7, i)), hz: [300, 1800], decay_ms: [8, 45], gain_jitter_db: 12, spread: 0.6 }, gain_db: 2 },
-          { id: 'hiss', source: { type: 'noise', color: 'pink' }, amp: { random: { rate_hz: 5, depth: 0.25 }, base: 0.5 }, gain_db: -12, fx: [{ type: 'filter', mode: 'highpass', hz: 3000 }] },
+          {
+            id: 'roar',
+            source: { type: 'noise', color: 'brown' },
+            amp: { random: { rate_hz: 7, depth: 0.35 }, base: 0.65 },
+            gain_db: -8,
+            fx: [
+              { type: 'filter', hz: { random: { rate_hz: 3, depth: 200 }, base: r0(lg(300, 800, i)) }, q: 0.8 },
+              { type: 'gain', db: { random: { rate_hz: 18, depth: 4 }, base: 0 } },
+            ],
+          },
+          {
+            id: 'crackle',
+            source: { type: 'particles', kind: 'burst', rate_hz: { random: { rate_hz: 2.5, depth: r1(lg(6, 40, i)) }, base: r1(lg(6, 40, i)) }, hz: [900, 7000], decay_ms: [0.6, 4], q: 0.9, gain_jitter_db: 22, spread: 0.8 },
+            gain_db: 8,
+          },
+          { id: 'pops', source: { type: 'particles', kind: 'burst', rate_hz: r1(lg(0.8, 5, i)), hz: [150, 900], decay_ms: [6, 30], q: 1, gain_jitter_db: 10, spread: 0.6 }, gain_db: 4 },
+          { id: 'hiss', source: { type: 'noise', color: 'pink' }, amp: { random: { rate_hz: 4, depth: 0.4 }, base: 0.5 }, gain_db: -26, fx: [{ type: 'filter', mode: 'bandpass', hz: 2500, q: 0.7 }] },
         ];
         break;
       case 'room':
