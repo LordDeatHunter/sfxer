@@ -209,11 +209,12 @@ export const door = defineRecipe({
       ];
     } else {
       const T = p.length_ms;
-      const f = lg(220, 90, p.size);
+      const f = lg(73, 30, p.size);
       // Stick-slip friction: the hinge sticks and slips in segments, so the tick rate sits on a
       // plateau, jumps, and briefly stops while the hinge sticks. Each tick rings the door body.
       // A smoothly gliding buzz reads as a voice (kazoo, frog, groan), so avoid glides and
-      // vowel filters.
+      // vowel filters. Keep ticks slow (below ~100 per second, or the train becomes a pitched burp) and
+      // the body small and bright: real creaks sit at 2-6 kHz, and low body modes read as burping.
       const seg = (t0: number, t1: number, k: number): [number, number][] => [[r0(T * t0), r0(f * k)], [r0(T * t1), r0(f * k * 1.04)]];
       const rate = env([...seg(0, 0.18, 0.25), ...seg(0.2, 0.42, 0.9), ...seg(0.44, 0.62, 0.65), ...seg(0.64, 0.9, 1.15), ...seg(0.92, 1, 0.3)]);
       const stick = env([[0, 0], [r0(T * 0.02), 1], [r0(T * 0.18), 0.9], [r0(T * 0.19), 0.1], [r0(T * 0.21), 1], [r0(T * 0.42), 0.8], [r0(T * 0.43), 0.15], [r0(T * 0.45), 1], [r0(T * 0.62), 0.9], [r0(T * 0.63), 0.1], [r0(T * 0.65), 1], [r0(T * 0.9), 0.7], [r0(T * 0.91), 0.1], [r0(T * 0.93), 0.6], [r0(T), 0]]);
@@ -223,8 +224,8 @@ export const door = defineRecipe({
           source: { type: 'particles', kind: 'click', rate_hz: rate, regularity: 0.85, hz: [2000, 6000], decay_ms: [0.3, 1], gain_jitter_db: 4, spread: 0.1 },
           amp: stick,
           fx: [
-            { type: 'resonator', material: mat, size: mat === 'metal' ? 0.4 : r1(0.1 + 0.3 * p.size), damping: mat === 'metal' ? 0.6 : 0.1 },
-            { type: 'filter', mode: 'highpass', hz: 200 },
+            { type: 'resonator', material: mat, size: mat === 'metal' ? 0.4 : r2(0.02 + 0.05 * p.size), damping: mat === 'metal' ? 0.6 : 0.3 },
+            { type: 'filter', mode: 'highpass', hz: mat === 'metal' ? 200 : 2000 },
           ],
         },
       ];
