@@ -1,5 +1,5 @@
 import { expandRecipe, type Assets, type PatchInput, type PatchIssue } from '@sfxer/core';
-import { play } from './audio';
+import { isPaused, isPlaying, pause, play, resume } from './audio';
 import { engine } from './engine';
 import type { Rendered } from './protocol';
 
@@ -14,6 +14,8 @@ interface AppState {
   error: string;
   busy: boolean;
   autoplay: boolean;
+  /** Repeat playback. Starts on for patches made as loops, but works for any sound. */
+  loop: boolean;
   /** Index of the soloed layer, or -1. */
   solo: number;
   assets: Assets;
@@ -35,6 +37,7 @@ export const app: AppState = $state({
   error: '',
   busy: false,
   autoplay: true,
+  loop: false,
   solo: -1,
   assets: {},
 });
@@ -75,13 +78,24 @@ export function touch(): void {
 
 export function setPatch(patch: PatchInput, andPlay = app.autoplay): void {
   app.patch = normalise(patch);
+  app.loop = patch.master?.loop === true;
   app.solo = -1;
   clearTimeout(timer);
   void renderNow(andPlay);
 }
 
+let played: Rendered | undefined;
+
 export function playResult(): void {
-  if (app.result) play(app.result.channels, app.result.sampleRate, app.patch.master?.loop === true);
+  if (!app.result) return;
+  played = app.result;
+  play(app.result.channels, app.result.sampleRate, app.loop);
+}
+
+/** Play/pause button: pause if playing, resume a paused take of the same render, else start over. */
+export function togglePlay(): void {
+  if (isPlaying()) pause();
+  else if (!(played === app.result && isPaused() && resume())) playResult();
 }
 
 export function reseed(): void {

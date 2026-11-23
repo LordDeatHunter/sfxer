@@ -28,7 +28,7 @@
   @apply bg-raised text-ink;
 }
 .dock {
-  @apply fixed bottom-4 left-1/2 z-20 flex max-w-[calc(100vw-1.5rem)] -translate-x-1/2 flex-wrap items-center justify-center gap-3 rounded-2xl border border-line bg-panel/90 px-4 py-3 shadow-lg shadow-black/25 backdrop-blur;
+  @apply fixed bottom-4 left-1/2 z-20 flex max-w-[calc(100vw-1.5rem)] -translate-x-1/2 flex-col gap-3 rounded-2xl border border-line bg-panel/90 px-4 py-3 shadow-lg shadow-black/25 backdrop-blur;
 }
 .app-logo {
   @apply mr-2 text-lg font-bold tracking-tight;
@@ -72,4 +72,30 @@
   50% {
     opacity: 0.25;
   }
+}
+
+.dock-controls {
+  @apply flex flex-wrap items-center justify-center gap-3;
+}
+.dock-play {
+  @apply min-w-24;
+}
+.dock-seek {
+  @apply relative -my-1.5 cursor-pointer touch-none py-1.5;
+}
+.dock-seek-off {
+  @apply cursor-default;
+}
+.dock-track {
+  @apply h-1.5 w-full overflow-hidden rounded-full bg-raised;
+}
+.dock-fill {
+  @apply h-full bg-accent;
+}
+.dock-thumb {
+  @apply pointer-events-none absolute top-1/2 h-3.5 w-3.5 -translate-x-1/2 -translate-y-1/2 rounded-full border-2 border-panel bg-accent shadow;
+}
+.dock-seek-off .dock-fill,
+.dock-seek-off .dock-thumb {
+  @apply opacity-0;
 }

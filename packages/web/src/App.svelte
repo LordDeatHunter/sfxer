@@ -6,8 +6,8 @@
   import ReportPanel from './components/ReportPanel.svelte';
   import Variations from './components/Variations.svelte';
   import Viz from './components/Viz.svelte';
-  import { downloadJson, downloadWav, stop } from './lib/audio';
-  import { app, playResult, setPatch, snapshot, type View } from './lib/state.svelte';
+  import { downloadJson, downloadWav, isPlaying, pause, progress, resume, seek, setLooping, stop } from './lib/audio';
+  import { app, setPatch, snapshot, togglePlay, type View } from './lib/state.svelte';
   import { setTheme, theme, type ThemeChoice } from './lib/theme.svelte';
 
   const tabs: { id: View; label: string }[] = [
@@ -25,11 +25,44 @@
 
   const fileName = $derived((app.patch.name ?? 'untitled').replace(/[^\w-]+/g, '_'));
 
+  // Playback state for the dock, polled once per frame.
+  let position: number | undefined = $state();
+  let playing = $state(false);
+  $effect(() => {
+    let frame = requestAnimationFrame(function tick() {
+      position = progress();
+      playing = isPlaying() || resumeAfterDrag;
+      frame = requestAnimationFrame(tick);
+    });
+    return () => cancelAnimationFrame(frame);
+  });
+
+  // Click or drag the bar to seek. Playback pauses while dragging and continues on release.
+  let resumeAfterDrag = false;
+  const fractionAt = (event: PointerEvent): number => {
+    const box = (event.currentTarget as HTMLElement).getBoundingClientRect();
+    return (event.clientX - box.left) / box.width;
+  };
+  function dragStart(event: PointerEvent): void {
+    if (!app.result || progress() === undefined) return;
+    (event.currentTarget as HTMLElement).setPointerCapture(event.pointerId);
+    resumeAfterDrag = isPlaying();
+    pause();
+    seek(fractionAt(event));
+  }
+  function dragMove(event: PointerEvent): void {
+    if ((event.currentTarget as HTMLElement).hasPointerCapture(event.pointerId)) seek(fractionAt(event));
+  }
+  function dragEnd(): void {
+    if (resumeAfterDrag) resume();
+    resumeAfterDrag = false;
+  }
+
   function onKey(event: KeyboardEvent): void {
     const el = event.target as HTMLElement | null;
     if (event.code !== 'Space' || (el && /^(INPUT|TEXTAREA|SELECT|BUTTON)$/.test(el.tagName))) return;
     event.preventDefault();
-    playResult();
+    togglePlay();
   }
 
   // First render on load, without sound: browsers block audio before a user gesture.
@@ -75,11 +108,33 @@
   </main>
 
   <footer class="dock">
-    <span class={app.busy ? 'app-busy' : 'app-idle'} title={app.busy ? 'Rendering' : 'Idle'}></span>
-    <label class="app-toggle"><input class="check" type="checkbox" bind:checked={app.autoplay} /> play on change</label>
-    <button class="btn btn-primary" onclick={playResult} disabled={!app.result} title="Space">Play</button>
-    <button class="btn" onclick={stop}>Stop</button>
-    <button class="btn" disabled={!app.result} onclick={() => app.result && downloadWav(fileName, app.result.channels, app.result.sampleRate)}>WAV</button>
-    <button class="btn" onclick={() => downloadJson(fileName, snapshot(app.patch))}>Patch JSON</button>
+    <div class="dock-controls">
+      <span class={app.busy ? 'app-busy' : 'app-idle'} title={app.busy ? 'Rendering' : 'Idle'}></span>
+      <label class="app-toggle"><input class="check" type="checkbox" bind:checked={app.autoplay} /> play on change</label>
+      <label class="app-toggle"><input class="check" type="checkbox" bind:checked={app.loop} onchange={() => setLooping(app.loop)} /> loop</label>
+      <button class="btn btn-primary dock-play" onclick={togglePlay} disabled={!app.result} title="Space">{playing ? 'Pause' : 'Play'}</button>
+      <button class="btn" onclick={stop}>Stop</button>
+      <button class="btn" disabled={!app.result} onclick={() => app.result && downloadWav(fileName, app.result.channels, app.result.sampleRate)}>WAV</button>
+      <button class="btn" onclick={() => downloadJson(fileName, snapshot(app.patch))}>Patch JSON</button>
+    </div>
+    <div
+      class="dock-seek"
+      class:dock-seek-off={position === undefined}
+      role="slider"
+      tabindex="-1"
+      aria-label="Playback position"
+      aria-valuemin={0}
+      aria-valuemax={100}
+      aria-valuenow={Math.round((position ?? 0) * 100)}
+      onpointerdown={dragStart}
+      onpointermove={dragMove}
+      onpointerup={dragEnd}
+      onpointercancel={dragEnd}
+    >
+      <div class="dock-track">
+        <div class="dock-fill" style:width={`${(position ?? 0) * 100}%`}></div>
+      </div>
+      <div class="dock-thumb" style:left={`${(position ?? 0) * 100}%`}></div>
+    </div>
   </footer>
 </div>
