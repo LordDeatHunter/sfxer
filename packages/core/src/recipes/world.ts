@@ -1,6 +1,7 @@
 import { z } from 'zod';
 import type { LayerInput } from '../schema/index.js';
-import { brightness, choice, defineRecipe, distance, env, far, layers, lg, lin, num, r0, r1, room, unit, wetness } from './common.js';
+import { hash32, Rng } from '../util.js';
+import { brightness, choice, defineRecipe, distance, env, far, layers, lg, lin, num, r0, r1, r2, room, unit, wetness } from './common.js';
 
 const click = (id: string, startMs: number, hz: number, material: 'metal' | 'plastic', damping: number, gainDb = 0): LayerInput => ({
   id,
@@ -153,34 +154,41 @@ export const door = defineRecipe({
     if (p.kind === 'knock') {
       ls = [];
       const gap = lin(210, 130, p.force);
-      // A door is a large, heavily damped slab: same spot every knock (moving the strike point
-      // changes the pitch of each knock), short ring, and a non-pitched thump. A lightly damped
-      // wooden mode plus a sine sweep sounds like a hollow tube.
+      // A door is a large, heavily damped slab struck by a soft knuckle: a very low, dull body plus
+      // a short bandpassed tap. Every knock shares one random stream (`seed`), so all of them hit
+      // the same body; otherwise each gets differently tuned overtones and reads as a new pitch.
+      // The later knocks only vary slightly in strength, spot and knuckle brightness.
+      const rng = new Rng(hash32(seed + 0x6b6e));
+      const tap = lg(1800, 3600, p.force);
       for (let i = 0; i < Math.round(p.knocks); i++) {
         const t = r0(i * gap + (i % 2) * 12);
-        const accent = i === 0 ? 0 : -1.5 - (i % 2);
+        const first = i === 0;
+        const accent = first ? 0 : r1(-0.5 - rng.next());
         ls.push(
           {
             id: `knock${i + 1}`,
+            seed: 1,
             start_ms: t,
-            source: { type: 'modal', material: mat, size: r1(0.45 + 0.3 * p.size), damping: mat === 'metal' ? 0.55 : 0.72, strike: { hardness: r1(0.4 + 0.4 * p.force), position: 0.27 }, mode_count: 40 },
-            gain_db: accent,
+            source: {
+              type: 'modal',
+              material: mat,
+              size: r2(0.7 + 0.3 * p.size),
+              hz: r0(lg(32, 14, p.size)),
+              damping: mat === 'metal' ? 0.7 : 0.89,
+              strike: { hardness: r2(0.02 + 0.1 * p.force + (first ? 0 : 0.015 * rng.bi())), position: r2(0.3 + (first ? 0 : 0.015 * rng.bi())) },
+              mode_count: 40,
+            },
+            amp: 2.4,
+            gain_db: 10 + accent,
           },
           {
             id: `knuckle${i + 1}`,
+            seed: 2,
             start_ms: t,
             source: { type: 'noise', color: 'pink' },
             amp: env([[0, 1], [5, 0]]),
-            gain_db: -6 + accent,
-            fx: [{ type: 'filter', mode: 'bandpass', hz: r0(lg(1800, 3600, p.force)), q: 0.7 }],
-          },
-          {
-            id: `thump${i + 1}`,
-            start_ms: t,
-            source: { type: 'noise', color: 'brown' },
-            amp: env([[0, 0], [1, 1], [r0(35 + 40 * p.size), 0]]),
-            gain_db: -4 + accent,
-            fx: [{ type: 'filter', mode: 'lowpass', hz: r0(lg(420, 220, p.size)), q: 0.7 }],
+            gain_db: 24 + accent,
+            fx: [{ type: 'filter', mode: 'bandpass', hz: r0(tap * (first ? 1 : 1 + 0.05 * rng.bi())), q: 2.2 }],
           },
         );
       }

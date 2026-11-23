@@ -4,22 +4,26 @@
   "layers": [
     {
       "id": "knock1",
+      "seed": 1,
       "start_ms": 0,
       "source": {
         "type": "modal",
         "material": "wood",
-        "size": 0.6,
-        "damping": 0.72,
+        "size": 0.88,
+        "hz": 20,
+        "damping": 0.89,
         "strike": {
-          "hardness": 0.6,
-          "position": 0.27
+          "hardness": 0.07,
+          "position": 0.3
         },
         "mode_count": 40
       },
-      "gain_db": 0
+      "amp": 2.4,
+      "gain_db": 10
     },
     {
       "id": "knuckle1",
+      "seed": 2,
       "start_ms": 0,
       "source": {
         "type": "noise",
@@ -38,68 +42,38 @@
         ],
         "curve": "exp"
       },
-      "gain_db": -6,
+      "gain_db": 24,
       "fx": [
         {
           "type": "filter",
           "mode": "bandpass",
           "hz": 2546,
-          "q": 0.7
-        }
-      ]
-    },
-    {
-      "id": "thump1",
-      "start_ms": 0,
-      "source": {
-        "type": "noise",
-        "color": "brown"
-      },
-      "amp": {
-        "env": [
-          [
-            0,
-            0
-          ],
-          [
-            1,
-            1
-          ],
-          [
-            59,
-            0
-          ]
-        ],
-        "curve": "exp"
-      },
-      "gain_db": -4,
-      "fx": [
-        {
-          "type": "filter",
-          "mode": "lowpass",
-          "hz": 285,
-          "q": 0.7
+          "q": 2.2
         }
       ]
     },
     {
       "id": "knock2",
+      "seed": 1,
       "start_ms": 182,
       "source": {
         "type": "modal",
         "material": "wood",
-        "size": 0.6,
-        "damping": 0.72,
+        "size": 0.88,
+        "hz": 20,
+        "damping": 0.89,
         "strike": {
-          "hardness": 0.6,
-          "position": 0.27
+          "hardness": 0.08,
+          "position": 0.29
         },
         "mode_count": 40
       },
-      "gain_db": -2.5
+      "amp": 2.4,
+      "gain_db": 9.3
     },
     {
       "id": "knuckle2",
+      "seed": 2,
       "start_ms": 182,
       "source": {
         "type": "noise",
@@ -118,68 +92,38 @@
         ],
         "curve": "exp"
       },
-      "gain_db": -8.5,
+      "gain_db": 23.3,
       "fx": [
         {
           "type": "filter",
           "mode": "bandpass",
-          "hz": 2546,
-          "q": 0.7
-        }
-      ]
-    },
-    {
-      "id": "thump2",
-      "start_ms": 182,
-      "source": {
-        "type": "noise",
-        "color": "brown"
-      },
-      "amp": {
-        "env": [
-          [
-            0,
-            0
-          ],
-          [
-            1,
-            1
-          ],
-          [
-            59,
-            0
-          ]
-        ],
-        "curve": "exp"
-      },
-      "gain_db": -6.5,
-      "fx": [
-        {
-          "type": "filter",
-          "mode": "lowpass",
-          "hz": 285,
-          "q": 0.7
+          "hz": 2615,
+          "q": 2.2
         }
       ]
     },
     {
       "id": "knock3",
+      "seed": 1,
       "start_ms": 340,
       "source": {
         "type": "modal",
         "material": "wood",
-        "size": 0.6,
-        "damping": 0.72,
+        "size": 0.88,
+        "hz": 20,
+        "damping": 0.89,
         "strike": {
-          "hardness": 0.6,
-          "position": 0.27
+          "hardness": 0.07,
+          "position": 0.31
         },
         "mode_count": 40
       },
-      "gain_db": -1.5
+      "amp": 2.4,
+      "gain_db": 8.8
     },
     {
       "id": "knuckle3",
+      "seed": 2,
       "start_ms": 340,
       "source": {
         "type": "noise",
@@ -198,47 +142,13 @@
         ],
         "curve": "exp"
       },
-      "gain_db": -7.5,
+      "gain_db": 22.8,
       "fx": [
         {
           "type": "filter",
           "mode": "bandpass",
-          "hz": 2546,
-          "q": 0.7
-        }
-      ]
-    },
-    {
-      "id": "thump3",
-      "start_ms": 340,
-      "source": {
-        "type": "noise",
-        "color": "brown"
-      },
-      "amp": {
-        "env": [
-          [
-            0,
-            0
-          ],
-          [
-            1,
-            1
-          ],
-          [
-            59,
-            0
-          ]
-        ],
-        "curve": "exp"
-      },
-      "gain_db": -5.5,
-      "fx": [
-        {
-          "type": "filter",
-          "mode": "lowpass",
-          "hz": 285,
-          "q": 0.7
+          "hz": 2447,
+          "q": 2.2
         }
       ]
     }

@@ -30,6 +30,7 @@ export const room = (wet: number, size: number, decayMs: number): FxInput[] =>
 
 export const far = (meters: number): FxInput[] => (meters >= 1 ? [{ type: 'distance', meters }] : []);
 
+export const r2 = (x: number): number => Math.round(x * 100) / 100;
 export const r1 = (x: number): number => Math.round(x * 10) / 10;
 export const r0 = (x: number): number => Math.round(x);
 export const lg = (a: number, b: number, t: number): number => a * Math.pow(b / a, t);

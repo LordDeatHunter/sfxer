@@ -415,6 +415,9 @@ export const Layer = z
     gain_db: num(-80, 24, 'Layer level in the mix.').default(0),
     pan: param(-1, 1, 'Stereo position. -1 = left, 1 = right.').default(0),
     start_ms: num(0, 60000, 'Delay before the layer begins.').default(0),
+    seed: z.number().int().min(0).max(1000000).optional().meta({
+      description: 'Random stream for this layer. By default every layer gets its own; layers with the same seed share it, so repeated hits on one object (knocks, steps) have the same body. Vary them with strike, gain or fx instead.',
+    }),
     fx: z.array(Fx).max(16).default([]),
     mute: z.boolean().default(false),
   })

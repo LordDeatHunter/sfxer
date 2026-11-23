@@ -39,6 +39,8 @@ export interface RenderOptions {
 }
 
 const subRng = (seed: number, a: number, b: number): Rng => new Rng(hash32(seed ^ hash32(a * 7919 + b * 104729 + 1)));
+/** A layer's random stream: its own by index, or a shared one when it sets `seed`. */
+const streamOf = (layer: Layer, index: number): number => (layer.seed === undefined ? index : 1_000_000 + layer.seed);
 
 function paramMin(p: Param): number {
   if (typeof p === 'number') return p;
@@ -52,7 +54,7 @@ function tailMs(fx: Fx[]): number {
 }
 
 function layerBodyMs(layer: Layer, index: number, patch: Patch, assets: Assets, warnings: string[], extraMs: number): number {
-  const natural = sourceLengthMs(layer.source, subRng(patch.seed, index, 0), SAMPLE_RATE, assets);
+  const natural = sourceLengthMs(layer.source, subRng(patch.seed, streamOf(layer, index), 0), SAMPLE_RATE, assets);
   const env = envEndsSilent(layer.amp) ? envEndMs(layer.amp) : undefined;
   let body: number;
   if (natural !== undefined && env !== undefined) body = Math.min(natural, env);
@@ -109,11 +111,11 @@ export function render(patch: Patch, options: RenderOptions = {}): RenderResult 
       warnings.push(`Layer "${layer.id ?? index}" starts after the sound ends and was skipped.`);
       return;
     }
-    const ctx = { sr, n: ln, rng: subRng(patch.seed, index, 0), assets };
+    const ctx = { sr, n: ln, rng: subRng(patch.seed, streamOf(layer, index), 0), assets };
     const src = renderSource(layer.source, ctx);
     const buf: Stereo = src instanceof Float32Array ? [src, src.slice()] : src;
 
-    const amp = resolveParam(layer.amp, ln, sr, subRng(patch.seed, index, 1), 0, 4);
+    const amp = resolveParam(layer.amp, ln, sr, subRng(patch.seed, streamOf(layer, index), 1), 0, 4);
     const anti = msToSamples(2, sr);
     // Sources that run forever are stopped at the end of the layer body.
     const bodyEnd = msToSamples(spans[a]!.body, sr);
@@ -133,9 +135,9 @@ export function render(patch: Patch, options: RenderOptions = {}): RenderResult 
       }
     }
 
-    layer.fx.forEach((fx, j) => applyFx(buf, fx, { sr, n: ln, rng: subRng(patch.seed, index, 2 + j) }));
+    layer.fx.forEach((fx, j) => applyFx(buf, fx, { sr, n: ln, rng: subRng(patch.seed, streamOf(layer, index), 2 + j) }));
 
-    const pan = resolveParam(layer.pan, ln, sr, subRng(patch.seed, index, 99), -1, 1);
+    const pan = resolveParam(layer.pan, ln, sr, subRng(patch.seed, streamOf(layer, index), 99), -1, 1);
     const g = dbToGain(layer.gain_db);
     let peak = 0;
     let sq = 0;

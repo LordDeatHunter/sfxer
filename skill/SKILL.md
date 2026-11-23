@@ -43,6 +43,7 @@ With MCP the same steps are tools: `list_recipes`, `expand_recipe`, `render` (ta
 - Envelope times are ms from the start of that layer. A layer with an endless source (`osc`, `fm`, `noise`, `particles`, `granular`) needs an `amp` envelope that ends at 0.
 - `duration: "auto"` fits the layers plus reverb tails. Loudness is normalised for you; do not chase level with `gain_db`, use it only to balance layers against each other.
 - Same patch + same `seed` = identical audio. Change `seed` for a free variation.
+- Each layer gets its own random stream, so two identical `modal` layers still differ in pitch. For repeated hits on one object (knocks, steps), give the layers the same layer-level `seed` and vary them with strike, gain or filter instead.
 - Validation errors name the JSON path and suggest the fix. Out-of-range values are errors, never silently clamped.
 
 Sources: `modal` (struck objects: the workhorse), `particles` (many tiny events: debris, crackle, rain, sparkle), `noise`, `osc`, `fm`, `pluck`, `impulse`, `sample` and `granular` (user WAV files).
