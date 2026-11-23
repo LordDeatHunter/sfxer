@@ -1,0 +1,77 @@
+{
+  "name": "bubbles_blub",
+  "seed": 1,
+  "layers": [
+    {
+      "id": "blubs",
+      "source": {
+        "type": "particles",
+        "kind": "bubble",
+        "rate_hz": 9,
+        "regularity": 0.35,
+        "hz": [
+          514,
+          1029
+        ],
+        "decay_ms": [
+          25,
+          60
+        ],
+        "chirp_semitones": 9,
+        "gain_jitter_db": 6,
+        "spread": 0.4
+      },
+      "amp": {
+        "env": [
+          [
+            0,
+            0
+          ],
+          [
+            60,
+            1
+          ],
+          [
+            1350,
+            1
+          ],
+          [
+            1500,
+            0
+          ]
+        ],
+        "curve": "smooth"
+      },
+      "fx": [
+        {
+          "type": "filter",
+          "mode": "lowpass",
+          "hz": 3873,
+          "q": 0.7
+        }
+      ]
+    }
+  ],
+  "master": {
+    "fx": [
+      {
+        "type": "eq",
+        "high_db": 0
+      },
+      {
+        "type": "reverb",
+        "size": 0.25,
+        "decay_ms": 400,
+        "damping": 0.45,
+        "predelay_ms": 6,
+        "mix": 0.068
+      },
+      {
+        "type": "limiter"
+      }
+    ],
+    "normalize": {
+      "lufs": -20
+    }
+  }
+}

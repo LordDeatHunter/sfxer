@@ -1,6 +1,6 @@
 import { z } from 'zod';
 import type { LayerInput, ParamInput } from '../schema/index.js';
-import { brightness, choice, defineRecipe, distance, env, far, layers, lg, r0, r1, r2, room, unit, wetness } from './common.js';
+import { brightness, choice, defineRecipe, distance, env, far, layers, lg, lin, num, r0, r1, r2, room, unit, wetness } from './common.js';
 
 /*
  * Wet sounds, broken down from CC0 reference recordings (squelches, slime, gore hits, bubbles)
@@ -22,7 +22,7 @@ const KINDS = ['squish', 'splat', 'squelch', 'slime', 'stab', 'crunch', 'gib', '
 type Range = [number, number];
 type Mod = Exclude<ParamInput, undefined>;
 
-function bubbles(id: string, start: number, T: number, rate: Mod, hz: Range, decay: Range, chirp: number, gainDb: number, spread = 0.5): LayerInput {
+function bubbleLayer(id: string, start: number, T: number, rate: Mod, hz: Range, decay: Range, chirp: number, gainDb: number, spread = 0.5): LayerInput {
   return {
     id,
     start_ms: r0(start),
@@ -318,7 +318,7 @@ export const gore = defineRecipe({
           splatter('spray', 2, T * 0.7, 0.6 + 0.4 * s, top, -2),
           film('wet', 0, T, env([[0, r0(lg(1200, 2000, s))], [r0(T * 0.3), 250], [r0(T), 20]]), 1500 * fw, 12000 * fw, -3),
           squelch('squish', 8, lg(140, 320, s), 2000 * fw, 1.8, 30, -6),
-          bubbles('drips', 30, T, env([[0, r0(lg(40, 100, s))], [r0(T * 0.4), 15], [r0(T), 2]]), [500 * fh, 2400 * fh], bubDecay, chirp, -14, 0.8),
+          bubbleLayer('drips', 30, T, env([[0, r0(lg(40, 100, s))], [r0(T * 0.4), 15], [r0(T), 2]]), [500 * fh, 2400 * fh], bubDecay, chirp, -14, 0.8),
           ...(crunch ? bone('', 2, lg(60, 160, s), p.crunch, -10 + 8 * p.crunch) : []),
         );
         break;
@@ -366,7 +366,7 @@ export const gore = defineRecipe({
           squelch('wound', 6, T * 0.55, 2500 * fw, 1.8, 40, -3),
           film('wet', 4, T, env([[0, 1200], [r0(T * 0.4), 150], [r0(T), 10]]), 1500 * fw, 12000 * fw, -2),
           splatter('spurt', 10, T * 0.6, 0.35, top, -8),
-          bubbles('blood', 40, T, env([[0, 40], [r0(T), 2]]), [700 * fh, 2600 * fh], bubDecay, chirp, -15),
+          bubbleLayer('blood', 40, T, env([[0, 40], [r0(T), 2]]), [700 * fh, 2600 * fh], bubDecay, chirp, -15),
           ...(crunch ? bone('', 4, 70, p.crunch, -10 + 8 * p.crunch) : []),
         );
         break;
@@ -393,7 +393,7 @@ export const gore = defineRecipe({
           film('wet', 0, T, env([[0, 2000], [r0(T * 0.3), 400], [r0(T), 20]]), 1500 * fw, 12000 * fw, -2),
           squelch('rip', 10, T * 0.35, 2000 * fw, 1.8, 34, -4),
           ...bone('', 0, lg(120, 300, s), Math.max(p.crunch, 0.4), -6),
-          bubbles('chunks', 60, T, env([[0, 80], [r0(T * 0.3), 25], [r0(T), 2]]), [300 * fh, 2000 * fh], bubDecay, chirp, -14, 0.9),
+          bubbleLayer('chunks', 60, T, env([[0, 80], [r0(T * 0.3), 25], [r0(T), 2]]), [300 * fh, 2000 * fh], bubDecay, chirp, -14, 0.9),
           {
             // Lumps landing around the listener after the burst.
             id: 'landing',
@@ -417,7 +417,7 @@ export const gore = defineRecipe({
             amp: env([[0, 0], [1, 1], [len, 0]]),
           },
           slap('splash', 0, 6, lg(3000, 6000, p.brightness), -14),
-          bubbles('spatter', 4, 60, 70, [r0(f * 1.4), r0(f * 3)], [3, 10], 6, -20, 0.6),
+          bubbleLayer('spatter', 4, 60, 70, [r0(f * 1.4), r0(f * 3)], [3, 10], 6, -20, 0.6),
         );
         break;
       }
@@ -439,6 +439,117 @@ export const gore = defineRecipe({
           ...room(p.wetness, 0.22, 250 + 600 * p.wetness),
           { type: 'limiter' },
         ],
+        normalize: { lufs },
+      },
+    };
+  },
+});
+
+export const bubbles = defineRecipe({
+  name: 'bubbles',
+  description: 'Bubbles: big blubs rising, an underwater stream, a pot boiling, a single pop.',
+  params: z.strictObject({
+    kind: choice(
+      ['blub', 'stream', 'boil', 'pop'],
+      'blub',
+      'blub = a few big bubbles rising; stream = steady underwater stream; boil = a pot at a rolling boil; pop = one bubble surfacing.',
+    ),
+    size: unit(0.5, 'Bubble size. 0 = tiny and high, 1 = big and low.'),
+    amount: unit(0.5, 'How many bubbles.'),
+    length_ms: num(150, 6000, 1500, 'Length (not used by pop).'),
+    brightness: brightness(),
+    wetness: wetness(0.15),
+    distance_m: distance(),
+  }),
+  build: (p, seed) => {
+    const T = p.length_ms;
+    const f = lg(1800, 300, p.size); // Minnaert: bigger bubble, lower note
+    const hold = (fade = 0.15): Mod => env([[0, 0], [r0(Math.min(60, T * 0.1)), 1], [r0(T * (1 - fade)), 1], [r0(T), 0]], 'smooth');
+    // Under water there are no highs; the surface pops of boiling are the bright part.
+    const underwater = { type: 'filter' as const, mode: 'lowpass' as const, hz: r0(lg(2500, 6000, p.brightness)), q: 0.7 };
+    let ls: LayerInput[];
+    let lufs = -20;
+    switch (p.kind) {
+      case 'stream':
+        ls = layers(
+          {
+            id: 'bubbles',
+            source: { type: 'particles', kind: 'bubble', rate_hz: { random: { rate_hz: 3, depth: r0(lin(10, 40, p.amount)) }, base: r0(lin(20, 90, p.amount)) }, hz: [r0(f * 0.6), r0(f * 2.2)], decay_ms: [12, 40], chirp_semitones: 7, gain_jitter_db: 12, spread: 0.5 },
+            amp: hold(),
+            fx: [underwater],
+          },
+          {
+            id: 'rush',
+            source: { type: 'noise', color: 'brown' },
+            amp: hold(),
+            gain_db: -16,
+            fx: [{ type: 'filter', mode: 'lowpass', hz: { random: { rate_hz: 2, depth: 80 }, base: r0(f * 0.4 + 150) }, q: 0.8 }],
+          },
+        );
+        break;
+      case 'boil':
+        // A real boil is a dense spray of broadband bursts over a steady low rumble, with only a few
+        // tonal bubbles; mostly-tonal bubbles read as underwater instead.
+        ls = layers(
+          {
+            id: 'bubbles',
+            source: { type: 'particles', kind: 'bubble', rate_hz: { random: { rate_hz: 4, depth: r0(lin(10, 35, p.amount)) }, base: r0(lin(25, 80, p.amount)) }, hz: [r0(f * 0.5), r0(f * 1.8)], decay_ms: [6, 25], chirp_semitones: 6, gain_jitter_db: 14, spread: 0.7 },
+            amp: hold(),
+            gain_db: 0,
+          },
+          {
+            // Bubbles bursting at the surface: short broadband spits.
+            id: 'spits',
+            source: { type: 'particles', kind: 'burst', rate_hz: { random: { rate_hz: 5, depth: r0(lin(90, 240, p.amount)) }, base: r0(lin(150, 400, p.amount)) }, hz: [600, r0(lg(8000, 14000, p.brightness))], decay_ms: [0.4, 3], q: 0.8, gain_jitter_db: 20, spread: 0.8 },
+            amp: hold(),
+            gain_db: -2,
+          },
+          {
+            id: 'rumble',
+            source: { type: 'noise', color: 'brown' },
+            amp: hold(),
+            gain_db: -14,
+            fx: [{ type: 'filter', mode: 'lowpass', hz: { random: { rate_hz: 3, depth: 60 }, base: 220 }, q: 0.8 }, { type: 'gain', db: { random: { rate_hz: 8, depth: 6 }, base: 0 } }],
+          },
+        );
+        break;
+      case 'pop': {
+        // One bubble reaching the surface: a quick rising note, the tick of the film breaking.
+        const len = r0(lg(30, 90, p.size));
+        lufs = -22;
+        ls = layers(
+          {
+            id: 'bubble',
+            source: { type: 'osc', hz: env([[0, r0(f)], [r0(len * 0.25), r0(f * 1.5)], [len, r0(f * 1.7)]]) },
+            amp: env([[0, 0], [2, 1], [len, 0]]),
+          },
+          {
+            id: 'burst',
+            start_ms: r0(len * 0.6),
+            source: { type: 'noise', color: 'white' },
+            amp: env([[0, 1], [4, 0]]),
+            gain_db: -16,
+            fx: [{ type: 'filter', mode: 'bandpass', hz: r0(lg(3000, 7000, p.brightness)), q: 1 }],
+          },
+        );
+        break;
+      }
+      default: {
+        // A few big bubbles wobbling up: separate, rising blips with a little space between.
+        ls = layers({
+          id: 'blubs',
+          source: { type: 'particles', kind: 'bubble', rate_hz: r1(lin(4, 14, p.amount)), regularity: 0.35, hz: [r0(f * 0.7), r0(f * 1.4)], decay_ms: [25, 60], chirp_semitones: 9, gain_jitter_db: 6, spread: 0.4 },
+          amp: hold(0.1),
+          fx: [underwater],
+        });
+      }
+    }
+    return {
+      name: `bubbles_${p.kind}`,
+      seed,
+      layers: ls,
+      master: {
+        fx: [{ type: 'eq', high_db: r1((p.brightness - 0.5) * 6) }, ...far(p.distance_m), ...room(p.wetness, 0.25, 400), { type: 'limiter' }],
         normalize: { lufs },
       },
     };

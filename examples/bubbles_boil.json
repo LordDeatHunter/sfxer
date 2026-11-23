@@ -1,0 +1,175 @@
+{
+  "name": "bubbles_boil",
+  "seed": 1,
+  "layers": [
+    {
+      "id": "bubbles",
+      "source": {
+        "type": "particles",
+        "kind": "bubble",
+        "rate_hz": {
+          "random": {
+            "rate_hz": 4,
+            "depth": 23
+          },
+          "base": 53
+        },
+        "hz": [
+          367,
+          1323
+        ],
+        "decay_ms": [
+          6,
+          25
+        ],
+        "chirp_semitones": 6,
+        "gain_jitter_db": 14,
+        "spread": 0.7
+      },
+      "amp": {
+        "env": [
+          [
+            0,
+            0
+          ],
+          [
+            60,
+            1
+          ],
+          [
+            1275,
+            1
+          ],
+          [
+            1500,
+            0
+          ]
+        ],
+        "curve": "smooth"
+      },
+      "gain_db": 0
+    },
+    {
+      "id": "spits",
+      "source": {
+        "type": "particles",
+        "kind": "burst",
+        "rate_hz": {
+          "random": {
+            "rate_hz": 5,
+            "depth": 165
+          },
+          "base": 275
+        },
+        "hz": [
+          600,
+          10583
+        ],
+        "decay_ms": [
+          0.4,
+          3
+        ],
+        "q": 0.8,
+        "gain_jitter_db": 20,
+        "spread": 0.8
+      },
+      "amp": {
+        "env": [
+          [
+            0,
+            0
+          ],
+          [
+            60,
+            1
+          ],
+          [
+            1275,
+            1
+          ],
+          [
+            1500,
+            0
+          ]
+        ],
+        "curve": "smooth"
+      },
+      "gain_db": -2
+    },
+    {
+      "id": "rumble",
+      "source": {
+        "type": "noise",
+        "color": "brown"
+      },
+      "amp": {
+        "env": [
+          [
+            0,
+            0
+          ],
+          [
+            60,
+            1
+          ],
+          [
+            1275,
+            1
+          ],
+          [
+            1500,
+            0
+          ]
+        ],
+        "curve": "smooth"
+      },
+      "gain_db": -14,
+      "fx": [
+        {
+          "type": "filter",
+          "mode": "lowpass",
+          "hz": {
+            "random": {
+              "rate_hz": 3,
+              "depth": 60
+            },
+            "base": 220
+          },
+          "q": 0.8
+        },
+        {
+          "type": "gain",
+          "db": {
+            "random": {
+              "rate_hz": 8,
+              "depth": 6
+            },
+            "base": 0
+          }
+        }
+      ]
+    }
+  ],
+  "master": {
+    "fx": [
+      {
+        "type": "eq",
+        "high_db": 0
+      },
+      {
+        "type": "reverb",
+        "size": 0.25,
+        "decay_ms": 400,
+        "damping": 0.45,
+        "predelay_ms": 6,
+        "mix": 0.068
+      },
+      {
+        "type": "limiter"
+      }
+    ],
+    "normalize": {
+      "lufs": -20
+    }
+  }
+}

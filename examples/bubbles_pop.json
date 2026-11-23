@@ -1,0 +1,98 @@
+{
+  "name": "bubbles_pop",
+  "seed": 1,
+  "layers": [
+    {
+      "id": "bubble",
+      "source": {
+        "type": "osc",
+        "hz": {
+          "env": [
+            [
+              0,
+              735
+            ],
+            [
+              13,
+              1102
+            ],
+            [
+              52,
+              1249
+            ]
+          ],
+          "curve": "exp"
+        }
+      },
+      "amp": {
+        "env": [
+          [
+            0,
+            0
+          ],
+          [
+            2,
+            1
+          ],
+          [
+            52,
+            0
+          ]
+        ],
+        "curve": "exp"
+      }
+    },
+    {
+      "id": "burst",
+      "start_ms": 31,
+      "source": {
+        "type": "noise",
+        "color": "white"
+      },
+      "amp": {
+        "env": [
+          [
+            0,
+            1
+          ],
+          [
+            4,
+            0
+          ]
+        ],
+        "curve": "exp"
+      },
+      "gain_db": -16,
+      "fx": [
+        {
+          "type": "filter",
+          "mode": "bandpass",
+          "hz": 4583,
+          "q": 1
+        }
+      ]
+    }
+  ],
+  "master": {
+    "fx": [
+      {
+        "type": "eq",
+        "high_db": 0
+      },
+      {
+        "type": "reverb",
+        "size": 0.25,
+        "decay_ms": 400,
+        "damping": 0.45,
+        "predelay_ms": 6,
+        "mix": 0.068
+      },
+      {
+        "type": "limiter"
+      }
+    ],
+    "normalize": {
+      "lufs": -22
+    }
+  }
+}

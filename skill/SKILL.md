@@ -1,6 +1,6 @@
 ---
 name: sfxer
-description: Design sound effects (impacts, whooshes, explosions, UI sounds, footsteps, pickups, magic, sci-fi, mechanisms, ambience loops, wet/gore/slime) as layered JSON patches and render them to WAV with the `sfx` CLI or the sfxer MCP tools. Use whenever a project needs a sound effect made, improved or varied.
+description: Design sound effects (impacts, whooshes, explosions, UI sounds, footsteps, pickups, magic, sci-fi, mechanisms, ambience loops, wet/gore/slime, bubbles, crumbling rock) as layered JSON patches and render them to WAV with the `sfx` CLI or the sfxer MCP tools. Use whenever a project needs a sound effect made, improved or varied.
 ---
 
 # sfxer: making sound effects that do not sound like chiptune beeps
