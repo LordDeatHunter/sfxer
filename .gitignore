@@ -3,3 +3,8 @@ dist/
 *.tsbuildinfo
 out/
 .svelte-kit/
+.env
+.freesound_token.json
+sounds/cc0/*
+!sounds/cc0/README.md
+!sounds/cc0/manifest.json

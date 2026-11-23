@@ -16,7 +16,8 @@
     "test": "vitest run",
     "check": "python scripts/check_all.py",
     "sfx": "bun packages/cli/dist/main.js",
-    "mcp": "bun packages/mcp/dist/main.js"
+    "mcp": "bun packages/mcp/dist/main.js",
+    "freesound": "python scripts/fetch_freesound.py"
   },
   "devDependencies": {
     "@types/node": "^24.0.0",
