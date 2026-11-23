@@ -24,11 +24,31 @@ export function particles(s: SourceOf<'particles'>, ctx: Ctx): Stereo {
     const [gl, gr] = panGains(rng.bi() * s.spread);
     const len = Math.min(n - start, Math.max(8, Math.ceil((decayMs / 1000) * sr)));
     const d = Math.exp(-6.908 / Math.max(1, (decayMs / 1000) * sr));
-    if (s.kind === 'ping') {
+    if (s.kind === 'ping' && s.chirp_semitones === 0) {
       const inc = (2 * Math.PI * hz) / sr;
       let env = gain;
       for (let i = 0; i < len; i++) {
         const y = env * Math.sin(inc * i);
+        L[start + i] = L[start + i]! + y * gl;
+        R[start + i] = R[start + i]! + y * gr;
+        env *= d;
+      }
+    } else if (s.kind === 'ping' || s.kind === 'bubble') {
+      // Gliding sine. A ping glides evenly over its life; a bubble (Minnaert resonance of a
+      // forming bubble) rises fast and settles, and starts with a soft 1 ms onset plus a tiny
+      // broadband tick from the surface breaking.
+      const bubble = s.kind === 'bubble';
+      const tau = Math.max(1, len * 0.18);
+      const attack = bubble ? Math.max(1, Math.round(sr * 0.001)) : 0;
+      const tick = bubble ? Math.max(2, Math.round(sr * 0.0006)) : 0;
+      const tickGain = gain * 0.35;
+      let phase = 0;
+      let env = gain;
+      for (let i = 0; i < len; i++) {
+        const g = bubble ? 1 - Math.exp(-i / tau) : i / len;
+        phase += (2 * Math.PI * hz * Math.pow(2, (s.chirp_semitones * g) / 12)) / sr;
+        let y = env * Math.sin(phase) * (i < attack ? i / attack : 1);
+        if (i < tick) y += tickGain * rng.bi() * (1 - i / tick);
         L[start + i] = L[start + i]! + y * gl;
         R[start + i] = R[start + i]! + y * gr;
         env *= d;

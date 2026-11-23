@@ -149,15 +149,23 @@ const ParticlesSource = z
   .strictObject({
     type: z.literal('particles'),
     kind: z
-      .enum(['ping', 'burst', 'click'])
+      .enum(['ping', 'burst', 'click', 'bubble'])
       .default('burst')
-      .meta({ description: 'ping = tiny ringing tone, burst = filtered noise puff, click = sharp tick.' }),
+      .meta({
+        description:
+          'ping = tiny ringing tone, burst = filtered noise puff, click = sharp tick, bubble = liquid blip whose pitch rises as it rings (drips, gloops, wet squelch); set chirp_semitones for the rise.',
+      }),
     rate_hz: param(0.2, 4000, 'Average particles per second. Use an envelope for a dense start that thins out.'),
     hz: range(30, 18000, 'Each particle picks a centre frequency in this [low, high] range.').default([800, 6000]),
     decay_ms: range(0.2, 2000, 'Each particle picks a decay time in this [low, high] range.').default([2, 30]),
     gain_jitter_db: num(0, 36, 'Random loudness variation between particles.').default(12),
     q: num(0.5, 40, 'Resonance of "burst" particles.').default(3),
     spread: num(0, 1, 'Random stereo placement of particles.').default(0.6),
+    chirp_semitones: num(
+      -24,
+      24,
+      'Pitch glide of each "ping" or "bubble" particle while it rings. Positive rises: 3-12 makes real bubbles and drips (a bubble rises fast, then settles). Negative falls (bouncy, cartoon).',
+    ).default(0),
     regularity: num(
       0,
       1,
@@ -166,7 +174,7 @@ const ParticlesSource = z
   })
   .meta({
     description:
-      'Sprays many small randomised events: debris, sparks, crackle, gravel, rain, coins, bubbles. Key to organic texture.',
+      'Sprays many small randomised events: debris, sparks, crackle, gravel, rain, coins, bubbles, drips, wet squelch. Key to organic texture.',
   });
 
 const SampleSource = z
