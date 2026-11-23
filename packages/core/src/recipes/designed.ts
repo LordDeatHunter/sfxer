@@ -61,19 +61,18 @@ export const ui = defineRecipe({
         ls = [note('first', 660 * k, 0, 170, b), note('second', 990 * k, 85, 320, b), tick('tick', 0, 5000 * k, -10)];
         break;
       case 'error':
+        // One low buzz chopped at ~28 Hz: "wrong". Two notes at different pitches are a tiny
+        // melody and read as music (a falling pair was heard as a jingle, not an error).
         ls = [
           {
-            id: 'first',
-            source: { type: 'osc', shape: 'saw', hz: r1(233 * k), unison: 3, detune_cents: 18 },
-            amp: env([[0, 0], [4, 1], [110, 0]]),
-            fx: [{ type: 'filter', hz: env([[0, r0(lg(2500, 7000, b))], [110, 500]]), q: 1.2 }],
-          },
-          {
-            id: 'second',
-            start_ms: 120,
-            source: { type: 'osc', shape: 'saw', hz: r1(185 * k), unison: 3, detune_cents: 18 },
-            amp: env([[0, 0], [4, 1], [190, 0]]),
-            fx: [{ type: 'filter', hz: env([[0, r0(lg(2500, 7000, b))], [190, 400]]), q: 1.2 }],
+            id: 'buzz',
+            source: { type: 'osc', shape: 'square', hz: r1(140 * k), unison: 3, detune_cents: 25 },
+            amp: env([[0, 0], [4, 1], [305, 0.9], [320, 0]], 'linear'),
+            fx: [
+              { type: 'filter', hz: r0(lg(1500, 4000, b)), q: 1 },
+              { type: 'shaper', drive_db: 6 },
+              { type: 'gain', db: { lfo: { hz: 28, depth: 8, shape: 'square' }, base: -4 } },
+            ],
           },
           tick('tick', 0, 3500 * k, -8),
         ];
