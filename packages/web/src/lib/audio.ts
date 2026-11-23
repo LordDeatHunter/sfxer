@@ -105,6 +105,21 @@ export function progress(): number | undefined {
   return pausedAt === undefined ? undefined : pausedAt / buffer.duration;
 }
 
+/** Fire-and-forget playback for interface sounds; never touches the main player. */
+export function playOneShot(channels: Float32Array[], sampleRate: number, gain = 1): void {
+  if (!channels[0] || channels[0].length === 0) return;
+  const ac = ctx();
+  void ac.resume();
+  const buf = ac.createBuffer(channels.length, channels[0].length, sampleRate);
+  channels.forEach((ch, i) => buf.copyToChannel(new Float32Array(ch), i));
+  const node = ac.createBufferSource();
+  node.buffer = buf;
+  const level = ac.createGain();
+  level.gain.value = gain;
+  node.connect(level).connect(ac.destination);
+  node.start();
+}
+
 /** Decode any audio file the browser understands into raw channels. */
 export async function decodeFile(file: File): Promise<{ sampleRate: number; channels: Float32Array[] }> {
   const buffer = await ctx().decodeAudioData(await file.arrayBuffer());

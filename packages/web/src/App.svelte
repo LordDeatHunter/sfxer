@@ -9,6 +9,7 @@
   import { downloadJson, downloadWav, isPlaying, pause, progress, resume, seek, setLooping, stop } from './lib/audio';
   import { app, setPatch, snapshot, togglePlay, type View } from './lib/state.svelte';
   import { setTheme, theme, type ThemeChoice } from './lib/theme.svelte';
+  import { playToggle, preloadUiSounds } from './lib/uisound';
 
   const tabs: { id: View; label: string }[] = [
     { id: 'library', label: 'Library' },
@@ -65,11 +66,18 @@
     togglePlay();
   }
 
+  // Every checkbox toggle in the app clicks with a random sfxer-made toggle sound.
+  function onChange(event: Event): void {
+    const el = event.target;
+    if (el instanceof HTMLInputElement && el.type === 'checkbox') playToggle();
+  }
+
   // First render on load, without sound: browsers block audio before a user gesture.
   setPatch(snapshot(app.patch), false);
+  preloadUiSounds();
 </script>
 
-<svelte:window onkeydown={onKey} />
+<svelte:window onkeydown={onKey} onchange={onChange} />
 
 <div class="app">
   <header class="app-bar">
