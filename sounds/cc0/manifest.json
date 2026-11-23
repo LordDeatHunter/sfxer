@@ -165,6 +165,26 @@
     ],
     "description": "blood squirt gob splash sponge.flac"
   },
+  "475852": {
+    "file": "475852_ese_foot_step_concrete_11.ogg",
+    "quality": "preview",
+    "name": "ESE - Foot Step - Concrete 11.wav",
+    "author": "EpicSoundEffects",
+    "url": "https://freesound.org/people/EpicSoundEffects/sounds/475852/",
+    "license": "http://creativecommons.org/publicdomain/zero/1.0/",
+    "duration": 0.575604,
+    "tags": [
+      "cinematic",
+      "concrete",
+      "footstep",
+      "running",
+      "sound",
+      "stepsound",
+      "walk",
+      "walking"
+    ],
+    "description": "Get access to 100+ high quality cinematic sounds for free here : <a href=\"https://epicsoundeffects.com/free-sound-effects-libraries/\" rel=\"nofollow\">https://epicsoundeffects.com/free-sound-effects-libraries/</a>"
+  },
   "486885": {
     "file": "486885_bubbles_rise.ogg",
     "quality": "preview",
@@ -200,6 +220,28 @@
     ],
     "description": "A sound composed from bunching wet paper towels smacked against the floor and a wet bottle of liquid being sloshed mixed together to create an impact sound. Creates a horrible sensation of flesh impacted by a powerful shockwave.\n\nA bottle with liquid being sloshed around gently can provide the needed element of a subdued liquid sound - taking away the need to filter it with Low Pass filters (but it can help boost other frequencies)."
   },
+  "588509": {
+    "file": "588509_wooddoorsqueak.ogg",
+    "quality": "preview",
+    "name": "WoodDoorSqueak.wav",
+    "author": "TampaJoey",
+    "url": "https://freesound.org/people/TampaJoey/sounds/588509/",
+    "license": "http://creativecommons.org/publicdomain/zero/1.0/",
+    "duration": 1.8676,
+    "tags": [
+      "Close",
+      "Closing",
+      "Creak",
+      "Creaking",
+      "Door",
+      "Old",
+      "Open",
+      "Squeak",
+      "Squeaking",
+      "Wooden"
+    ],
+    "description": "Wood door squeak sound effect I made for a video game I developed. \n\nFree to use without restrictions for any project or purpose. Enjoy."
+  },
   "589636": {
     "file": "589636_sfx_squelch_slayer_15.ogg",
     "quality": "preview",
@@ -233,6 +275,33 @@
       "wet"
     ],
     "description": "One of a series of heavily processed sounds of a squelchy stress reliever toy. I ran the original recordings through S-LAYER, the sample-mangling plugin from Twisted Tools, combining and mulching everything into new, dynamic sounds with lots of interesting, muddy contours."
+  },
+  "590157": {
+    "file": "590157_creaking_wood_9.ogg",
+    "quality": "preview",
+    "name": "Creaking Wood 9.wav",
+    "author": "Greg_Surr",
+    "url": "https://freesound.org/people/Greg_Surr/sounds/590157/",
+    "license": "http://creativecommons.org/publicdomain/zero/1.0/",
+    "duration": 1.95091,
+    "tags": [
+      "boards",
+      "chair",
+      "creak",
+      "creaking",
+      "creaky",
+      "door",
+      "floor",
+      "floorboards",
+      "house",
+      "rocking",
+      "rocking-chair",
+      "settling",
+      "squeak",
+      "wood",
+      "wooden"
+    ],
+    "description": "Creaking wood. Could be used for a rocking chair sound effect or many other applications."
   },
   "630590": {
     "file": "630590_bone_break_4.ogg",
@@ -320,6 +389,21 @@
     ],
     "description": "Squelch sound effect for blood/flesh/stabbing/gore.\n\nDONATE: <a href=\"https://www.paypal.com/paypalme/andrewweigh\" rel=\"nofollow\">https://www.paypal.com/paypalme/andrewweigh</a>\n\n(I’m a student and would love to upgrade my audio gear, so if you like/download any of my audio then that would be greatly appreciated! No worries if not).\n\nLooking for more audio? \n\nTry:\n\nYouTube: https://<a href=\"http://www.youtube.com/channel/UCdsJQeYEVDkU7SqYN3qlrTA\" rel=\"nofollow\">www.youtube.com/channel/UCdsJQeYEV"
   },
+  "690006": {
+    "file": "690006_concrete_footstep_2.ogg",
+    "quality": "preview",
+    "name": "Concrete Footstep 2.mp3",
+    "author": "matth3wc04",
+    "url": "https://freesound.org/people/matth3wc04/sounds/690006/",
+    "license": "http://creativecommons.org/publicdomain/zero/1.0/",
+    "duration": 0.400583,
+    "tags": [
+      "Floor",
+      "Movement",
+      "Sound"
+    ],
+    "description": "The other variation of the Movement piece supposed to represent the second foot."
+  },
   "779805": {
     "file": "779805_meaty_damage_impact.ogg",
     "quality": "preview",
@@ -335,6 +419,112 @@
       "Impact"
     ],
     "description": "Ouch. Made from spectral compression artifacts and some recordings I took with Zoom H4n Pro"
+  },
+  "795453": {
+    "file": "795453_error_sound.ogg",
+    "quality": "preview",
+    "name": "Error Sound",
+    "author": "aulix24",
+    "url": "https://freesound.org/people/aulix24/sounds/795453/",
+    "license": "http://creativecommons.org/publicdomain/zero/1.0/",
+    "duration": 0.52873,
+    "tags": [
+      "beep",
+      "computer",
+      "digital",
+      "game",
+      "soundesign",
+      "stereo",
+      "synth"
+    ],
+    "description": "Basic computer error sound created in Audacity"
+  },
+  "815493": {
+    "file": "815493_mechanical_switch_latch_02.ogg",
+    "quality": "preview",
+    "name": "Mechanical switch (latch) 02",
+    "author": "xkeril",
+    "url": "https://freesound.org/people/xkeril/sounds/815493/",
+    "license": "http://creativecommons.org/publicdomain/zero/1.0/",
+    "duration": 1.79981,
+    "tags": [
+      "button",
+      "chest",
+      "click",
+      "close",
+      "closing",
+      "door",
+      "foley",
+      "gate",
+      "latch",
+      "lock",
+      "mechanical",
+      "mechanism",
+      "open",
+      "opening",
+      "realistic",
+      "sfx",
+      "short",
+      "switch",
+      "toggle",
+      "wood"
+    ],
+    "description": "One mechanical toogling sound, cool for switch, lock, opening or closing mechanism. The sound is from a door latch, made of wood, in a luxurious hotel. When I heard it, I immediately loved it, so I wanted to record it for a nice foley. Unfortunately, I only had my iPhone on hand, so the quality is limited.\n\nRecorded with an iPhone, but under ideal conditions. And then processed with RX11 and a few plugin.\n\nThis sound is only 1 switch, but there are more in the pack."
+  },
+  "835523": {
+    "file": "835523_20251126_click_case_close.ogg",
+    "quality": "preview",
+    "name": "20251126_Click - Case close",
+    "author": "Sadiquecat",
+    "url": "https://freesound.org/people/Sadiquecat/sounds/835523/",
+    "license": "http://creativecommons.org/publicdomain/zero/1.0/",
+    "duration": 0.179938,
+    "tags": [
+      "button",
+      "click",
+      "closing",
+      "dji-mic3",
+      "mic3",
+      "switch"
+    ],
+    "description": "Subject : Closing the case of my DJI mic 3 with the mic in it, making this click n release sound as the latch moves.\nDate YMD : 2025 November\nLocation : Albi 81000 Tarn Occitanie France. \nHardware : Dji mic 3\nWeather : \nProcessing : Trimmed and normalised in Audacity. Fade in / out.\nNotes :\nTips :\n\n\nAttribution is greatly appreciated but not required. Recommendation : X sound by Sadiquecat on <a href=\"http://Freesound.org\" rel=\"nofollow\">Freesound.org</a> in CC0 licence.\nHope you enjoy :)\n\nPS: I"
+  },
+  "859155": {
+    "file": "859155_ui_interaction_error_beep_ghost_metro_ticket.ogg",
+    "quality": "preview",
+    "name": "UI Interaction Error Beep - Ghost Metro Ticket",
+    "author": "TommasoMotteran",
+    "url": "https://freesound.org/people/TommasoMotteran/sounds/859155/",
+    "license": "http://creativecommons.org/publicdomain/zero/1.0/",
+    "duration": 1.0,
+    "tags": [
+      "alert",
+      "beep",
+      "click",
+      "denied",
+      "digital",
+      "electronic",
+      "error",
+      "failed",
+      "feedback",
+      "futuristic",
+      "gui",
+      "hmi",
+      "interaction",
+      "interface",
+      "invalid",
+      "metro",
+      "notification",
+      "reject",
+      "scanner",
+      "system",
+      "tap",
+      "transit",
+      "ui",
+      "ux",
+      "warning"
+    ],
+    "description": "A clean and modern UI/UX feedback sound designed for failed interactions, invalid actions, access denial, ticket validation errors, scanner feedback, metro/transit systems, apps, games, interfaces, kiosks, and futuristic HMI environments.\n\nNo AI used, just free VSTs and royalty free sounds."
   },
   "877027": {
     "file": "877027_meat_slime_hit_layer_3.ogg",
