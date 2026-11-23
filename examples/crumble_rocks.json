@@ -1,0 +1,107 @@
+{
+  "name": "crumble",
+  "seed": 1,
+  "layers": [
+    {
+      "id": "grains",
+      "source": {
+        "type": "particles",
+        "kind": "burst",
+        "rate_hz": 106,
+        "hz": [
+          277,
+          3200
+        ],
+        "decay_ms": [
+          2,
+          37
+        ],
+        "q": 2,
+        "gain_jitter_db": 12,
+        "spread": 0.6
+      },
+      "amp": {
+        "env": [
+          [
+            0,
+            0
+          ],
+          [
+            180,
+            1
+          ],
+          [
+            900,
+            0
+          ]
+        ],
+        "curve": "smooth"
+      }
+    },
+    {
+      "id": "chunks",
+      "source": {
+        "type": "particles",
+        "kind": "burst",
+        "rate_hz": {
+          "random": {
+            "rate_hz": 4,
+            "depth": 9.3
+          },
+          "base": 9.3
+        },
+        "hz": [
+          135,
+          755
+        ],
+        "decay_ms": [
+          8,
+          41
+        ],
+        "q": 1,
+        "gain_jitter_db": 10,
+        "spread": 0.7
+      },
+      "amp": {
+        "env": [
+          [
+            0,
+            0
+          ],
+          [
+            180,
+            1
+          ],
+          [
+            900,
+            0
+          ]
+        ],
+        "curve": "smooth"
+      },
+      "gain_db": -5
+    }
+  ],
+  "master": {
+    "fx": [
+      {
+        "type": "eq",
+        "high_db": 0
+      },
+      {
+        "type": "reverb",
+        "size": 0.3,
+        "decay_ms": 500,
+        "damping": 0.45,
+        "predelay_ms": 6,
+        "mix": 0.081
+      },
+      {
+        "type": "limiter"
+      }
+    ],
+    "normalize": {
+      "lufs": -20
+    }
+  }
+}

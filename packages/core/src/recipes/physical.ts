@@ -339,3 +339,68 @@ export const footstep = defineRecipe({
     };
   },
 });
+
+export const crumble = defineRecipe({
+  name: 'crumble',
+  description: 'Earth and stone giving way: dirt crumbling, pebbles trickling, rubble or a small rockfall.',
+  params: z.strictObject({
+    length_ms: num(300, 5000, 900, 'How long the material keeps falling.'),
+    size: unit(0.3, 'Size of the bits. 0 = grit and soil, 1 = fist-sized rocks.'),
+    density: unit(0.4, 'How much material. 0 = a few bits trickling, 1 = a solid pour.'),
+    brightness: brightness(),
+    wetness: wetness(0.18),
+    distance_m: distance(),
+  }),
+  build: (p, seed) => {
+    const T = p.length_ms;
+    // Started as a user-made patch (one burst-particle layer swelling in and fading out) that the
+    // judge heard as "rocks falling" once dry. Keep it dry: a long hall turns it into a magic
+    // sparkle, and a low rumble bed under it reads as fire.
+    const shape = env([[0, 0], [r0(T * 0.2), 1], [r0(T), 0]], 'smooth');
+    return {
+      name: 'crumble',
+      seed,
+      layers: layers(
+        {
+          id: 'grains',
+          source: {
+            type: 'particles',
+            kind: 'burst',
+            rate_hz: r0(lin(25, 140, p.density)),
+            hz: [r0(lg(700, 250, p.size)), r0(lg(6500, 3000, p.size) * lg(0.75, 1.3, p.brightness))],
+            decay_ms: [2, r0(lg(20, 40, p.size))],
+            q: 2,
+            gain_jitter_db: 12,
+            spread: 0.6,
+          },
+          amp: shape,
+        },
+        p.size > 0.4 && {
+          // Bigger pieces knocking together under the grit.
+          id: 'chunks',
+          source: {
+            type: 'particles',
+            kind: 'burst',
+            rate_hz: { random: { rate_hz: 4, depth: r1(lin(3, 12, p.density)) }, base: r1(lin(3, 12, p.density)) },
+            hz: [r0(lg(400, 120, p.size)), r0(lg(1500, 700, p.size))],
+            decay_ms: [8, r0(lg(20, 45, p.size))],
+            q: 1,
+            gain_jitter_db: 10,
+            spread: 0.7,
+          },
+          amp: shape,
+          gain_db: r1(-14 + 10 * p.size),
+        },
+      ),
+      master: {
+        fx: [
+          { type: 'eq', high_db: r1((p.brightness - 0.5) * 6) },
+          ...far(p.distance_m),
+          ...room(p.wetness, 0.3, 500),
+          { type: 'limiter' },
+        ],
+        normalize: { lufs: -20 },
+      },
+    };
+  },
+});

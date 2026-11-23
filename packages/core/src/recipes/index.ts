@@ -5,13 +5,13 @@ import { clampToSchema } from '../vary.js';
 import type { Recipe } from './common.js';
 import { energy, magic, pickup, ui } from './designed.js';
 import { gore } from './organic.js';
-import { explosion, footstep, impact, whoosh } from './physical.js';
+import { crumble, explosion, footstep, impact, whoosh } from './physical.js';
 import { ambience_loop, door, mechanical } from './world.js';
 
 export type { Recipe } from './common.js';
 
 export const RECIPES: Record<string, Recipe> = Object.fromEntries(
-  ([impact, whoosh, explosion, footstep, ui, pickup, magic, energy, mechanical, door, ambience_loop, gore] as unknown as Recipe[]).map((r) => [r.name, r]),
+  ([impact, whoosh, explosion, footstep, ui, pickup, magic, energy, mechanical, door, ambience_loop, gore, crumble] as unknown as Recipe[]).map((r) => [r.name, r]),
 );
 
 export class UnknownRecipeError extends Error {

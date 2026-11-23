@@ -31,6 +31,8 @@ EXAMPLES = {
     "door_creak": ["door", "-p", "kind=creak"],
     "ambience_rain": ["ambience_loop", "-p", "kind=rain"],
     "ambience_fire": ["ambience_loop", "-p", "kind=fire"],
+    "crumble": ["crumble"],
+    "crumble_rocks": ["crumble", "-p", "size=0.9", "-p", "density=0.7"],
     "gore_squish": ["gore", "-p", "kind=squish"],
     "gore_splat": ["gore", "-p", "kind=splat"],
     "gore_squelch": ["gore", "-p", "kind=squelch"],
