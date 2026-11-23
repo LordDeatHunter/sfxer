@@ -119,7 +119,7 @@ export const pickup = defineRecipe({
   params: z.strictObject({
     kind: choice(['coin', 'gem', 'powerup', 'item'], 'coin', 'What is collected.'),
     pitch_semitones: num(-12, 12, 0, 'Transpose the whole sound.'),
-    sparkle: unit(0.5, 'Amount of glitter on top.'),
+    sparkle: unit(0.5, 'Amount of glitter on top (not used by coin).'),
     brightness: brightness(0.6),
     wetness: wetness(0.25),
   }),
@@ -140,7 +140,6 @@ export const pickup = defineRecipe({
           { id: 'clink1', source: { type: 'modal', material: 'metal', hz: r0(2100 * k), size: 0.1, damping: 0.25, strike: { hardness: 0.9 } } },
           { id: 'clink2', start_ms: 62, source: { type: 'modal', material: 'metal', hz: r0(2800 * k), size: 0.1, damping: 0.15, strike: { hardness: 0.9 } }, gain_db: -2 },
           tick('tick', 0, 7000, -14),
-          sparkle(60, 350, 4000, 11000),
         ];
         break;
       case 'gem':
