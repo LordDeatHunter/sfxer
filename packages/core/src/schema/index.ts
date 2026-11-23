@@ -158,6 +158,11 @@ const ParticlesSource = z
     gain_jitter_db: num(0, 36, 'Random loudness variation between particles.').default(12),
     q: num(0.5, 40, 'Resonance of "burst" particles.').default(3),
     spread: num(0, 1, 'Random stereo placement of particles.').default(0.6),
+    regularity: num(
+      0,
+      1,
+      'Timing. 0 = random (rain, crackle, debris); near 1 = an evenly spaced train with slight jitter (ratchets, engines, a creaking hinge, where rate_hz becomes a pitch).',
+    ).default(0),
   })
   .meta({
     description:
@@ -308,6 +313,21 @@ const ConvolveFx = z
       'Convolution with a synthetic impulse response: room, hall, cave, box (small enclosure), tube (pipe), tank (metal).',
   });
 
+const ResonatorFx = z
+  .strictObject({
+    type: z.literal('resonator'),
+    material: z.enum(MATERIALS).default('wood'),
+    size: num(0, 1, 'Body size. 0 = tiny and high, 1 = huge and low.').default(0.5),
+    hz: num(20, 12000, 'Override the fundamental chosen by material and size.').optional(),
+    damping: num(0, 1, 'How quickly the body stops ringing.').default(0.3),
+    mode_count: int(1, 48, 'Number of resonant modes.').default(16),
+    mix: mix(1),
+  })
+  .meta({
+    description:
+      'Rings a material body with the incoming sound, using the same mode model as the modal source. Turns friction, scraping, rolling or tick trains into wood, metal or glass (a creaking door is a slow, irregular tick train through a wooden resonator).',
+  });
+
 const TransientFx = z
   .strictObject({
     type: z.literal('transient'),
@@ -375,6 +395,7 @@ export const Fx = z.discriminatedUnion('type', [
   DelayFx,
   ReverbFx,
   ConvolveFx,
+  ResonatorFx,
   TransientFx,
   CompressorFx,
   LimiterFx,

@@ -53,7 +53,9 @@ export function particles(s: SourceOf<'particles'>, ctx: Ctx): Stereo {
       }
     }
     const r = Math.max(sigAt(rate, Math.min(n - 1, start)), 0.2);
-    t += Math.max(1, (-Math.log(1 - rng.next()) / r) * sr);
+    // Blend a random (Poisson) gap with an even one; same rng draw either way, so regularity 0 is unchanged.
+    const gap = (1 - s.regularity) * -Math.log(1 - rng.next()) + s.regularity;
+    t += Math.max(1, (gap / r) * sr);
   }
   return [L, R];
 }

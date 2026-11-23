@@ -1,6 +1,7 @@
 import type { Fx } from '../schema/index.js';
 import type { Rng, Stereo } from '../util.js';
 import { compressor, limiter, transient } from './dynamics.js';
+import { resonator, resonatorTailMs } from './resonator.js';
 import { chorus, convolveFx, delay, irLengthMs, reverb, width } from './space.js';
 import { comb, crush, distance, eq, filter, formant, gain, pitch, shaper } from './tone.js';
 
@@ -33,6 +34,8 @@ export function applyFx(buf: Stereo, fx: Fx, ctx: FxCtx): void {
       return reverb(buf, fx, ctx);
     case 'convolve':
       return convolveFx(buf, fx, ctx);
+    case 'resonator':
+      return resonator(buf, fx, ctx);
     case 'transient':
       return transient(buf, fx, ctx);
     case 'compressor':
@@ -57,6 +60,8 @@ export function fxTailMs(fx: Fx): number {
       return fx.mix > 0 ? fx.decay_ms + fx.predelay_ms : 0;
     case 'convolve':
       return fx.mix > 0 ? irLengthMs(fx) : 0;
+    case 'resonator':
+      return resonatorTailMs(fx);
     case 'delay':
       return fx.mix > 0 ? fx.time_ms * (1 + (fx.feedback > 0.01 ? Math.min(40, Math.log(0.001) / Math.log(fx.feedback)) : 0)) : 0;
     case 'comb': {
