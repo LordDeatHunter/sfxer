@@ -245,11 +245,13 @@ export const footstep = defineRecipe({
     const toe = r0(55 + 60 * p.weight);
     const heelMat = { concrete: 'stone', wood: 'wood', gravel: 'stone', grass: 'hollow', metal: 'metal', snow: 'hollow', dirt: 'hollow' } as const;
     const loose = p.surface === 'gravel' || p.surface === 'snow' || p.surface === 'grass' || p.surface === 'dirt';
+    // Stones knocking together are short and broadband (low q, a few ms); resonant bursts that
+    // ring for 10-20 ms are water droplets and make gravel sound wet.
     const grain = {
-      gravel: { hz: [1200, 8000], decay: [3, 22], rate: 260, kind: 'burst', gain: 3 },
-      snow: { hz: [700, 3500], decay: [6, 40], rate: 420, kind: 'burst', gain: 1 },
-      grass: { hz: [3000, 11000], decay: [4, 30], rate: 200, kind: 'burst', gain: -4 },
-      dirt: { hz: [500, 4000], decay: [4, 25], rate: 150, kind: 'burst', gain: -3 },
+      gravel: { hz: [600, 5000], decay: [1, 6], rate: 380, kind: 'burst', gain: 2, q: 0.8 },
+      snow: { hz: [700, 3500], decay: [6, 40], rate: 420, kind: 'burst', gain: 1, q: 1.5 },
+      grass: { hz: [3000, 11000], decay: [4, 30], rate: 200, kind: 'burst', gain: -4, q: 3 },
+      dirt: { hz: [500, 4000], decay: [1, 8], rate: 150, kind: 'burst', gain: -3, q: 1 },
     } as const;
     const g = loose ? grain[p.surface as keyof typeof grain] : undefined;
     return {
@@ -268,17 +270,26 @@ export const footstep = defineRecipe({
           gain_db: loose ? -10 : 0,
         },
         {
+          // Filtered noise, not a swept sine: a sine dropping in pitch under a hit is a kick drum.
           id: 'thud',
-          source: { type: 'osc', shape: 'sine', hz: env([[0, r0(lg(170, 110, p.weight))], [25, r0(lg(85, 55, p.weight))]]) },
-          amp: env([[0, 0], [2, 1], [r0(50 + 60 * p.weight), 0]]),
-          gain_db: r1(-22 + 12 * p.weight),
+          source: { type: 'noise', color: 'brown' },
+          amp: env([[0, 0], [1, 1], [r0(30 + 40 * p.weight), 0]]),
+          gain_db: r1(-14 + 10 * p.weight),
+          fx: [{ type: 'filter', mode: 'lowpass', hz: r0(lg(500, 220, p.weight)), q: 0.7 }],
+        },
+        !loose && {
+          // Grit between sole and floor.
+          id: 'grit',
+          source: { type: 'particles', kind: 'click', rate_hz: env([[0, 600], [8, 120], [r0(toe), 30], [r0(toe + 6), 400], [r0(toe + 40), 1]]), hz: [2500, 9000], decay_ms: [0.3, 1.5], gain_jitter_db: 18, spread: 0.2 },
+          amp: env([[0, 1], [r0(toe + 50), 0]], 'linear'),
+          gain_db: -20,
         },
         {
           id: 'toe',
           start_ms: toe,
           source: { type: 'noise', color: 'pink' },
           amp: env([[0, 1], [r0(18 + 20 * p.weight), 0]]),
-          gain_db: -6,
+          gain_db: -11,
           fx: [{ type: 'filter', mode: 'bandpass', hz: r0(lg(900, 3200, p.brightness)), q: 0.7 }],
         },
         p.scuff > 0.02 && {
@@ -298,11 +309,17 @@ export const footstep = defineRecipe({
             hz: [g.hz[0], g.hz[1]],
             decay_ms: [g.decay[0], g.decay[1]],
             gain_jitter_db: 16,
-            q: p.surface === 'snow' ? 1.5 : 3,
+            q: g.q,
             spread: 0.35,
           },
           amp: env([[0, 1], [r0(toe + 130), 0]], 'linear'),
           gain_db: g.gain,
+        },
+        p.surface === 'gravel' && {
+          id: 'stones',
+          source: { type: 'particles', kind: 'burst', rate_hz: env([[0, 90], [r0(toe), 20], [r0(toe + 10), 90], [r0(toe + 100), 1]]), hz: [250, 1400], decay_ms: [2, 8], q: 1, gain_jitter_db: 14, spread: 0.3 },
+          amp: env([[0, 1], [r0(toe + 110), 0]], 'linear'),
+          gain_db: 0,
         },
       ),
       master: {
@@ -312,7 +329,7 @@ export const footstep = defineRecipe({
           ...room(p.wetness, 0.25, 250 + 600 * p.wetness),
           { type: 'limiter' },
         ],
-        normalize: { lufs: loose ? -20 : -24 },
+        normalize: { lufs: loose ? -20 : -26 },
       },
     };
   },
