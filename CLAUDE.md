@@ -41,6 +41,8 @@ Bun workspaces: `core` ← `cli` ← `mcp`, and `core` ← `web`.
 
 **Recipes** (`recipes/`): named builders (`impact`, `whoosh`, `ui`, …) with their own zod param schema that expand into a full editable `PatchInput`; the output is clamped back into schema ranges. Register new ones in `recipes/index.ts`. `vary.ts` makes seeded variations of a patch.
 
+**Judge** (`judge/`, Python via `uv`, separate from the TS packages): `judge.py` runs AudioSet (AST) labels and a CLAP prompt match on audio files, one-shot or `--serve` (JSON lines). `packages/cli/src/judge.ts` bridges it: `judgeSync` for `sfx judge` / `render --prompt`, `JudgeServer` (persistent process) for the MCP `judge` tool and `render`'s `prompt`. Setup: `uv sync --project judge`; models download on first use (~1.5 GB, CPU).
+
 **Match** (`match/`): approximates an uploaded sound as an editable patch by measurement only (deterministic). It is deliberately exposed **only in the web app**, never through the CLI or MCP.
 
 **CLI** (`packages/cli`): `main.ts` is arg parsing/commands; `lib.ts` handles file IO (WAV/PNG, ffmpeg for other formats, patch files with sample paths relative to the patch). Every command supports `--json`. **MCP** (`packages/mcp/src/main.ts`) registers tools over the same core and CLI lib functions.

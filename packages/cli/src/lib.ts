@@ -152,3 +152,4 @@ export function renderToFile(patch: Patch, baseDir: string, out: string, opts: W
   }
   return written;
 }
+export * from './judge.js';

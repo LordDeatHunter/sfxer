@@ -20,7 +20,7 @@ import {
   spectrogram,
   vary,
 } from '@sfxer/core';
-import { encodePng, loadAudio, readPatchFile, renderToFile, UserError, writeSpectrogram } from './lib.js';
+import { encodePng, judgeSync, judgeText, loadAudio, readPatchFile, renderToFile, UserError, writeSpectrogram } from './lib.js';
 
 const HELP = `sfx - layered sound-effect synthesis
 
@@ -29,10 +29,14 @@ Workflow: pick a recipe -> render -> read the report -> edit the patch JSON -> r
   sfx recipes                                   list recipes and their parameters
   sfx recipe <name> [-p key=value ...] [-o patch.json] [--seed n]
                                                 expand a recipe into an editable patch
-  sfx render <patch.json> [-o out.wav] [--png] [--bits 16|24|32]
-                                                render; -o may end in .ogg/.mp3/.flac (needs ffmpeg)
+  sfx render <patch.json> [-o out.wav] [--png] [--bits 16|24|32] [--prompt "what it should be"]
+                                                render; -o may end in .ogg/.mp3/.flac (needs ffmpeg);
+                                                --prompt also runs the judge on the result
   sfx analyze <audio> [--png]                   measure any audio file
   sfx compare <a> <b>                           describe how b differs from a
+  sfx judge <audio...> [--prompt "..."] [--alt label ...] [--top 5]
+                                                what it sounds like (AudioSet labels) and whether it
+                                                matches the prompt (CLAP); needs the Python judge
   sfx vary <patch.json> [-n 6] [--amount 0.3] [-o dir] [--render]
                                                 make variations (footsteps, repeated hits)
   sfx validate <patch.json>                     check a patch without rendering
@@ -54,6 +58,9 @@ const { values, positionals } = parseArgs({
     count: { type: 'string', short: 'n' },
     amount: { type: 'string' },
     render: { type: 'boolean' },
+    prompt: { type: 'string' },
+    alt: { type: 'string', multiple: true },
+    top: { type: 'string' },
     help: { type: 'boolean', short: 'h' },
   },
 });
@@ -68,7 +75,7 @@ const need = (index: number, what: string): string => {
   return v;
 };
 
-const numberOpt = (name: 'seed' | 'count' | 'amount' | 'bits', fallback: number): number => {
+const numberOpt = (name: 'seed' | 'count' | 'amount' | 'bits' | 'top', fallback: number): number => {
   const raw = values[name];
   if (raw === undefined) return fallback;
   const n = Number(raw);
@@ -97,9 +104,10 @@ function cmdRender(): void {
   const bits = numberOpt('bits', 16);
   if (bits !== 16 && bits !== 24 && bits !== 32) throw new UserError('--bits must be 16, 24 or 32.');
   const w = renderToFile(patch, dirname(resolve(file)), out, { bits, ...(values.png ? { png: withExt(out, '.png') } : {}) });
+  const judged = values.prompt ? judgeSync([w.wav], { prompt: values.prompt, alt: values.alt })[0] : undefined;
   print(
-    [`wrote ${w.exported ?? w.wav}${w.exported ? ` (and ${w.wav})` : ''}${w.png ? `\nspectrogram ${w.png}` : ''}`, renderText(w.result), reportText(w.report)].join('\n'),
-    { file: w.exported ?? w.wav, wav: w.wav, spectrogram: w.png, layers: w.result.layers, render_warnings: w.result.warnings, normalize_gain_db: w.result.normalizeGainDb, report: w.report },
+    [`wrote ${w.exported ?? w.wav}${w.exported ? ` (and ${w.wav})` : ''}${w.png ? `\nspectrogram ${w.png}` : ''}`, renderText(w.result), reportText(w.report), ...(judged ? [`judge:\n${judgeText([judged])}`] : [])].join('\n'),
+    { file: w.exported ?? w.wav, wav: w.wav, spectrogram: w.png, layers: w.result.layers, render_warnings: w.result.warnings, normalize_gain_db: w.result.normalizeGainDb, report: w.report, ...(judged ? { judge: judged } : {}) },
   );
 }
 
@@ -120,6 +128,12 @@ function cmdCompare(): void {
   const b = loadAudio(need(2, 'second audio file'));
   const c = compare(a.channels, a.sampleRate, b.channels, b.sampleRate);
   print(`A = ${positionals[1]}\nB = ${positionals[2]}\n${compareText(c)}`, c);
+}
+
+function cmdJudge(): void {
+  need(1, 'audio file');
+  const results = judgeSync(positionals.slice(1), { prompt: values.prompt, alt: values.alt, top: numberOpt('top', 5) });
+  print(judgeText(results), { results });
 }
 
 function cmdRecipes(): void {
@@ -219,6 +233,7 @@ const commands: Record<string, () => void> = {
   render: cmdRender,
   analyze: cmdAnalyze,
   compare: cmdCompare,
+  judge: cmdJudge,
   recipes: cmdRecipes,
   recipe: cmdRecipe,
   vary: cmdVary,

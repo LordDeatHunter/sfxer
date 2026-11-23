@@ -28,6 +28,7 @@ import torch  # noqa: E402
 AST_ID = "MIT/ast-finetuned-audioset-10-10-0.4593"
 CLAP_ID = "laion/larger_clap_general"
 MAX_S = 10.0
+SYNONYM_COS = 0.85
 
 # Broad game/UI sound-effect vocabulary the prompt competes against.
 DEFAULT_LABELS = [
@@ -93,6 +94,10 @@ class Judge:
     def clap_match(self, x48: np.ndarray, prompt: str | None, labels: list[str], top: int) -> dict:
         inp = self.clap_proc(audios=[x48], sampling_rate=48000, return_tensors="pt")
         a = torch.nn.functional.normalize(self.clap.get_audio_features(**inp), dim=-1)[0]
+        if prompt:
+            # Labels that mean the same as the prompt would split its probability; drop them.
+            sims = self.text_emb([template(l) for l in labels]) @ self.text_emb([template(prompt)])[0]
+            labels = [l for l, s in zip(labels, sims.tolist()) if s < SYNONYM_COS]
         cands = list(dict.fromkeys(([prompt] if prompt else []) + labels))
         cos = self.text_emb([template(c) for c in cands]) @ a
         probs = torch.softmax(cos * self.clap.logit_scale_a.exp(), dim=0)

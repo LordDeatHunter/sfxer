@@ -11,14 +11,14 @@ You cannot hear. sfxer makes up for that: every render returns a measured report
 
 1. **Start from a recipe.** `sfx recipes` lists them with parameters.
    `sfx recipe impact -p material=metal -p size=0.3 -o hit.json`
-2. **Render and read.** `sfx render hit.json --png` writes `hit.wav` and `hit.png` and prints the report.
+2. **Render and read.** `sfx render hit.json --png --prompt "a sword hitting a shield"` writes `hit.wav` and `hit.png`, prints the report, and runs the judge (see below).
 3. **Edit the patch JSON**, not the recipe call, once you need anything specific. Render again.
-4. **Stop when** the warnings are gone (or you can justify each one) and the numbers match the intent.
+4. **Stop when** the warnings are gone (or you can justify each one), the numbers match the intent, and the judge says MATCH.
 5. Need several takes (footsteps, repeated hits)? `sfx vary hit.json -n 6 --amount 0.3 --render`.
 
-Other commands: `sfx analyze file.wav`, `sfx compare a.wav b.wav`, `sfx validate patch.json`, `sfx docs [name]` (full reference, or one source/effect/recipe), `sfx schema [name]`. Add `--json` to any command for machine-readable output.
+Other commands: `sfx analyze file.wav`, `sfx compare a.wav b.wav`, `sfx judge a.wav [--prompt ...] [--alt ...]`, `sfx validate patch.json`, `sfx docs [name]` (full reference, or one source/effect/recipe), `sfx schema [name]`. Add `--json` to any command for machine-readable output.
 
-With MCP the same steps are tools: `list_recipes`, `expand_recipe`, `render`, `analyze`, `compare`, `vary`, `describe`.
+With MCP the same steps are tools: `list_recipes`, `expand_recipe`, `render` (takes `prompt`), `judge`, `analyze`, `compare`, `vary`, `describe`.
 
 ## Patch shape
 
@@ -80,5 +80,16 @@ Run `sfx docs <name>` before using one you have not used yet.
 | `layers` list shows a layer 30+ dB below the others | It is inaudible | Raise its `gain_db` or remove it |
 
 Loudness guide: -16 LUFS for foreground game effects, -18 to -20 for common ones (pickups, steps), -22 to -26 for UI and ambience.
+
+## The judge: does it sound like what you meant?
+
+The report says whether a sound is technically healthy; it cannot say whether a "sword clash" actually reads as a sword clash. The judge does that with two pretrained audio models:
+
+- **AudioSet hears**: the top labels from a 527-class classifier. This is roughly what a listener would name it. Generic labels ("Sound effect", "Music") mean it is not clearly anything.
+- **CLAP**: your prompt is ranked against ~47 common SFX categories (or your own `--alt` labels). Rank 1 = MATCH, 2-3 = AMBIGUOUS, lower = MISMATCH, and it names what it reads as instead.
+
+Use `--alt` to ask a narrow question: `sfx judge hit.wav --prompt metal --alt wood glass stone` checks the material only.
+
+Treat it as one strong opinion, not ground truth: the models were trained on recorded audio, so they are harsh on stylised or retro sounds that are intentionally synthetic. A MISMATCH on a realistic target is a real problem; on a deliberately 8-bit coin it may not be. Short sounds (< 100 ms) are harder for both models. Needs `uv sync --project judge` once (~1.5 GB of models, CPU).
 
 If you can view images, open the PNG: a good effect shows a clear vertical edge at the start, energy across the spectrum, and visible movement over time. A horizontal line or two on a black background is a beep.

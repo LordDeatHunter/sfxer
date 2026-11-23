@@ -22,7 +22,7 @@ import {
   type Patch,
   type PatchInput,
 } from '@sfxer/core';
-import { encodePng, loadAudio, renderToFile, UserError } from '@sfxer/cli';
+import { encodePng, JudgeServer, judgeText, loadAudio, renderToFile, UserError } from '@sfxer/cli';
 import { z } from 'zod';
 
 type Content = { type: 'text'; text: string } | { type: 'image'; data: string; mimeType: string };
@@ -31,9 +31,9 @@ type Result = { content: Content[]; isError?: boolean };
 const text = (t: string): Content => ({ type: 'text', text: t });
 
 /** Every tool reports failures as readable text so the agent can fix its input and retry. */
-const safe = <A>(fn: (args: A) => Result) => async (args: A): Promise<Result> => {
+const safe = <A>(fn: (args: A) => Result | Promise<Result>) => async (args: A): Promise<Result> => {
   try {
-    return fn(args);
+    return await fn(args);
   } catch (e) {
     return { content: [text((e as Error).message)], isError: true };
   }
@@ -64,11 +64,14 @@ const pngOf = (channels: Float32Array[], sr: number): Content => {
   return { type: 'image', data: encodePng(spectrogram(mono, sr)).toString('base64'), mimeType: 'image/png' };
 };
 
+/** Started on first use; keeps the CLAP/AudioSet models loaded between calls. */
+const judge = new JudgeServer();
+
 const server = new McpServer(
   { name: 'sfxer', version: '0.1.0' },
   {
     instructions:
-      'Sound-effect design. Loop: list_recipes -> expand_recipe -> render -> read the report and warnings -> edit the patch JSON -> render again. Call describe before using a source or effect for the first time. Never deliver a sound whose report you have not read.',
+      'Sound-effect design. Loop: list_recipes -> expand_recipe -> render (pass `prompt` describing the target sound) -> read the report, warnings and judge verdict -> edit the patch JSON -> render again. Call describe before using a source or effect for the first time. Never deliver a sound whose report you have not read; a judge MISMATCH means it most likely reads as something else.',
   },
 );
 
@@ -110,12 +113,18 @@ server.registerTool(
       ...patchArgs,
       out: z.string().optional().describe('Output audio path. Defaults to <patch name>.wav in the working directory.'),
       spectrogram: z.boolean().optional().describe('Include the spectrogram image (default true).'),
+      prompt: z
+        .string()
+        .optional()
+        .describe('What the sound should be, e.g. "a sword hitting a shield". Also runs the judge: AudioSet labels and whether CLAP ranks the prompt first among common SFX categories.'),
     },
   },
-  safe((args) => {
+  safe(async (args) => {
     const { patch, baseDir, stem } = resolvePatch(args);
     const w = renderToFile(patch, baseDir, args.out ?? `${stem}.wav`);
-    const content: Content[] = [text([`Wrote ${w.exported ?? w.wav}`, renderText(w.result), reportText(w.report)].join('\n'))];
+    const parts = [`Wrote ${w.exported ?? w.wav}`, renderText(w.result), reportText(w.report)];
+    if (args.prompt) parts.push(`judge:\n${judgeText(await judge.judge([w.wav], { prompt: args.prompt }))}`);
+    const content: Content[] = [text(parts.join('\n'))];
     if (args.spectrogram !== false) content.push(pngOf(w.result.channels, w.result.sampleRate));
     return { content };
   }),
@@ -142,6 +151,21 @@ server.registerTool(
     if (wantPng !== false) content.push(pngOf(a.channels, a.sampleRate));
     return { content };
   }),
+);
+
+server.registerTool(
+  'judge',
+  {
+    description:
+      'Semantic check, since you cannot listen: what a classifier hears (AudioSet labels) and whether the sound matches a text prompt (CLAP, ranked against common SFX categories or your own `alt` labels). Verdict MATCH / AMBIGUOUS / MISMATCH. The first call loads the models (~15 s).',
+    inputSchema: {
+      files: z.array(z.string()).min(1).describe('Audio files to judge.'),
+      prompt: z.string().optional().describe('What the sound should be, e.g. "glass shattering".'),
+      alt: z.array(z.string()).optional().describe('Competing labels instead of the built-in SFX vocabulary, e.g. ["metal", "wood", "glass"].'),
+      top: z.number().int().min(1).max(20).optional().describe('How many labels to list (default 5).'),
+    },
+  },
+  safe(async ({ files, prompt, alt, top }) => ({ content: [text(judgeText(await judge.judge(files, { prompt, alt, top })))] })),
 );
 
 server.registerTool(
