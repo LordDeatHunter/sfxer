@@ -9,10 +9,10 @@
     "packages/web"
   ],
   "scripts": {
-    "dev": "bun run --filter @sfxer/web dev",
-    "start": "bun run --filter @sfxer/web build && bun run --filter @sfxer/web preview",
+    "dev": "vite packages/web",
+    "start": "vite build packages/web && vite preview packages/web",
     "build": "tsc -b packages/core packages/cli packages/mcp",
-    "build:web": "bun run --filter @sfxer/web build",
+    "build:web": "vite build packages/web",
     "test": "vitest run",
     "check": "python scripts/check_all.py",
     "sfx": "bun packages/cli/dist/main.js",
