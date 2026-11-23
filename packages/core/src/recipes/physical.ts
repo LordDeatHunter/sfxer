@@ -264,19 +264,22 @@ export const footstep = defineRecipe({
           source: {
             type: 'modal',
             material: heelMat[p.surface],
-            size: r1(0.45 + 0.4 * p.weight),
-            damping: p.surface === 'metal' ? 0.55 : 0.5,
-            strike: { hardness: r1(loose ? 0.3 : 0.6 + 0.3 * p.brightness), position: 0.3 },
+            size: r1(loose ? 0.45 + 0.4 * p.weight : 0.7 + 0.3 * p.weight),
+            damping: p.surface === 'metal' ? 0.55 : loose ? 0.5 : 0.75,
+            strike: { hardness: r1(loose ? 0.3 : 0.25 + 0.2 * p.brightness), position: 0.3 },
           },
           gain_db: loose ? -10 : 0,
         },
         {
           // Filtered noise, not a swept sine: a sine dropping in pitch under a hit is a kick drum.
+          // Real steps are mostly this low body (100-200 Hz, 100+ ms); short and bright reads as a click.
           id: 'thud',
           source: { type: 'noise', color: 'brown' },
-          amp: env([[0, 0], [1, 1], [r0(30 + 40 * p.weight), 0]]),
-          gain_db: r1(-14 + 10 * p.weight),
-          fx: [{ type: 'filter', mode: 'lowpass', hz: r0(lg(500, 220, p.weight)), q: 0.7 }],
+          amp: loose ? env([[0, 0], [1, 1], [r0(30 + 40 * p.weight), 0]]) : env([[0, 0], [2, 1], [r0(lin(80, 160, p.weight) * 0.35), 0.5], [r0(lin(80, 160, p.weight)), 0]]),
+          gain_db: r1(loose ? -14 + 10 * p.weight : -4 + 12 * p.weight),
+          fx: loose
+            ? [{ type: 'filter', mode: 'lowpass', hz: r0(lg(500, 220, p.weight)), q: 0.7 }]
+            : [{ type: 'filter', mode: 'lowpass', hz: r0(lg(450, 200, p.weight)), q: 0.9 }, { type: 'shaper', drive_db: 6 }],
         },
         !loose && {
           // Grit between sole and floor.
@@ -298,7 +301,8 @@ export const footstep = defineRecipe({
           start_ms: 8,
           source: { type: 'noise', color: 'pink' },
           amp: env([[0, 0], [r0(toe * 0.5), 1], [r0(toe + 40), 0]], 'smooth'),
-          gain_db: r1(-24 + 14 * p.scuff),
+          // Kept well down on hard floors: a clear scrape there reads as a zipper.
+          gain_db: r1((loose ? -24 : -36) + 14 * p.scuff),
           fx: [{ type: 'filter', mode: 'bandpass', hz: { random: { rate_hz: 30, depth: 800 }, base: r0(lg(1800, 4500, p.brightness)) }, q: 1.4 }],
         },
         g && {
