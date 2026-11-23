@@ -27,6 +27,37 @@
     @apply bg-base text-ink font-sans text-sm antialiased;
     color-scheme: dark;
   }
+  /* Light palette: chosen explicitly, or by the OS when the switcher is on "system". */
+  :root[data-theme='light'] {
+      --color-base: #f4f5f8;
+      --color-panel: #ffffff;
+      --color-raised: #eceef3;
+      --color-line: #d6d9e2;
+      --color-ink: #1a1c24;
+      --color-dim: #5c6175;
+      --color-accent: #1c86b4;
+      --color-accent-ink: #ffffff;
+      --color-warn: #a8620c;
+      --color-bad: #c43c3c;
+      --color-good: #23804a;
+      color-scheme: light;
+  }
+  @media (prefers-color-scheme: light) {
+    :root:not([data-theme='dark']) {
+      --color-base: #f4f5f8;
+      --color-panel: #ffffff;
+      --color-raised: #eceef3;
+      --color-line: #d6d9e2;
+      --color-ink: #1a1c24;
+      --color-dim: #5c6175;
+      --color-accent: #1c86b4;
+      --color-accent-ink: #ffffff;
+      --color-warn: #a8620c;
+      --color-bad: #c43c3c;
+      --color-good: #23804a;
+      color-scheme: light;
+    }
+  }
   body {
     @apply m-0 min-h-screen;
   }

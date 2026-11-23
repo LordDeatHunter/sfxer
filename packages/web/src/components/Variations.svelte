@@ -40,7 +40,7 @@
     const h = (canvas.height = 96);
     const g = canvas.getContext('2d');
     if (!g) return;
-    g.fillStyle = '#6ec8eb';
+    g.fillStyle = getComputedStyle(canvas).getPropertyValue('--color-accent').trim() || '#6ec8eb';
     let peak = 1e-6;
     for (let i = 0; i < samples.length; i++) peak = Math.max(peak, Math.abs(samples[i]!));
     for (let x = 0; x < w; x++) {

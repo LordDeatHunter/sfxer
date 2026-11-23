@@ -1,10 +1,22 @@
 @reference "./theme.css";
 
 .app {
-  @apply mx-auto flex min-h-screen max-w-[1500px] flex-col gap-3 p-3;
+  @apply mx-auto flex min-h-screen max-w-[1500px] flex-col gap-3 px-3 pb-28;
 }
 .app-bar {
-  @apply flex flex-wrap items-center gap-2;
+  @apply sticky top-0 z-20 -mx-3 flex flex-wrap items-center gap-2 border-b border-line bg-base/85 px-3 py-2 backdrop-blur;
+}
+.theme-switch {
+  @apply flex gap-1 rounded-lg border border-line bg-panel p-1;
+}
+.theme-option {
+  @apply cursor-pointer rounded-md border-0 bg-transparent px-2.5 py-1 text-xs font-medium text-dim hover:text-ink;
+}
+.theme-option-active {
+  @apply bg-raised text-ink;
+}
+.dock {
+  @apply fixed bottom-4 left-1/2 z-20 flex max-w-[calc(100vw-1.5rem)] -translate-x-1/2 flex-wrap items-center justify-center gap-2 rounded-xl border border-line bg-panel/90 px-3 py-2 shadow-lg shadow-black/25 backdrop-blur;
 }
 .app-logo {
   @apply mr-2 text-lg font-bold tracking-tight;
@@ -34,7 +46,7 @@
   @apply flex min-w-0 flex-col gap-3;
 }
 .app-side {
-  @apply flex min-w-0 flex-col gap-3 lg:sticky lg:top-3;
+  @apply flex min-w-0 flex-col gap-3 lg:sticky lg:top-16;
 }
 .app-busy {
   @apply h-2 w-2 rounded-full bg-accent;

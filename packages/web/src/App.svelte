@@ -8,12 +8,19 @@
   import Viz from './components/Viz.svelte';
   import { downloadJson, downloadWav, stop } from './lib/audio';
   import { app, playResult, setPatch, snapshot, type View } from './lib/state.svelte';
+  import { setTheme, theme, type ThemeChoice } from './lib/theme.svelte';
 
   const tabs: { id: View; label: string }[] = [
     { id: 'library', label: 'Library' },
     { id: 'editor', label: 'Editor' },
     { id: 'variations', label: 'Variations' },
     { id: 'match', label: 'Match' },
+  ];
+
+  const themes: { id: ThemeChoice; label: string }[] = [
+    { id: 'light', label: 'Light' },
+    { id: 'dark', label: 'Dark' },
+    { id: 'system', label: 'System' },
   ];
 
   const fileName = $derived((app.patch.name ?? 'untitled').replace(/[^\w-]+/g, '_'));
@@ -40,12 +47,11 @@
       {/each}
     </nav>
     <span class="spacer"></span>
-    <span class={app.busy ? 'app-busy' : 'app-idle'} title={app.busy ? 'Rendering' : 'Idle'}></span>
-    <label class="app-toggle"><input class="check" type="checkbox" bind:checked={app.autoplay} /> play on change</label>
-    <button class="btn btn-primary" onclick={playResult} disabled={!app.result} title="Space">Play</button>
-    <button class="btn" onclick={stop}>Stop</button>
-    <button class="btn" disabled={!app.result} onclick={() => app.result && downloadWav(fileName, app.result.channels, app.result.sampleRate)}>WAV</button>
-    <button class="btn" onclick={() => downloadJson(fileName, snapshot(app.patch))}>Patch JSON</button>
+    <div class="theme-switch" role="radiogroup" aria-label="Theme">
+      {#each themes as t (t.id)}
+        <button class="theme-option" class:theme-option-active={theme.choice === t.id} role="radio" aria-checked={theme.choice === t.id} onclick={() => setTheme(t.id)}>{t.label}</button>
+      {/each}
+    </div>
   </header>
 
   <main class="app-main" class:app-main-wide={app.view === 'match'}>
@@ -67,4 +73,13 @@
       </aside>
     {/if}
   </main>
+
+  <footer class="dock">
+    <span class={app.busy ? 'app-busy' : 'app-idle'} title={app.busy ? 'Rendering' : 'Idle'}></span>
+    <label class="app-toggle"><input class="check" type="checkbox" bind:checked={app.autoplay} /> play on change</label>
+    <button class="btn btn-primary" onclick={playResult} disabled={!app.result} title="Space">Play</button>
+    <button class="btn" onclick={stop}>Stop</button>
+    <button class="btn" disabled={!app.result} onclick={() => app.result && downloadWav(fileName, app.result.channels, app.result.sampleRate)}>WAV</button>
+    <button class="btn" onclick={() => downloadJson(fileName, snapshot(app.patch))}>Patch JSON</button>
+  </footer>
 </div>
