@@ -109,13 +109,43 @@ export const mechanical = defineRecipe({
         ];
         break;
       }
-      default:
+      default: {
+        // A latch is two broadband clicks (a small catch, then the clack as it seats) followed by
+        // tiny settling clicks. Ringing metal modes make it a coin or a bell, and a swept sine
+        // under it a drum, so the clicks are short noise bursts and the weight is low-passed noise.
+        const gap = r0(lin(30, 60, p.size));
+        const hp = r0(lg(300, 100, p.size));
+        const noiseClick = (id: string, t: number, gainDb: number, lenMs: number): LayerInput => ({
+          id,
+          start_ms: t,
+          source: { type: 'noise', color: 'white' },
+          amp: env([[0, 1], [2, 0.35], [lenMs, 0]]),
+          gain_db: gainDb,
+          fx: [
+            { type: 'filter', mode: 'highpass', hz: hp, q: 0.7 },
+            { type: 'filter', mode: 'lowpass', hz: 12000, q: 0.7 },
+          ],
+        });
         ls = [
-          click('catch', 0, f, 'metal', 0.55),
-          click('seat', 38, f * 0.62, 'metal', 0.5, -2),
-          snap('snap', 0, f * 2, -9),
-          { id: 'thud', start_ms: 36, source: { type: 'osc', hz: env([[0, r0(lg(260, 140, p.size))], [30, r0(lg(110, 60, p.size))]]) }, amp: env([[0, 0], [2, 1], [70, 0]]), gain_db: -10 },
+          noiseClick('catch', 0, -7, r0(lin(8, 14, p.size))),
+          noiseClick('clack', gap, 0, r0(lin(14, 26, p.size))),
+          {
+            id: 'settle',
+            start_ms: gap - 2,
+            source: { type: 'particles', kind: 'burst', rate_hz: env([[0, 900], [40, 300], [140, 5]]), hz: [r0(f * 0.6), 7000], decay_ms: [0.4, 3], q: 0.9, gain_jitter_db: 14, spread: 0.2 },
+            amp: env([[0, 1], [150, 0]]),
+            gain_db: -6,
+          },
+          {
+            id: 'thud',
+            start_ms: gap,
+            source: { type: 'noise', color: 'brown' },
+            amp: env([[0, 0], [1, 1], [r0(lin(40, 90, p.size)), 0]]),
+            gain_db: -8,
+            fx: [{ type: 'filter', mode: 'lowpass', hz: r0(lg(700, 300, p.size)), q: 0.8 }],
+          },
         ];
+      }
     }
     return {
       name: `mechanical_${p.kind}`,
@@ -123,7 +153,8 @@ export const mechanical = defineRecipe({
       layers: ls,
       master: {
         fx: [
-          { type: 'convolve', ir: 'box', mix: 0.25 },
+          // The box IR rings; it suits devices with a housing but turns a latch into a bell.
+          ...(p.kind === 'latch' ? [] : [{ type: 'convolve' as const, ir: 'box' as const, mix: 0.25 }]),
           { type: 'eq', high_db: r1((p.brightness - 0.5) * 10) },
           ...far(p.distance_m),
           ...room(p.wetness, 0.3, 250 + 700 * p.wetness),
