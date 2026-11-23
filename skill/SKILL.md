@@ -62,7 +62,9 @@ Run `sfx docs <name>` before using one you have not used yet.
 5. **Things in the world are struck, not switched on.** Use `modal` with the right `material`, `size`, `strike.hardness` and `damping` instead of tuning oscillators by hand.
 6. **Small random events add life.** A quiet `particles` layer after an impact (debris), over a tone (sparkle) or under a step (grit) does more than any amount of EQ.
 7. **Put it in a space.** Reverb `mix` 0.08-0.2 removes the "generated in a vacuum" feel; `convolve` with `box` or `tube` puts a sound inside an object; `distance` pushes it away.
-8. **Finish it.** A touch of `shaper` (3-6 dB) on the master glues layers; `transient` adds punch; leave `normalize` on.
+8. **No swept sines under hits.** A sine dropping in pitch under a hit is a kick drum: it turns explosions, footsteps and knocks into drums. Use low-passed brown noise for weight instead. Likewise, a smoothly gliding buzz through a `formant` filter reads as a voice (kazoo, frog, groan).
+9. **Excite bodies.** The `resonator` effect rings a material body (same model as `modal`) with any input: friction, scraping, rolling. `particles` with `regularity` near 1 makes an evenly spaced tick train whose `rate_hz` acts like a pitch (ratchets, engines, hinges).
+10. **Finish it.** A touch of `shaper` (3-6 dB) on the master glues layers; `transient` adds punch; leave `normalize` on.
 
 ## Reading the report
 

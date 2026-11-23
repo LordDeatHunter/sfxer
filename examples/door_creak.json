@@ -5,37 +5,64 @@
     {
       "id": "hinge",
       "source": {
-        "type": "osc",
-        "shape": "pulse",
-        "pulse_width": 0.12,
-        "hz": {
+        "type": "particles",
+        "kind": "click",
+        "rate_hz": {
           "env": [
             [
               0,
-              42
+              32
             ],
             [
-              420,
-              126
+              216,
+              33
             ],
             [
-              840,
+              240,
+              116
+            ],
+            [
+              504,
+              120
+            ],
+            [
+              528,
               84
             ],
             [
+              744,
+              87
+            ],
+            [
+              768,
+              148
+            ],
+            [
+              1080,
+              154
+            ],
+            [
+              1104,
+              39
+            ],
+            [
               1200,
-              34
+              40
             ]
           ],
-          "curve": "smooth"
+          "curve": "exp"
         },
-        "pitch_semitones": {
-          "random": {
-            "rate_hz": 11,
-            "depth": 3
-          },
-          "base": 0
-        }
+        "regularity": 0.85,
+        "hz": [
+          2000,
+          6000
+        ],
+        "decay_ms": [
+          0.3,
+          1
+        ],
+        "gain_jitter_db": 4,
+        "spread": 0.1
       },
       "amp": {
         "env": [
@@ -44,142 +71,75 @@
             0
           ],
           [
-            180,
+            24,
             1
           ],
           [
-            960,
+            216,
+            0.9
+          ],
+          [
+            228,
+            0.1
+          ],
+          [
+            252,
+            1
+          ],
+          [
+            504,
+            0.8
+          ],
+          [
+            516,
+            0.15
+          ],
+          [
+            540,
+            1
+          ],
+          [
+            744,
+            0.9
+          ],
+          [
+            756,
+            0.1
+          ],
+          [
+            780,
+            1
+          ],
+          [
+            1080,
             0.7
           ],
           [
-            1200,
-            0
-          ]
-        ],
-        "curve": "smooth"
-      },
-      "fx": [
-        {
-          "type": "filter",
-          "mode": "bandpass",
-          "hz": {
-            "random": {
-              "rate_hz": 5,
-              "depth": 350
-            },
-            "base": 1100
-          },
-          "q": 5
-        },
-        {
-          "type": "comb",
-          "hz": 310,
-          "feedback": 0.8,
-          "mix": 0.5
-        },
-        {
-          "type": "shaper",
-          "drive_db": 10
-        }
-      ]
-    },
-    {
-      "id": "groan",
-      "source": {
-        "type": "osc",
-        "shape": "saw",
-        "hz": {
-          "env": [
-            [
-              0,
-              42
-            ],
-            [
-              420,
-              126
-            ],
-            [
-              1200,
-              34
-            ]
-          ],
-          "curve": "smooth"
-        },
-        "pitch_semitones": {
-          "random": {
-            "rate_hz": 7,
-            "depth": 2
-          },
-          "base": 0
-        }
-      },
-      "amp": {
-        "env": [
-          [
-            0,
-            0
+            1092,
+            0.1
           ],
           [
-            240,
-            1
+            1116,
+            0.6
           ],
           [
             1200,
             0
           ]
         ],
-        "curve": "smooth"
+        "curve": "exp"
       },
-      "gain_db": -10,
       "fx": [
         {
-          "type": "formant",
-          "vowel": "o",
-          "mix": 0.8
+          "type": "resonator",
+          "material": "wood",
+          "size": 0.3,
+          "damping": 0.1
         },
         {
           "type": "filter",
-          "hz": 1800
-        }
-      ]
-    },
-    {
-      "id": "scrape",
-      "source": {
-        "type": "noise",
-        "color": "crackle",
-        "density_hz": {
-          "random": {
-            "rate_hz": 9,
-            "depth": 900
-          },
-          "base": 1500
-        }
-      },
-      "amp": {
-        "env": [
-          [
-            0,
-            0
-          ],
-          [
-            240,
-            1
-          ],
-          [
-            1200,
-            0
-          ]
-        ],
-        "curve": "smooth"
-      },
-      "gain_db": 8,
-      "fx": [
-        {
-          "type": "filter",
-          "mode": "bandpass",
-          "hz": 3400,
-          "q": 1
+          "mode": "highpass",
+          "hz": 200
         }
       ]
     }

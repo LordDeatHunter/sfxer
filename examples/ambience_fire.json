@@ -11,8 +11,8 @@
       },
       "amp": {
         "random": {
-          "rate_hz": 3,
-          "depth": 0.3
+          "rate_hz": 7,
+          "depth": 0.35
         },
         "base": 0.65
       },
@@ -22,12 +22,22 @@
           "type": "filter",
           "hz": {
             "random": {
-              "rate_hz": 2,
-              "depth": 150
+              "rate_hz": 3,
+              "depth": 200
             },
-            "base": 418
+            "base": 490
           },
-          "q": 0.9
+          "q": 0.8
+        },
+        {
+          "type": "gain",
+          "db": {
+            "random": {
+              "rate_hz": 18,
+              "depth": 4
+            },
+            "base": 0
+          }
         }
       ]
     },
@@ -35,45 +45,47 @@
       "id": "crackle",
       "source": {
         "type": "particles",
-        "kind": "click",
+        "kind": "burst",
         "rate_hz": {
           "random": {
-            "rate_hz": 1.5,
-            "depth": 7.7
+            "rate_hz": 2.5,
+            "depth": 15.5
           },
-          "base": 13
+          "base": 15.5
         },
         "hz": [
           900,
-          6000
+          7000
         ],
         "decay_ms": [
-          1,
-          8
+          0.6,
+          4
         ],
-        "gain_jitter_db": 24,
+        "q": 0.9,
+        "gain_jitter_db": 22,
         "spread": 0.8
       },
-      "gain_db": 9
+      "gain_db": 8
     },
     {
       "id": "pops",
       "source": {
         "type": "particles",
         "kind": "burst",
-        "rate_hz": 2.6,
+        "rate_hz": 2,
         "hz": [
-          300,
-          1800
+          150,
+          900
         ],
         "decay_ms": [
-          8,
-          45
+          6,
+          30
         ],
-        "gain_jitter_db": 12,
+        "q": 1,
+        "gain_jitter_db": 10,
         "spread": 0.6
       },
-      "gain_db": 2
+      "gain_db": 4
     },
     {
       "id": "hiss",
@@ -83,17 +95,18 @@
       },
       "amp": {
         "random": {
-          "rate_hz": 5,
-          "depth": 0.25
+          "rate_hz": 4,
+          "depth": 0.4
         },
         "base": 0.5
       },
-      "gain_db": -12,
+      "gain_db": -26,
       "fx": [
         {
           "type": "filter",
-          "mode": "highpass",
-          "hz": 3000
+          "mode": "bandpass",
+          "hz": 2500,
+          "q": 0.7
         }
       ]
     }

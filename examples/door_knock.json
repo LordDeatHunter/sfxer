@@ -8,13 +8,13 @@
       "source": {
         "type": "modal",
         "material": "wood",
-        "size": 0.8,
-        "damping": 0.15,
+        "size": 0.6,
+        "damping": 0.72,
         "strike": {
           "hardness": 0.6,
-          "position": 0.2
+          "position": 0.27
         },
-        "mode_count": 30
+        "mode_count": 40
       },
       "gain_db": 0
     },
@@ -32,7 +32,41 @@
             1
           ],
           [
-            9,
+            5,
+            0
+          ]
+        ],
+        "curve": "exp"
+      },
+      "gain_db": -6,
+      "fx": [
+        {
+          "type": "filter",
+          "mode": "bandpass",
+          "hz": 2546,
+          "q": 0.7
+        }
+      ]
+    },
+    {
+      "id": "thump1",
+      "start_ms": 0,
+      "source": {
+        "type": "noise",
+        "color": "brown"
+      },
+      "amp": {
+        "env": [
+          [
+            0,
+            0
+          ],
+          [
+            1,
+            1
+          ],
+          [
+            59,
             0
           ]
         ],
@@ -42,49 +76,11 @@
       "fx": [
         {
           "type": "filter",
-          "mode": "bandpass",
-          "hz": 2117,
+          "mode": "lowpass",
+          "hz": 285,
           "q": 0.7
         }
       ]
-    },
-    {
-      "id": "panel1",
-      "start_ms": 0,
-      "source": {
-        "type": "osc",
-        "hz": {
-          "env": [
-            [
-              0,
-              144
-            ],
-            [
-              30,
-              84
-            ]
-          ],
-          "curve": "exp"
-        }
-      },
-      "amp": {
-        "env": [
-          [
-            0,
-            0
-          ],
-          [
-            2,
-            1
-          ],
-          [
-            108,
-            0
-          ]
-        ],
-        "curve": "exp"
-      },
-      "gain_db": -15
     },
     {
       "id": "knock2",
@@ -92,13 +88,13 @@
       "source": {
         "type": "modal",
         "material": "wood",
-        "size": 0.8,
-        "damping": 0.15,
+        "size": 0.6,
+        "damping": 0.72,
         "strike": {
           "hardness": 0.6,
-          "position": 0.3
+          "position": 0.27
         },
-        "mode_count": 30
+        "mode_count": 40
       },
       "gain_db": -2.5
     },
@@ -116,7 +112,41 @@
             1
           ],
           [
-            9,
+            5,
+            0
+          ]
+        ],
+        "curve": "exp"
+      },
+      "gain_db": -8.5,
+      "fx": [
+        {
+          "type": "filter",
+          "mode": "bandpass",
+          "hz": 2546,
+          "q": 0.7
+        }
+      ]
+    },
+    {
+      "id": "thump2",
+      "start_ms": 182,
+      "source": {
+        "type": "noise",
+        "color": "brown"
+      },
+      "amp": {
+        "env": [
+          [
+            0,
+            0
+          ],
+          [
+            1,
+            1
+          ],
+          [
+            59,
             0
           ]
         ],
@@ -126,49 +156,11 @@
       "fx": [
         {
           "type": "filter",
-          "mode": "bandpass",
-          "hz": 2117,
+          "mode": "lowpass",
+          "hz": 285,
           "q": 0.7
         }
       ]
-    },
-    {
-      "id": "panel2",
-      "start_ms": 182,
-      "source": {
-        "type": "osc",
-        "hz": {
-          "env": [
-            [
-              0,
-              144
-            ],
-            [
-              30,
-              84
-            ]
-          ],
-          "curve": "exp"
-        }
-      },
-      "amp": {
-        "env": [
-          [
-            0,
-            0
-          ],
-          [
-            2,
-            1
-          ],
-          [
-            108,
-            0
-          ]
-        ],
-        "curve": "exp"
-      },
-      "gain_db": -17.5
     },
     {
       "id": "knock3",
@@ -176,13 +168,13 @@
       "source": {
         "type": "modal",
         "material": "wood",
-        "size": 0.8,
-        "damping": 0.15,
+        "size": 0.6,
+        "damping": 0.72,
         "strike": {
           "hardness": 0.6,
-          "position": 0.3
+          "position": 0.27
         },
-        "mode_count": 30
+        "mode_count": 40
       },
       "gain_db": -1.5
     },
@@ -200,7 +192,41 @@
             1
           ],
           [
-            9,
+            5,
+            0
+          ]
+        ],
+        "curve": "exp"
+      },
+      "gain_db": -7.5,
+      "fx": [
+        {
+          "type": "filter",
+          "mode": "bandpass",
+          "hz": 2546,
+          "q": 0.7
+        }
+      ]
+    },
+    {
+      "id": "thump3",
+      "start_ms": 340,
+      "source": {
+        "type": "noise",
+        "color": "brown"
+      },
+      "amp": {
+        "env": [
+          [
+            0,
+            0
+          ],
+          [
+            1,
+            1
+          ],
+          [
+            59,
             0
           ]
         ],
@@ -210,49 +236,11 @@
       "fx": [
         {
           "type": "filter",
-          "mode": "bandpass",
-          "hz": 2117,
+          "mode": "lowpass",
+          "hz": 285,
           "q": 0.7
         }
       ]
-    },
-    {
-      "id": "panel3",
-      "start_ms": 340,
-      "source": {
-        "type": "osc",
-        "hz": {
-          "env": [
-            [
-              0,
-              144
-            ],
-            [
-              30,
-              84
-            ]
-          ],
-          "curve": "exp"
-        }
-      },
-      "amp": {
-        "env": [
-          [
-            0,
-            0
-          ],
-          [
-            2,
-            1
-          ],
-          [
-            108,
-            0
-          ]
-        ],
-        "curve": "exp"
-      },
-      "gain_db": -16.5
     }
   ],
   "master": {
@@ -274,7 +262,7 @@
       }
     ],
     "normalize": {
-      "lufs": -18
+      "lufs": -21
     }
   }
 }

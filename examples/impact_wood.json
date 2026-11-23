@@ -55,21 +55,8 @@
     {
       "id": "thump",
       "source": {
-        "type": "osc",
-        "shape": "sine",
-        "hz": {
-          "env": [
-            [
-              0,
-              190
-            ],
-            [
-              30,
-              79
-            ]
-          ],
-          "curve": "exp"
-        }
+        "type": "noise",
+        "color": "brown"
       },
       "amp": {
         "env": [
@@ -78,18 +65,24 @@
             0
           ],
           [
-            2,
+            1,
             1
           ],
           [
-            180,
+            140,
             0
           ]
         ],
         "curve": "exp"
       },
-      "gain_db": -20,
+      "gain_db": -14.8,
       "fx": [
+        {
+          "type": "filter",
+          "mode": "lowpass",
+          "hz": 238,
+          "q": 0.8
+        },
         {
           "type": "shaper",
           "drive_db": 6

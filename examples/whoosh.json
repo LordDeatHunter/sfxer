@@ -109,7 +109,7 @@
         ],
         "curve": "smooth"
       },
-      "gain_db": -14,
+      "gain_db": -20,
       "pan": {
         "env": [
           [

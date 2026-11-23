@@ -19,21 +19,8 @@
     {
       "id": "thud",
       "source": {
-        "type": "osc",
-        "shape": "sine",
-        "hz": {
-          "env": [
-            [
-              0,
-              137
-            ],
-            [
-              25,
-              68
-            ]
-          ],
-          "curve": "exp"
-        }
+        "type": "noise",
+        "color": "brown"
       },
       "amp": {
         "env": [
@@ -42,17 +29,81 @@
             0
           ],
           [
-            2,
+            1,
             1
           ],
           [
-            80,
+            50,
             0
           ]
         ],
         "curve": "exp"
       },
-      "gain_db": -16
+      "gain_db": -9,
+      "fx": [
+        {
+          "type": "filter",
+          "mode": "lowpass",
+          "hz": 332,
+          "q": 0.7
+        }
+      ]
+    },
+    {
+      "id": "grit",
+      "source": {
+        "type": "particles",
+        "kind": "click",
+        "rate_hz": {
+          "env": [
+            [
+              0,
+              600
+            ],
+            [
+              8,
+              120
+            ],
+            [
+              85,
+              30
+            ],
+            [
+              91,
+              400
+            ],
+            [
+              125,
+              1
+            ]
+          ],
+          "curve": "exp"
+        },
+        "hz": [
+          2500,
+          9000
+        ],
+        "decay_ms": [
+          0.3,
+          1.5
+        ],
+        "gain_jitter_db": 18,
+        "spread": 0.2
+      },
+      "amp": {
+        "env": [
+          [
+            0,
+            1
+          ],
+          [
+            135,
+            0
+          ]
+        ],
+        "curve": "linear"
+      },
+      "gain_db": -20
     },
     {
       "id": "toe",
@@ -74,7 +125,7 @@
         ],
         "curve": "exp"
       },
-      "gain_db": -6,
+      "gain_db": -11,
       "fx": [
         {
           "type": "filter",
@@ -144,7 +195,7 @@
       }
     ],
     "normalize": {
-      "lufs": -24
+      "lufs": -26
     }
   }
 }
