@@ -3,7 +3,7 @@
   "seed": 1,
   "layers": [
     {
-      "id": "squelch",
+      "id": "p1_squelch",
       "start_ms": 0,
       "source": {
         "type": "noise",
@@ -16,27 +16,19 @@
             0
           ],
           [
-            211,
-            0.9
-          ],
-          [
-            492,
-            0.55
-          ],
-          [
-            774,
+            128,
             1
           ],
           [
-            1126,
-            0.5
+            275,
+            0.4
           ],
           [
-            1266,
-            0.08
+            330,
+            0.06
           ],
           [
-            1407,
+            367,
             0
           ]
         ],
@@ -50,9 +42,9 @@
           "hz": {
             "random": {
               "rate_hz": 28,
-              "depth": 472
+              "depth": 643
             },
-            "base": 858
+            "base": 1170
           },
           "q": 1.8
         },
@@ -69,7 +61,7 @@
       ]
     },
     {
-      "id": "film",
+      "id": "p1_film",
       "start_ms": 0,
       "source": {
         "type": "particles",
@@ -77,13 +69,13 @@
         "rate_hz": {
           "random": {
             "rate_hz": 9,
-            "depth": 162
+            "depth": 232
           },
-          "base": 162
+          "base": 232
         },
         "hz": [
-          643,
-          3859
+          877,
+          5263
         ],
         "decay_ms": [
           0.8,
@@ -100,27 +92,19 @@
             0
           ],
           [
-            211,
-            0.9
-          ],
-          [
-            492,
-            0.55
-          ],
-          [
-            774,
+            128,
             1
           ],
           [
-            1126,
-            0.5
+            275,
+            0.4
           ],
           [
-            1266,
-            0.08
+            330,
+            0.06
           ],
           [
-            1407,
+            367,
             0
           ]
         ],
@@ -129,7 +113,7 @@
       "gain_db": -2
     },
     {
-      "id": "gloop",
+      "id": "p1_gloop",
       "start_ms": 0,
       "source": {
         "type": "particles",
@@ -137,19 +121,19 @@
         "rate_hz": {
           "random": {
             "rate_hz": 5,
-            "depth": 55
+            "depth": 10
           },
-          "base": 46
+          "base": 8
         },
         "hz": [
-          173,
-          866
+          160,
+          641
         ],
         "decay_ms": [
           8,
           30
         ],
-        "chirp_semitones": 7,
+        "chirp_semitones": 8.7,
         "gain_jitter_db": 12,
         "spread": 0.5
       },
@@ -160,37 +144,29 @@
             0
           ],
           [
-            211,
-            0.9
-          ],
-          [
-            492,
-            0.55
-          ],
-          [
-            774,
+            128,
             1
           ],
           [
-            1126,
-            0.5
+            275,
+            0.4
           ],
           [
-            1266,
-            0.08
+            330,
+            0.06
           ],
           [
-            1407,
+            367,
             0
           ]
         ],
         "curve": "smooth"
       },
-      "gain_db": 2
+      "gain_db": -10
     },
     {
-      "id": "churn",
-      "start_ms": 0,
+      "id": "p1_peel_tick",
+      "start_ms": 293,
       "source": {
         "type": "noise",
         "color": "white"
@@ -199,58 +175,534 @@
         "env": [
           [
             0,
-            0
-          ],
-          [
-            422,
             1
           ],
           [
-            985,
-            0.3
+            6,
+            0
+          ]
+        ],
+        "curve": "exp"
+      },
+      "gain_db": -18,
+      "fx": [
+        {
+          "type": "filter",
+          "mode": "bandpass",
+          "hz": 1687,
+          "q": 1.2
+        }
+      ]
+    },
+    {
+      "id": "p1_peel_snap",
+      "start_ms": 295,
+      "source": {
+        "type": "osc",
+        "hz": {
+          "env": [
+            [
+              0,
+              562
+            ],
+            [
+              12,
+              844
+            ],
+            [
+              35,
+              956
+            ]
+          ],
+          "curve": "exp"
+        }
+      },
+      "amp": {
+        "env": [
+          [
+            0,
+            0
           ],
           [
-            1407,
+            2,
+            1
+          ],
+          [
+            35,
+            0
+          ]
+        ],
+        "curve": "exp"
+      },
+      "gain_db": -14
+    },
+    {
+      "id": "p2_squelch",
+      "start_ms": 458,
+      "source": {
+        "type": "noise",
+        "color": "pink"
+      },
+      "amp": {
+        "env": [
+          [
+            0,
+            0
+          ],
+          [
+            128,
+            1
+          ],
+          [
+            275,
+            0.4
+          ],
+          [
+            330,
+            0.06
+          ],
+          [
+            367,
             0
           ]
         ],
         "curve": "smooth"
       },
-      "gain_db": -16,
+      "gain_db": -3,
       "fx": [
         {
           "type": "filter",
           "mode": "bandpass",
           "hz": {
-            "env": [
-              [
-                0,
-                106
-              ],
-              [
-                422,
-                176
-              ],
-              [
-                1407,
-                132
-              ]
-            ],
-            "curve": "smooth"
+            "random": {
+              "rate_hz": 28,
+              "depth": 515
+            },
+            "base": 936
           },
-          "q": 1
+          "q": 1.8
         },
         {
           "type": "gain",
           "db": {
             "random": {
-              "rate_hz": 11,
-              "depth": 5
+              "rate_hz": 70,
+              "depth": 9
             },
             "base": 0
           }
         }
       ]
+    },
+    {
+      "id": "p2_film",
+      "start_ms": 458,
+      "source": {
+        "type": "particles",
+        "kind": "bubble",
+        "rate_hz": {
+          "random": {
+            "rate_hz": 9,
+            "depth": 232
+          },
+          "base": 232
+        },
+        "hz": [
+          702,
+          4210
+        ],
+        "decay_ms": [
+          0.8,
+          4
+        ],
+        "chirp_semitones": 5,
+        "gain_jitter_db": 18,
+        "spread": 0.7
+      },
+      "amp": {
+        "env": [
+          [
+            0,
+            0
+          ],
+          [
+            128,
+            1
+          ],
+          [
+            275,
+            0.4
+          ],
+          [
+            330,
+            0.06
+          ],
+          [
+            367,
+            0
+          ]
+        ],
+        "curve": "smooth"
+      },
+      "gain_db": -5
+    },
+    {
+      "id": "p2_gloop",
+      "start_ms": 458,
+      "source": {
+        "type": "particles",
+        "kind": "bubble",
+        "rate_hz": {
+          "random": {
+            "rate_hz": 5,
+            "depth": 10
+          },
+          "base": 8
+        },
+        "hz": [
+          160,
+          641
+        ],
+        "decay_ms": [
+          8,
+          30
+        ],
+        "chirp_semitones": 8.7,
+        "gain_jitter_db": 12,
+        "spread": 0.5
+      },
+      "amp": {
+        "env": [
+          [
+            0,
+            0
+          ],
+          [
+            128,
+            1
+          ],
+          [
+            275,
+            0.4
+          ],
+          [
+            330,
+            0.06
+          ],
+          [
+            367,
+            0
+          ]
+        ],
+        "curve": "smooth"
+      },
+      "gain_db": -13
+    },
+    {
+      "id": "p2_peel_tick",
+      "start_ms": 752,
+      "source": {
+        "type": "noise",
+        "color": "white"
+      },
+      "amp": {
+        "env": [
+          [
+            0,
+            1
+          ],
+          [
+            6,
+            0
+          ]
+        ],
+        "curve": "exp"
+      },
+      "gain_db": -21,
+      "fx": [
+        {
+          "type": "filter",
+          "mode": "bandpass",
+          "hz": 1350,
+          "q": 1.2
+        }
+      ]
+    },
+    {
+      "id": "p2_peel_snap",
+      "start_ms": 754,
+      "source": {
+        "type": "osc",
+        "hz": {
+          "env": [
+            [
+              0,
+              450
+            ],
+            [
+              12,
+              675
+            ],
+            [
+              35,
+              765
+            ]
+          ],
+          "curve": "exp"
+        }
+      },
+      "amp": {
+        "env": [
+          [
+            0,
+            0
+          ],
+          [
+            2,
+            1
+          ],
+          [
+            35,
+            0
+          ]
+        ],
+        "curve": "exp"
+      },
+      "gain_db": -17
+    },
+    {
+      "id": "p3_squelch",
+      "start_ms": 807,
+      "source": {
+        "type": "noise",
+        "color": "pink"
+      },
+      "amp": {
+        "env": [
+          [
+            0,
+            0
+          ],
+          [
+            128,
+            1
+          ],
+          [
+            275,
+            0.4
+          ],
+          [
+            330,
+            0.06
+          ],
+          [
+            367,
+            0
+          ]
+        ],
+        "curve": "smooth"
+      },
+      "gain_db": -1,
+      "fx": [
+        {
+          "type": "filter",
+          "mode": "bandpass",
+          "hz": {
+            "random": {
+              "rate_hz": 28,
+              "depth": 740
+            },
+            "base": 1345
+          },
+          "q": 1.8
+        },
+        {
+          "type": "gain",
+          "db": {
+            "random": {
+              "rate_hz": 70,
+              "depth": 9
+            },
+            "base": 0
+          }
+        }
+      ]
+    },
+    {
+      "id": "p3_film",
+      "start_ms": 807,
+      "source": {
+        "type": "particles",
+        "kind": "bubble",
+        "rate_hz": {
+          "random": {
+            "rate_hz": 9,
+            "depth": 232
+          },
+          "base": 232
+        },
+        "hz": [
+          1009,
+          6052
+        ],
+        "decay_ms": [
+          0.8,
+          4
+        ],
+        "chirp_semitones": 5,
+        "gain_jitter_db": 18,
+        "spread": 0.7
+      },
+      "amp": {
+        "env": [
+          [
+            0,
+            0
+          ],
+          [
+            128,
+            1
+          ],
+          [
+            275,
+            0.4
+          ],
+          [
+            330,
+            0.06
+          ],
+          [
+            367,
+            0
+          ]
+        ],
+        "curve": "smooth"
+      },
+      "gain_db": -3
+    },
+    {
+      "id": "p3_gloop",
+      "start_ms": 807,
+      "source": {
+        "type": "particles",
+        "kind": "bubble",
+        "rate_hz": {
+          "random": {
+            "rate_hz": 5,
+            "depth": 10
+          },
+          "base": 8
+        },
+        "hz": [
+          160,
+          641
+        ],
+        "decay_ms": [
+          8,
+          30
+        ],
+        "chirp_semitones": 8.7,
+        "gain_jitter_db": 12,
+        "spread": 0.5
+      },
+      "amp": {
+        "env": [
+          [
+            0,
+            0
+          ],
+          [
+            128,
+            1
+          ],
+          [
+            275,
+            0.4
+          ],
+          [
+            330,
+            0.06
+          ],
+          [
+            367,
+            0
+          ]
+        ],
+        "curve": "smooth"
+      },
+      "gain_db": -11
+    },
+    {
+      "id": "p3_peel_tick",
+      "start_ms": 1100,
+      "source": {
+        "type": "noise",
+        "color": "white"
+      },
+      "amp": {
+        "env": [
+          [
+            0,
+            1
+          ],
+          [
+            6,
+            0
+          ]
+        ],
+        "curve": "exp"
+      },
+      "gain_db": -19,
+      "fx": [
+        {
+          "type": "filter",
+          "mode": "bandpass",
+          "hz": 1940,
+          "q": 1.2
+        }
+      ]
+    },
+    {
+      "id": "p3_peel_snap",
+      "start_ms": 1102,
+      "source": {
+        "type": "osc",
+        "hz": {
+          "env": [
+            [
+              0,
+              647
+            ],
+            [
+              12,
+              970
+            ],
+            [
+              35,
+              1099
+            ]
+          ],
+          "curve": "exp"
+        }
+      },
+      "amp": {
+        "env": [
+          [
+            0,
+            0
+          ],
+          [
+            2,
+            1
+          ],
+          [
+            35,
+            0
+          ]
+        ],
+        "curve": "exp"
+      },
+      "gain_db": -15
     }
   ],
   "master": {

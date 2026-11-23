@@ -101,6 +101,27 @@ function wet(prefix: string, start: number, T: number, o: WetOpts, gainDb = 0): 
   ];
 }
 
+/** Goo pulling apart: a short sticky tick and one quick rising blip as the strand snaps. */
+function peel(id: string, start: number, hz: number, gainDb: number): LayerInput[] {
+  return [
+    {
+      id: `${id}_tick`,
+      start_ms: r0(start),
+      source: { type: 'noise', color: 'white' },
+      amp: env([[0, 1], [6, 0]]),
+      gain_db: r1(gainDb - 4),
+      fx: [{ type: 'filter', mode: 'bandpass', hz: r0(hz * 3), q: 1.2 }],
+    },
+    {
+      id: `${id}_snap`,
+      start_ms: r0(start + 2),
+      source: { type: 'osc', hz: env([[0, r0(hz)], [12, r0(hz * 1.5)], [35, r0(hz * 1.7)]]) },
+      amp: env([[0, 0], [2, 1], [35, 0]]),
+      gain_db: r1(gainDb),
+    },
+  ];
+}
+
 /** Narrow, jittering band of noise: the sound of goo being squeezed. */
 function squelch(id: string, start: number, T: number, centre: number, q: number, jitterHz: number, gainDb: number): LayerInput {
   return {
@@ -312,12 +333,22 @@ export const gore = defineRecipe({
         break;
       }
       case 'slime': {
-        const T = lg(900, 2200, s);
         lufs = -20;
-        // Thick goo: lower band, fewer tiny bubbles, more and bigger gloops, slow uneven pushes.
+        // Slime is handled, not boiled: separate gooey pushes with gaps between them, each ending
+        // in a sticky peel as the goo pulls apart. A continuous bed of bubbles reads as boiling
+        // liquid or a magic spell, so gloops are kept sparse and quiet.
+        const pushes: [number, number, number][] = [
+          [0, 1, 0],
+          [1.25, 0.8, -3],
+          [2.2, 1.15, -1],
+          [3.4, 0.9, -4],
+        ];
+        const len = lg(280, 480, s);
         ls = layers(
-          ...wet('', 0, T, { centre: 1100 * fw, film: lg(120, 220, s), gloop: lg(35, 60, s), gloopHz: [180 * fh * 1.5, 900 * fh * 1.5], chirp: chirp * 0.8, gloopDb: 2, shape: [[0, 0], [0.15, 0.9], [0.35, 0.55], [0.55, 1], [0.8, 0.5], [1, 0]] }),
-          squeeze('churn', 0, T, lg(260, 160, v), 1, -16, 0.3),
+          ...pushes.slice(0, s < 0.3 ? 2 : s < 0.7 ? 3 : 4).flatMap(([at, k, g], i) => [
+            ...wet(`p${i + 1}_`, at * len, len, { centre: 1500 * fw * k, film: lg(180, 300, s), gloop: 8, gloopHz: [250 * fh, 1000 * fh], chirp, gloopDb: -10, shape: [[0, 0], [0.35, 1], [0.75, 0.4], [1, 0]] }, g),
+            ...peel(`p${i + 1}_peel`, at * len + len * 0.8, lg(900, 500, v) * k, g - 14),
+          ]),
         );
         break;
       }
