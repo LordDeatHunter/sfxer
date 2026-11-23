@@ -6,35 +6,45 @@
       "id": "catch",
       "start_ms": 0,
       "source": {
-        "type": "modal",
-        "material": "metal",
-        "hz": 1523,
-        "size": 0.2,
-        "damping": 0.55,
-        "strike": {
-          "hardness": 0.85
-        }
+        "type": "noise",
+        "color": "white"
       },
-      "gain_db": 0
+      "amp": {
+        "env": [
+          [
+            0,
+            1
+          ],
+          [
+            2,
+            0.35
+          ],
+          [
+            10,
+            0
+          ]
+        ],
+        "curve": "exp"
+      },
+      "gain_db": -7,
+      "fx": [
+        {
+          "type": "filter",
+          "mode": "highpass",
+          "hz": 193,
+          "q": 0.7
+        },
+        {
+          "type": "filter",
+          "mode": "lowpass",
+          "hz": 12000,
+          "q": 0.7
+        }
+      ]
     },
     {
-      "id": "seat",
-      "start_ms": 38,
-      "source": {
-        "type": "modal",
-        "material": "metal",
-        "hz": 944,
-        "size": 0.2,
-        "damping": 0.5,
-        "strike": {
-          "hardness": 0.85
-        }
-      },
-      "gain_db": -2
-    },
-    {
-      "id": "snap",
-      "start_ms": 0,
+      "id": "clack",
+      "start_ms": 42,
       "source": {
         "type": "noise",
         "color": "white"
@@ -46,40 +56,88 @@
             1
           ],
           [
-            6,
+            2,
+            0.35
+          ],
+          [
+            19,
             0
           ]
         ],
         "curve": "exp"
       },
-      "gain_db": -9,
+      "gain_db": 0,
       "fx": [
         {
           "type": "filter",
-          "mode": "bandpass",
-          "hz": 3046,
-          "q": 1
+          "mode": "highpass",
+          "hz": 193,
+          "q": 0.7
+        },
+        {
+          "type": "filter",
+          "mode": "lowpass",
+          "hz": 12000,
+          "q": 0.7
         }
       ]
     },
     {
-      "id": "thud",
-      "start_ms": 36,
+      "id": "settle",
+      "start_ms": 40,
       "source": {
-        "type": "osc",
-        "hz": {
+        "type": "particles",
+        "kind": "burst",
+        "rate_hz": {
           "env": [
             [
               0,
-              203
+              900
             ],
             [
-              30,
-              86
+              40,
+              300
+            ],
+            [
+              140,
+              5
             ]
           ],
           "curve": "exp"
-        }
+        },
+        "hz": [
+          914,
+          7000
+        ],
+        "decay_ms": [
+          0.4,
+          3
+        ],
+        "q": 0.9,
+        "gain_jitter_db": 14,
+        "spread": 0.2
+      },
+      "amp": {
+        "env": [
+          [
+            0,
+            1
+          ],
+          [
+            150,
+            0
+          ]
+        ],
+        "curve": "exp"
+      },
+      "gain_db": -6
+    },
+    {
+      "id": "thud",
+      "start_ms": 42,
+      "source": {
+        "type": "noise",
+        "color": "brown"
       },
       "amp": {
         "env": [
@@ -88,26 +146,29 @@
             0
           ],
           [
-            2,
+            1,
             1
           ],
           [
-            70,
+            60,
             0
           ]
         ],
         "curve": "exp"
       },
-      "gain_db": -10
+      "gain_db": -8,
+      "fx": [
+        {
+          "type": "filter",
+          "mode": "lowpass",
+          "hz": 499,
+          "q": 0.8
+        }
+      ]
     }
   ],
   "master": {
     "fx": [
-      {
-        "type": "convolve",
-        "ir": "box",
-        "mix": 0.25
-      },
       {
         "type": "eq",
         "high_db": 0

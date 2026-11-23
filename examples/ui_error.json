@@ -3,13 +3,13 @@
   "seed": 1,
   "layers": [
     {
-      "id": "first",
+      "id": "buzz",
       "source": {
         "type": "osc",
-        "shape": "saw",
-        "hz": 233,
+        "shape": "square",
+        "hz": 140,
         "unison": 3,
-        "detune_cents": 18
+        "detune_cents": 25
       },
       "amp": {
         "env": [
@@ -22,76 +22,36 @@
             1
           ],
           [
-            110,
+            305,
+            0.9
+          ],
+          [
+            320,
             0
           ]
         ],
-        "curve": "exp"
+        "curve": "linear"
       },
       "fx": [
         {
           "type": "filter",
-          "hz": {
-            "env": [
-              [
-                0,
-                4183
-              ],
-              [
-                110,
-                500
-              ]
-            ],
-            "curve": "exp"
-          },
-          "q": 1.2
-        }
-      ]
-    },
-    {
-      "id": "second",
-      "start_ms": 120,
-      "source": {
-        "type": "osc",
-        "shape": "saw",
-        "hz": 185,
-        "unison": 3,
-        "detune_cents": 18
-      },
-      "amp": {
-        "env": [
-          [
-            0,
-            0
-          ],
-          [
-            4,
-            1
-          ],
-          [
-            190,
-            0
-          ]
-        ],
-        "curve": "exp"
-      },
-      "fx": [
+          "hz": 2449,
+          "q": 1
+        },
         {
-          "type": "filter",
-          "hz": {
-            "env": [
-              [
-                0,
-                4183
-              ],
-              [
-                190,
-                400
-              ]
-            ],
-            "curve": "exp"
-          },
-          "q": 1.2
+          "type": "shaper",
+          "drive_db": 6
+        },
+        {
+          "type": "gain",
+          "db": {
+            "lfo": {
+              "hz": 28,
+              "depth": 8,
+              "shape": "square"
+            },
+            "base": -4
+          }
         }
       ]
     },

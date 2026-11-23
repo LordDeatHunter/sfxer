@@ -7,10 +7,10 @@
       "source": {
         "type": "modal",
         "material": "stone",
-        "size": 0.7,
-        "damping": 0.5,
+        "size": 0.9,
+        "damping": 0.75,
         "strike": {
-          "hardness": 0.8,
+          "hardness": 0.4,
           "position": 0.3
         }
       },
@@ -29,23 +29,31 @@
             0
           ],
           [
-            1,
+            2,
             1
           ],
           [
-            50,
+            42,
+            0.5
+          ],
+          [
+            120,
             0
           ]
         ],
         "curve": "exp"
       },
-      "gain_db": -9,
+      "gain_db": 2,
       "fx": [
         {
           "type": "filter",
           "mode": "lowpass",
-          "hz": 332,
-          "q": 0.7
+          "hz": 300,
+          "q": 0.9
+        },
+        {
+          "type": "shaper",
+          "drive_db": 6
         }
       ]
     },
@@ -159,7 +167,7 @@
         ],
         "curve": "smooth"
       },
-      "gain_db": -18.4,
+      "gain_db": -30.4,
       "fx": [
         {
           "type": "filter",
