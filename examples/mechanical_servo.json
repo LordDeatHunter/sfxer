@@ -1,0 +1,207 @@
+{
+  "name": "mechanical_servo",
+  "seed": 1,
+  "layers": [
+    {
+      "id": "motor",
+      "source": {
+        "type": "osc",
+        "shape": "pulse",
+        "pulse_width": 0.3,
+        "hz": {
+          "env": [
+            [
+              0,
+              113
+            ],
+            [
+              120,
+              227
+            ],
+            [
+              480,
+              245
+            ],
+            [
+              600,
+              102
+            ]
+          ],
+          "curve": "smooth"
+        },
+        "unison": 3,
+        "detune_cents": 14
+      },
+      "amp": {
+        "env": [
+          [
+            0,
+            0
+          ],
+          [
+            20,
+            1
+          ],
+          [
+            560,
+            1
+          ],
+          [
+            600,
+            0
+          ]
+        ],
+        "curve": "smooth"
+      },
+      "fx": [
+        {
+          "type": "filter",
+          "mode": "bandpass",
+          "hz": 1134,
+          "q": 2.2
+        },
+        {
+          "type": "formant",
+          "vowel": "e",
+          "mix": 0.4
+        }
+      ]
+    },
+    {
+      "id": "gears",
+      "source": {
+        "type": "osc",
+        "shape": "saw",
+        "hz": {
+          "env": [
+            [
+              0,
+              703
+            ],
+            [
+              120,
+              1406
+            ],
+            [
+              480,
+              1520
+            ],
+            [
+              600,
+              635
+            ]
+          ],
+          "curve": "smooth"
+        }
+      },
+      "amp": {
+        "env": [
+          [
+            0,
+            0
+          ],
+          [
+            20,
+            1
+          ],
+          [
+            560,
+            1
+          ],
+          [
+            600,
+            0
+          ]
+        ],
+        "curve": "smooth"
+      },
+      "gain_db": -12,
+      "fx": [
+        {
+          "type": "filter",
+          "mode": "highpass",
+          "hz": 1500
+        }
+      ]
+    },
+    {
+      "id": "air",
+      "source": {
+        "type": "noise",
+        "color": "pink"
+      },
+      "amp": {
+        "env": [
+          [
+            0,
+            0
+          ],
+          [
+            30,
+            1
+          ],
+          [
+            560,
+            1
+          ],
+          [
+            600,
+            0
+          ]
+        ],
+        "curve": "smooth"
+      },
+      "gain_db": -18,
+      "fx": [
+        {
+          "type": "filter",
+          "mode": "bandpass",
+          "hz": 2041,
+          "q": 1.5
+        }
+      ]
+    },
+    {
+      "id": "stop",
+      "start_ms": 590,
+      "source": {
+        "type": "modal",
+        "material": "metal",
+        "hz": 1523,
+        "size": 0.2,
+        "damping": 0.6,
+        "strike": {
+          "hardness": 0.85
+        }
+      },
+      "gain_db": -8
+    }
+  ],
+  "master": {
+    "fx": [
+      {
+        "type": "convolve",
+        "ir": "box",
+        "mix": 0.25
+      },
+      {
+        "type": "eq",
+        "high_db": 0
+      },
+      {
+        "type": "reverb",
+        "size": 0.3,
+        "decay_ms": 355,
+        "damping": 0.45,
+        "predelay_ms": 6,
+        "mix": 0.068
+      },
+      {
+        "type": "limiter"
+      }
+    ],
+    "normalize": {
+      "lufs": -18
+    }
+  }
+}

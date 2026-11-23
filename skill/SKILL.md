@@ -1,0 +1,84 @@
+---
+name: sfxer
+description: Design sound effects (impacts, whooshes, explosions, UI sounds, footsteps, pickups, magic, sci-fi, mechanisms, ambience loops) as layered JSON patches and render them to WAV with the `sfx` CLI or the sfxer MCP tools. Use whenever a project needs a sound effect made, improved or varied.
+---
+
+# sfxer: making sound effects that do not sound like chiptune beeps
+
+You cannot hear. sfxer makes up for that: every render returns a measured report with plain-language warnings, and an optional spectrogram image. **Never ship a sound whose report you have not read.**
+
+## The loop
+
+1. **Start from a recipe.** `sfx recipes` lists them with parameters.
+   `sfx recipe impact -p material=metal -p size=0.3 -o hit.json`
+2. **Render and read.** `sfx render hit.json --png` writes `hit.wav` and `hit.png` and prints the report.
+3. **Edit the patch JSON**, not the recipe call, once you need anything specific. Render again.
+4. **Stop when** the warnings are gone (or you can justify each one) and the numbers match the intent.
+5. Need several takes (footsteps, repeated hits)? `sfx vary hit.json -n 6 --amount 0.3 --render`.
+
+Other commands: `sfx analyze file.wav`, `sfx compare a.wav b.wav`, `sfx validate patch.json`, `sfx docs [name]` (full reference, or one source/effect/recipe), `sfx schema [name]`. Add `--json` to any command for machine-readable output.
+
+With MCP the same steps are tools: `list_recipes`, `expand_recipe`, `render`, `analyze`, `compare`, `vary`, `describe`.
+
+## Patch shape
+
+```json
+{
+  "name": "metal_latch",
+  "seed": 1,
+  "duration": "auto",
+  "layers": [
+    { "id": "body", "source": { "type": "modal", "material": "metal", "size": 0.3 },
+      "gain_db": 0, "fx": [ { "type": "eq", "high_db": 3 } ] },
+    { "id": "tick", "source": { "type": "noise" },
+      "amp": { "env": [[0, 1], [5, 0]], "curve": "exp" }, "gain_db": -8,
+      "fx": [ { "type": "filter", "mode": "bandpass", "hz": 4000 } ] }
+  ],
+  "master": { "fx": [ { "type": "reverb", "size": 0.3, "mix": 0.12 } ], "normalize": { "lufs": -18 } }
+}
+```
+
+- Units are in the key names: `hz`, `_ms`, `_db`, `semitones`. Anything else is 0..1.
+- Any field the docs mark `mod` takes a number **or** `{ "env": [[ms, value], ...], "curve": "exp" }`, `{ "lfo": { "hz", "depth" }, "base" }`, or `{ "random": { "rate_hz", "depth" }, "base" }`.
+- Envelope times are ms from the start of that layer. A layer with an endless source (`osc`, `fm`, `noise`, `particles`, `granular`) needs an `amp` envelope that ends at 0.
+- `duration: "auto"` fits the layers plus reverb tails. Loudness is normalised for you; do not chase level with `gain_db`, use it only to balance layers against each other.
+- Same patch + same `seed` = identical audio. Change `seed` for a free variation.
+- Validation errors name the JSON path and suggest the fix. Out-of-range values are errors, never silently clamped.
+
+Sources: `modal` (struck objects: the workhorse), `particles` (many tiny events: debris, crackle, rain, sparkle), `noise`, `osc`, `fm`, `pluck`, `impulse`, `sample` and `granular` (user WAV files).
+Effects: `filter`, `eq`, `comb`, `formant`, `shaper`, `crush`, `chorus`, `delay`, `reverb`, `convolve`, `transient`, `compressor`, `limiter`, `width`, `pitch`, `gain`, `distance`.
+Run `sfx docs <name>` before using one you have not used yet.
+
+## What makes a sound effect sound real
+
+1. **Layer it.** Most good effects are 3-5 layers with different jobs:
+   - *transient*: the first 2-20 ms that says "something happened" (short filtered noise, an impulse, a hard modal strike)
+   - *body*: the identity of the sound (modal object, filtered noise sweep, tonal element)
+   - *weight*: low thump, a sine dropping in pitch over 20-60 ms, lightly saturated
+   - *tail / detail*: debris, rattle, sparkle, air (`particles`), and the room
+2. **Never leave an oscillator bare.** A lone `osc` with an envelope is the retro beep. Use `unison` with detune, run it through a moving `filter`, add `shaper`, or replace it with `modal` or `fm`.
+3. **Move things.** Static sounds read as synthetic. Sweep filter `hz` with an `exp` envelope, let FM `index` fall over time, use `random` modulation for anything organic.
+4. **Shape noise.** Noise is only useful after a `filter`, and the filter should usually move. Bandpass for whooshes and air, lowpass falling over time for blasts.
+5. **Things in the world are struck, not switched on.** Use `modal` with the right `material`, `size`, `strike.hardness` and `damping` instead of tuning oscillators by hand.
+6. **Small random events add life.** A quiet `particles` layer after an impact (debris), over a tone (sparkle) or under a step (grit) does more than any amount of EQ.
+7. **Put it in a space.** Reverb `mix` 0.08-0.2 removes the "generated in a vacuum" feel; `convolve` with `box` or `tube` puts a sound inside an object; `distance` pushes it away.
+8. **Finish it.** A touch of `shaper` (3-6 dB) on the master glues layers; `transient` adds punch; leave `normalize` on.
+
+## Reading the report
+
+| You see | It means | Try |
+|---|---|---|
+| `one pure tone` warning | It is a beep | Add noise/modal layers, unison, filter movement, saturation |
+| `Almost no energy above 4 kHz` | Dull, no definition | Add a bright transient, raise `strike.hardness`, `eq` `high_db` |
+| Most energy below 120 Hz | Inaudible on phones and laptops | Add a mid layer, saturate the low layer so it has harmonics |
+| Energy mostly above 8 kHz | Thin, harsh | Add body below 1 kHz, lowpass the hiss |
+| `attack_ms` large on an impact | Soft, late | Shorten envelope attack, add a transient layer, `transient` fx |
+| `ends abruptly` | Tail was cut | Let envelopes reach 0, lengthen `duration`, add reverb |
+| `Loudness target not reached` | Too peaky to be loud | Lower the target for tiny clicks, or add body, `compressor`, `shaper` |
+| `centroid_over_time` flat on a long sound | Static timbre | Envelope or `random` on a filter |
+| Low `crest_db` (< 6) | Squashed | Less drive, less limiting |
+| `layers` list shows a layer 30+ dB below the others | It is inaudible | Raise its `gain_db` or remove it |
+
+Loudness guide: -16 LUFS for foreground game effects, -18 to -20 for common ones (pickups, steps), -22 to -26 for UI and ambience.
+
+If you can view images, open the PNG: a good effect shows a clear vertical edge at the start, energy across the spectrum, and visible movement over time. A horizontal line or two on a black background is a beep.

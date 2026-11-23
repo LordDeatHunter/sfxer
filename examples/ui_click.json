@@ -1,0 +1,108 @@
+{
+  "name": "ui_click",
+  "seed": 1,
+  "layers": [
+    {
+      "id": "body",
+      "source": {
+        "type": "modal",
+        "material": "plastic",
+        "hz": 950,
+        "damping": 0.45,
+        "strike": {
+          "hardness": 0.7
+        }
+      }
+    },
+    {
+      "id": "tick",
+      "start_ms": 0,
+      "source": {
+        "type": "noise",
+        "color": "white"
+      },
+      "amp": {
+        "env": [
+          [
+            0,
+            1
+          ],
+          [
+            5,
+            0
+          ]
+        ],
+        "curve": "exp"
+      },
+      "gain_db": -12,
+      "fx": [
+        {
+          "type": "filter",
+          "mode": "bandpass",
+          "hz": 4200,
+          "q": 1.2
+        }
+      ]
+    },
+    {
+      "id": "low",
+      "source": {
+        "type": "osc",
+        "hz": {
+          "env": [
+            [
+              0,
+              320
+            ],
+            [
+              18,
+              170
+            ]
+          ],
+          "curve": "exp"
+        }
+      },
+      "amp": {
+        "env": [
+          [
+            0,
+            0
+          ],
+          [
+            1,
+            1
+          ],
+          [
+            30,
+            0
+          ]
+        ],
+        "curve": "exp"
+      },
+      "gain_db": -10
+    }
+  ],
+  "master": {
+    "fx": [
+      {
+        "type": "eq",
+        "high_db": 0,
+        "low_db": -2
+      },
+      {
+        "type": "reverb",
+        "size": 0.3,
+        "decay_ms": 405,
+        "damping": 0.45,
+        "predelay_ms": 6,
+        "mix": 0.068
+      },
+      {
+        "type": "limiter"
+      }
+    ],
+    "normalize": {
+      "lufs": -23
+    }
+  }
+}

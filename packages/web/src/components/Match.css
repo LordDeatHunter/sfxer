@@ -1,0 +1,32 @@
+@reference "../theme.css";
+
+.match-drop {
+  @apply flex cursor-pointer flex-col items-center justify-center gap-2 rounded-lg border-2 border-dashed border-line p-8 text-center text-dim hover:border-dim;
+}
+.match-drop-over {
+  @apply border-accent text-ink;
+}
+.match-file {
+  @apply hidden;
+}
+.match-progress {
+  @apply h-1.5 w-full overflow-hidden rounded-full bg-raised;
+}
+.match-progress-bar {
+  @apply h-full bg-accent transition-[width];
+}
+.match-pair {
+  @apply grid gap-3 lg:grid-cols-2;
+}
+.match-side {
+  @apply flex flex-col gap-2;
+}
+.match-score {
+  @apply text-3xl font-bold tabular-nums;
+}
+.match-score-row {
+  @apply flex flex-wrap items-center gap-3;
+}
+.match-notes {
+  @apply m-0 flex list-disc flex-col gap-1 pl-5 text-sm text-dim;
+}

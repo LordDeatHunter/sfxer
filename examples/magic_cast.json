@@ -1,0 +1,230 @@
+{
+  "name": "magic_cast",
+  "seed": 1,
+  "layers": [
+    {
+      "id": "whoosh",
+      "source": {
+        "type": "noise",
+        "color": "pink"
+      },
+      "amp": {
+        "env": [
+          [
+            0,
+            0
+          ],
+          [
+            108,
+            1
+          ],
+          [
+            630,
+            0
+          ]
+        ],
+        "curve": "exp"
+      },
+      "pan": {
+        "env": [
+          [
+            0,
+            -0.5
+          ],
+          [
+            630,
+            0.5
+          ]
+        ],
+        "curve": "smooth"
+      },
+      "fx": [
+        {
+          "type": "filter",
+          "mode": "bandpass",
+          "hz": {
+            "env": [
+              [
+                0,
+                7516
+              ],
+              [
+                540,
+                350
+              ]
+            ],
+            "curve": "exp"
+          },
+          "q": 2.2
+        },
+        {
+          "type": "comb",
+          "hz": {
+            "env": [
+              [
+                0,
+                783
+              ],
+              [
+                540,
+                157
+              ]
+            ],
+            "curve": "exp"
+          },
+          "feedback": 0.75,
+          "mix": 0.4
+        }
+      ]
+    },
+    {
+      "id": "strike",
+      "source": {
+        "type": "fm",
+        "hz": 341.3,
+        "ratio": 2.76,
+        "index": {
+          "env": [
+            [
+              0,
+              6
+            ],
+            [
+              360,
+              0.3
+            ]
+          ],
+          "curve": "exp"
+        }
+      },
+      "amp": {
+        "env": [
+          [
+            0,
+            0
+          ],
+          [
+            3,
+            1
+          ],
+          [
+            720,
+            0
+          ]
+        ],
+        "curve": "exp"
+      },
+      "gain_db": -5,
+      "fx": [
+        {
+          "type": "chorus",
+          "mix": 0.35
+        }
+      ]
+    },
+    {
+      "id": "sub",
+      "source": {
+        "type": "osc",
+        "hz": {
+          "env": [
+            [
+              0,
+              157
+            ],
+            [
+              120,
+              52
+            ]
+          ],
+          "curve": "exp"
+        }
+      },
+      "amp": {
+        "env": [
+          [
+            0,
+            0
+          ],
+          [
+            4,
+            1
+          ],
+          [
+            315,
+            0
+          ]
+        ],
+        "curve": "exp"
+      },
+      "gain_db": -7
+    },
+    {
+      "id": "trail",
+      "start_ms": 40,
+      "source": {
+        "type": "particles",
+        "kind": "ping",
+        "rate_hz": {
+          "env": [
+            [
+              0,
+              140
+            ],
+            [
+              900,
+              3
+            ]
+          ],
+          "curve": "exp"
+        },
+        "hz": [
+          1567,
+          9395
+        ],
+        "decay_ms": [
+          30,
+          260
+        ],
+        "spread": 1
+      },
+      "amp": {
+        "env": [
+          [
+            0,
+            1
+          ],
+          [
+            900,
+            0
+          ]
+        ],
+        "curve": "linear"
+      },
+      "gain_db": -11
+    }
+  ],
+  "master": {
+    "fx": [
+      {
+        "type": "eq",
+        "high_db": 0,
+        "low_db": 0.6
+      },
+      {
+        "type": "reverb",
+        "size": 0.75,
+        "decay_ms": 2070,
+        "damping": 0.45,
+        "predelay_ms": 6,
+        "mix": 0.203
+      },
+      {
+        "type": "limiter"
+      }
+    ],
+    "normalize": {
+      "lufs": -18
+    }
+  }
+}

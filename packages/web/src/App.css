@@ -1,0 +1,51 @@
+@reference "./theme.css";
+
+.app {
+  @apply mx-auto flex min-h-screen max-w-[1500px] flex-col gap-3 p-3;
+}
+.app-bar {
+  @apply flex flex-wrap items-center gap-2;
+}
+.app-logo {
+  @apply mr-2 text-lg font-bold tracking-tight;
+}
+.app-logo-accent {
+  @apply text-accent;
+}
+.app-tabs {
+  @apply flex gap-1 rounded-lg border border-line bg-panel p-1;
+}
+.app-tab {
+  @apply cursor-pointer rounded-md border-0 bg-transparent px-3 py-1 text-sm font-medium text-dim hover:text-ink;
+}
+.app-tab-active {
+  @apply bg-raised text-ink;
+}
+.app-toggle {
+  @apply flex cursor-pointer items-center gap-1.5 text-xs text-dim;
+}
+.app-main {
+  @apply grid items-start gap-3 lg:grid-cols-[minmax(0,1fr)_minmax(360px,440px)];
+}
+.app-main-wide {
+  @apply lg:grid-cols-1;
+}
+.app-view {
+  @apply flex min-w-0 flex-col gap-3;
+}
+.app-side {
+  @apply flex min-w-0 flex-col gap-3 lg:sticky lg:top-3;
+}
+.app-busy {
+  @apply h-2 w-2 rounded-full bg-accent;
+  animation: app-pulse 0.8s ease-in-out infinite;
+}
+.app-idle {
+  @apply h-2 w-2 rounded-full bg-line;
+}
+
+@keyframes app-pulse {
+  50% {
+    opacity: 0.25;
+  }
+}

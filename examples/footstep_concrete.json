@@ -1,0 +1,150 @@
+{
+  "name": "footstep_concrete",
+  "seed": 1,
+  "layers": [
+    {
+      "id": "heel",
+      "source": {
+        "type": "modal",
+        "material": "stone",
+        "size": 0.7,
+        "damping": 0.5,
+        "strike": {
+          "hardness": 0.8,
+          "position": 0.3
+        }
+      },
+      "gain_db": 0
+    },
+    {
+      "id": "thud",
+      "source": {
+        "type": "osc",
+        "shape": "sine",
+        "hz": {
+          "env": [
+            [
+              0,
+              137
+            ],
+            [
+              25,
+              68
+            ]
+          ],
+          "curve": "exp"
+        }
+      },
+      "amp": {
+        "env": [
+          [
+            0,
+            0
+          ],
+          [
+            2,
+            1
+          ],
+          [
+            80,
+            0
+          ]
+        ],
+        "curve": "exp"
+      },
+      "gain_db": -16
+    },
+    {
+      "id": "toe",
+      "start_ms": 85,
+      "source": {
+        "type": "noise",
+        "color": "pink"
+      },
+      "amp": {
+        "env": [
+          [
+            0,
+            1
+          ],
+          [
+            28,
+            0
+          ]
+        ],
+        "curve": "exp"
+      },
+      "gain_db": -6,
+      "fx": [
+        {
+          "type": "filter",
+          "mode": "bandpass",
+          "hz": 1697,
+          "q": 0.7
+        }
+      ]
+    },
+    {
+      "id": "scuff",
+      "start_ms": 8,
+      "source": {
+        "type": "noise",
+        "color": "pink"
+      },
+      "amp": {
+        "env": [
+          [
+            0,
+            0
+          ],
+          [
+            43,
+            1
+          ],
+          [
+            125,
+            0
+          ]
+        ],
+        "curve": "smooth"
+      },
+      "gain_db": -18.4,
+      "fx": [
+        {
+          "type": "filter",
+          "mode": "bandpass",
+          "hz": {
+            "random": {
+              "rate_hz": 30,
+              "depth": 800
+            },
+            "base": 2846
+          },
+          "q": 1.4
+        }
+      ]
+    }
+  ],
+  "master": {
+    "fx": [
+      {
+        "type": "eq",
+        "high_db": 0
+      },
+      {
+        "type": "reverb",
+        "size": 0.25,
+        "decay_ms": 322,
+        "damping": 0.45,
+        "predelay_ms": 6,
+        "mix": 0.054
+      },
+      {
+        "type": "limiter"
+      }
+    ],
+    "normalize": {
+      "lufs": -24
+    }
+  }
+}

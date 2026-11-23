@@ -1,0 +1,282 @@
+{
+  "name": "explosion",
+  "seed": 1,
+  "layers": [
+    {
+      "id": "crack",
+      "source": {
+        "type": "noise",
+        "color": "white"
+      },
+      "amp": {
+        "env": [
+          [
+            0,
+            0
+          ],
+          [
+            1,
+            1
+          ],
+          [
+            25,
+            0.3
+          ],
+          [
+            200,
+            0
+          ]
+        ],
+        "curve": "exp"
+      },
+      "gain_db": -1.2,
+      "fx": [
+        {
+          "type": "filter",
+          "mode": "highpass",
+          "hz": 894,
+          "q": 0.7
+        },
+        {
+          "type": "shaper",
+          "drive_db": 14,
+          "curve": "hard"
+        }
+      ]
+    },
+    {
+      "id": "boom",
+      "source": {
+        "type": "osc",
+        "shape": "sine",
+        "hz": {
+          "env": [
+            [
+              0,
+              194
+            ],
+            [
+              90,
+              84
+            ],
+            [
+              990,
+              45
+            ]
+          ],
+          "curve": "exp"
+        }
+      },
+      "amp": {
+        "env": [
+          [
+            0,
+            0
+          ],
+          [
+            4,
+            1
+          ],
+          [
+            1155,
+            0
+          ]
+        ],
+        "curve": "exp"
+      },
+      "gain_db": -6.5,
+      "fx": [
+        {
+          "type": "shaper",
+          "drive_db": 12
+        }
+      ]
+    },
+    {
+      "id": "blast",
+      "source": {
+        "type": "noise",
+        "color": "pink"
+      },
+      "amp": {
+        "env": [
+          [
+            0,
+            0
+          ],
+          [
+            2,
+            1
+          ],
+          [
+            825,
+            0
+          ]
+        ],
+        "curve": "exp"
+      },
+      "gain_db": 1,
+      "fx": [
+        {
+          "type": "filter",
+          "mode": "lowpass",
+          "hz": {
+            "env": [
+              [
+                0,
+                7746
+              ],
+              [
+                578,
+                500
+              ]
+            ],
+            "curve": "exp"
+          },
+          "q": 0.8,
+          "slope": 24
+        },
+        {
+          "type": "shaper",
+          "drive_db": 10
+        }
+      ]
+    },
+    {
+      "id": "rumble",
+      "source": {
+        "type": "noise",
+        "color": "brown"
+      },
+      "amp": {
+        "env": [
+          [
+            0,
+            0
+          ],
+          [
+            40,
+            1
+          ],
+          [
+            495,
+            0.5
+          ],
+          [
+            1650,
+            0
+          ]
+        ],
+        "curve": "exp"
+      },
+      "gain_db": -6,
+      "fx": [
+        {
+          "type": "filter",
+          "mode": "lowpass",
+          "hz": {
+            "env": [
+              [
+                0,
+                1800
+              ],
+              [
+                495,
+                500
+              ],
+              [
+                1650,
+                90
+              ]
+            ],
+            "curve": "exp"
+          },
+          "q": 1
+        },
+        {
+          "type": "shaper",
+          "drive_db": 16
+        }
+      ]
+    },
+    {
+      "id": "debris",
+      "start_ms": 100,
+      "source": {
+        "type": "particles",
+        "kind": "burst",
+        "rate_hz": {
+          "env": [
+            [
+              0,
+              2
+            ],
+            [
+              280,
+              128
+            ],
+            [
+              1485,
+              1
+            ]
+          ],
+          "curve": "exp"
+        },
+        "hz": [
+          316,
+          5292
+        ],
+        "decay_ms": [
+          4,
+          70
+        ],
+        "gain_jitter_db": 18,
+        "spread": 0.9
+      },
+      "amp": {
+        "env": [
+          [
+            0,
+            1
+          ],
+          [
+            1485,
+            0
+          ]
+        ],
+        "curve": "linear"
+      },
+      "gain_db": -6.8
+    }
+  ],
+  "master": {
+    "fx": [
+      {
+        "type": "compressor",
+        "threshold_db": -16,
+        "ratio": 4,
+        "attack_ms": 8,
+        "release_ms": 200
+      },
+      {
+        "type": "shaper",
+        "drive_db": 5,
+        "mix": 0.6
+      },
+      {
+        "type": "reverb",
+        "size": 0.7,
+        "decay_ms": 1670,
+        "damping": 0.45,
+        "predelay_ms": 6,
+        "mix": 0.158
+      },
+      {
+        "type": "limiter"
+      }
+    ],
+    "normalize": {
+      "lufs": -14
+    }
+  }
+}

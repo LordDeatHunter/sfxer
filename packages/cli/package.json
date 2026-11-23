@@ -1,0 +1,10 @@
+{
+  "name": "@sfxer/cli",
+  "version": "0.1.0",
+  "type": "module",
+  "bin": { "sfx": "./dist/main.js" },
+  "main": "./dist/lib.js",
+  "types": "./dist/lib.d.ts",
+  "exports": { ".": { "types": "./dist/lib.d.ts", "default": "./dist/lib.js" } },
+  "dependencies": { "@sfxer/core": "workspace:*" }
+}

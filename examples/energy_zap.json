@@ -1,0 +1,171 @@
+{
+  "name": "energy_zap",
+  "seed": 1,
+  "layers": [
+    {
+      "id": "arc",
+      "source": {
+        "type": "noise",
+        "color": "crackle",
+        "density_hz": {
+          "env": [
+            [
+              0,
+              9000
+            ],
+            [
+              320,
+              600
+            ]
+          ],
+          "curve": "exp"
+        }
+      },
+      "amp": {
+        "env": [
+          [
+            0,
+            1
+          ],
+          [
+            96,
+            0.5
+          ],
+          [
+            320,
+            0
+          ]
+        ],
+        "curve": "exp"
+      },
+      "fx": [
+        {
+          "type": "filter",
+          "mode": "bandpass",
+          "hz": {
+            "random": {
+              "rate_hz": 45,
+              "depth": 1800
+            },
+            "base": 2397
+          },
+          "q": 2.5
+        },
+        {
+          "type": "shaper",
+          "drive_db": 22,
+          "curve": "hard"
+        }
+      ]
+    },
+    {
+      "id": "buzz",
+      "source": {
+        "type": "fm",
+        "hz": {
+          "random": {
+            "rate_hz": 60,
+            "depth": 60,
+            "smooth": false
+          },
+          "base": 105
+        },
+        "ratio": 7.3,
+        "index": {
+          "env": [
+            [
+              0,
+              9
+            ],
+            [
+              320,
+              1
+            ]
+          ],
+          "curve": "exp"
+        },
+        "feedback": 0.5
+      },
+      "amp": {
+        "env": [
+          [
+            0,
+            1
+          ],
+          [
+            320,
+            0
+          ]
+        ],
+        "curve": "exp"
+      },
+      "gain_db": -8,
+      "fx": [
+        {
+          "type": "filter",
+          "mode": "highpass",
+          "hz": 300
+        }
+      ]
+    },
+    {
+      "id": "snap",
+      "start_ms": 0,
+      "source": {
+        "type": "noise",
+        "color": "white"
+      },
+      "amp": {
+        "env": [
+          [
+            0,
+            1
+          ],
+          [
+            5,
+            0
+          ]
+        ],
+        "curve": "exp"
+      },
+      "gain_db": -4,
+      "fx": [
+        {
+          "type": "filter",
+          "mode": "bandpass",
+          "hz": 5000,
+          "q": 1.2
+        }
+      ]
+    }
+  ],
+  "master": {
+    "fx": [
+      {
+        "type": "compressor",
+        "threshold_db": -14,
+        "ratio": 3,
+        "attack_ms": 10,
+        "release_ms": 120
+      },
+      {
+        "type": "eq",
+        "high_db": 0.8
+      },
+      {
+        "type": "reverb",
+        "size": 0.45,
+        "decay_ms": 590,
+        "damping": 0.45,
+        "predelay_ms": 6,
+        "mix": 0.09
+      },
+      {
+        "type": "limiter"
+      }
+    ],
+    "normalize": {
+      "lufs": -16
+    }
+  }
+}

@@ -1,0 +1,14 @@
+{
+  "extends": "../../tsconfig.base.json",
+  "compilerOptions": {
+    "rootDir": "src",
+    "outDir": "dist",
+    "lib": ["ES2023", "DOM"],
+    "types": [],
+    // DSP loops index typed arrays on every sample; requiring a non-null
+    // assertion on each access would bury the maths, so this one flag is off here.
+    "noUncheckedIndexedAccess": false
+  },
+  "include": ["src"],
+  "exclude": ["src/**/*.test.ts"]
+}

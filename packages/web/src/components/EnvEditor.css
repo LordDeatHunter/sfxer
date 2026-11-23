@@ -1,0 +1,28 @@
+@reference "../theme.css";
+
+.env {
+  @apply flex w-full flex-col gap-1;
+}
+.env-plot {
+  @apply block h-24 w-full touch-none rounded-md border border-line bg-base;
+}
+.env-line {
+  @apply fill-none stroke-accent;
+  stroke-width: 1.5;
+}
+.env-fill {
+  @apply fill-accent/10 stroke-none;
+}
+.env-point {
+  @apply cursor-grab fill-base stroke-accent;
+  stroke-width: 1.5;
+}
+.env-point-selected {
+  @apply fill-accent;
+}
+.env-row {
+  @apply flex flex-wrap items-center gap-1.5 text-xs text-dim;
+}
+.env-hint {
+  @apply text-[11px] text-dim;
+}

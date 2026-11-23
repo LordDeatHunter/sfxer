@@ -1,0 +1,12 @@
+{
+  "name": "@sfxer/mcp",
+  "version": "0.1.0",
+  "type": "module",
+  "bin": { "sfxer-mcp": "./dist/main.js" },
+  "dependencies": {
+    "@modelcontextprotocol/sdk": "^1.32.2",
+    "@sfxer/cli": "workspace:*",
+    "@sfxer/core": "workspace:*",
+    "zod": "^4.6.7"
+  }
+}

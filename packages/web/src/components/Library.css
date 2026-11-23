@@ -1,0 +1,23 @@
+@reference "../theme.css";
+
+.library {
+  @apply grid items-start gap-3 md:grid-cols-[220px_minmax(0,1fr)];
+}
+.library-list {
+  @apply flex flex-col gap-1 p-2;
+}
+.library-item {
+  @apply cursor-pointer rounded-md border border-transparent bg-transparent px-2 py-1.5 text-left text-sm text-dim hover:text-ink;
+}
+.library-item-active {
+  @apply border-line bg-raised text-ink;
+}
+.library-desc {
+  @apply text-sm leading-snug text-dim;
+}
+.library-actions {
+  @apply mt-1 flex flex-wrap items-center gap-2;
+}
+.library-seed {
+  @apply text-xs text-dim tabular-nums;
+}

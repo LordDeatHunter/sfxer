@@ -1,0 +1,226 @@
+{
+  "name": "magic_charge",
+  "seed": 1,
+  "layers": [
+    {
+      "id": "tone",
+      "source": {
+        "type": "osc",
+        "shape": "saw",
+        "hz": 95.8,
+        "pitch_semitones": {
+          "env": [
+            [
+              0,
+              0
+            ],
+            [
+              900,
+              17
+            ]
+          ],
+          "curve": "exp"
+        },
+        "unison": 7,
+        "detune_cents": 30
+      },
+      "amp": {
+        "env": [
+          [
+            0,
+            0
+          ],
+          [
+            25,
+            0.25
+          ],
+          [
+            810,
+            1
+          ],
+          [
+            970,
+            0
+          ]
+        ],
+        "curve": "linear"
+      },
+      "fx": [
+        {
+          "type": "filter",
+          "hz": {
+            "env": [
+              [
+                0,
+                700
+              ],
+              [
+                900,
+                9395
+              ]
+            ],
+            "curve": "exp"
+          },
+          "q": 3
+        },
+        {
+          "type": "chorus",
+          "rate_hz": 1.6,
+          "mix": 0.5
+        }
+      ]
+    },
+    {
+      "id": "air",
+      "source": {
+        "type": "noise",
+        "color": "pink"
+      },
+      "amp": {
+        "env": [
+          [
+            0,
+            0
+          ],
+          [
+            20,
+            0.2
+          ],
+          [
+            900,
+            1
+          ],
+          [
+            960,
+            0
+          ]
+        ],
+        "curve": "linear"
+      },
+      "gain_db": -5,
+      "fx": [
+        {
+          "type": "filter",
+          "mode": "bandpass",
+          "hz": {
+            "env": [
+              [
+                0,
+                400
+              ],
+              [
+                900,
+                7516
+              ]
+            ],
+            "curve": "exp"
+          },
+          "q": 2.5
+        }
+      ]
+    },
+    {
+      "id": "sparks",
+      "source": {
+        "type": "particles",
+        "kind": "ping",
+        "rate_hz": {
+          "env": [
+            [
+              0,
+              3
+            ],
+            [
+              900,
+              160
+            ]
+          ],
+          "curve": "exp"
+        },
+        "hz": [
+          1306,
+          9395
+        ],
+        "decay_ms": [
+          15,
+          120
+        ],
+        "spread": 1
+      },
+      "amp": {
+        "env": [
+          [
+            0,
+            0.2
+          ],
+          [
+            900,
+            1
+          ],
+          [
+            960,
+            0
+          ]
+        ],
+        "curve": "linear"
+      },
+      "gain_db": -12
+    },
+    {
+      "id": "pulse",
+      "source": {
+        "type": "fm",
+        "hz": 47.9,
+        "ratio": 1,
+        "index": {
+          "lfo": {
+            "hz": 10.8,
+            "depth": 1.5
+          },
+          "base": 2
+        }
+      },
+      "amp": {
+        "env": [
+          [
+            0,
+            0
+          ],
+          [
+            900,
+            1
+          ],
+          [
+            960,
+            0
+          ]
+        ],
+        "curve": "smooth"
+      },
+      "gain_db": -16
+    }
+  ],
+  "master": {
+    "fx": [
+      {
+        "type": "eq",
+        "high_db": 0,
+        "low_db": 0.6
+      },
+      {
+        "type": "reverb",
+        "size": 0.75,
+        "decay_ms": 2070,
+        "damping": 0.45,
+        "predelay_ms": 6,
+        "mix": 0.203
+      },
+      {
+        "type": "limiter"
+      }
+    ],
+    "normalize": {
+      "lufs": -18
+    }
+  }
+}

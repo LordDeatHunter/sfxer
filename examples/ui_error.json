@@ -1,0 +1,152 @@
+{
+  "name": "ui_error",
+  "seed": 1,
+  "layers": [
+    {
+      "id": "first",
+      "source": {
+        "type": "osc",
+        "shape": "saw",
+        "hz": 233,
+        "unison": 3,
+        "detune_cents": 18
+      },
+      "amp": {
+        "env": [
+          [
+            0,
+            0
+          ],
+          [
+            4,
+            1
+          ],
+          [
+            110,
+            0
+          ]
+        ],
+        "curve": "exp"
+      },
+      "fx": [
+        {
+          "type": "filter",
+          "hz": {
+            "env": [
+              [
+                0,
+                4183
+              ],
+              [
+                110,
+                500
+              ]
+            ],
+            "curve": "exp"
+          },
+          "q": 1.2
+        }
+      ]
+    },
+    {
+      "id": "second",
+      "start_ms": 120,
+      "source": {
+        "type": "osc",
+        "shape": "saw",
+        "hz": 185,
+        "unison": 3,
+        "detune_cents": 18
+      },
+      "amp": {
+        "env": [
+          [
+            0,
+            0
+          ],
+          [
+            4,
+            1
+          ],
+          [
+            190,
+            0
+          ]
+        ],
+        "curve": "exp"
+      },
+      "fx": [
+        {
+          "type": "filter",
+          "hz": {
+            "env": [
+              [
+                0,
+                4183
+              ],
+              [
+                190,
+                400
+              ]
+            ],
+            "curve": "exp"
+          },
+          "q": 1.2
+        }
+      ]
+    },
+    {
+      "id": "tick",
+      "start_ms": 0,
+      "source": {
+        "type": "noise",
+        "color": "white"
+      },
+      "amp": {
+        "env": [
+          [
+            0,
+            1
+          ],
+          [
+            5,
+            0
+          ]
+        ],
+        "curve": "exp"
+      },
+      "gain_db": -8,
+      "fx": [
+        {
+          "type": "filter",
+          "mode": "bandpass",
+          "hz": 3500,
+          "q": 1.2
+        }
+      ]
+    }
+  ],
+  "master": {
+    "fx": [
+      {
+        "type": "eq",
+        "high_db": 0,
+        "low_db": -2
+      },
+      {
+        "type": "reverb",
+        "size": 0.3,
+        "decay_ms": 405,
+        "damping": 0.45,
+        "predelay_ms": 6,
+        "mix": 0.068
+      },
+      {
+        "type": "limiter"
+      }
+    ],
+    "normalize": {
+      "lufs": -20
+    }
+  }
+}

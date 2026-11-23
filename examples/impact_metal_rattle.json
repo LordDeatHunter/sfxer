@@ -1,0 +1,170 @@
+{
+  "name": "impact_metal",
+  "seed": 1,
+  "layers": [
+    {
+      "id": "body",
+      "source": {
+        "type": "modal",
+        "material": "metal",
+        "size": 0.5,
+        "damping": 0.1,
+        "mode_count": 32,
+        "strike": {
+          "hardness": 0.6,
+          "position": 0.28
+        }
+      },
+      "fx": [
+        {
+          "type": "eq",
+          "high_db": 0,
+          "low_db": 1.2
+        }
+      ]
+    },
+    {
+      "id": "contact",
+      "source": {
+        "type": "noise",
+        "color": "white"
+      },
+      "amp": {
+        "env": [
+          [
+            0,
+            1
+          ],
+          [
+            9.4,
+            0
+          ]
+        ],
+        "curve": "exp"
+      },
+      "gain_db": -4,
+      "fx": [
+        {
+          "type": "filter",
+          "mode": "bandpass",
+          "hz": 3003,
+          "q": 0.7
+        }
+      ]
+    },
+    {
+      "id": "thump",
+      "source": {
+        "type": "osc",
+        "shape": "sine",
+        "hz": {
+          "env": [
+            [
+              0,
+              190
+            ],
+            [
+              30,
+              79
+            ]
+          ],
+          "curve": "exp"
+        }
+      },
+      "amp": {
+        "env": [
+          [
+            0,
+            0
+          ],
+          [
+            2,
+            1
+          ],
+          [
+            180,
+            0
+          ]
+        ],
+        "curve": "exp"
+      },
+      "gain_db": -20,
+      "fx": [
+        {
+          "type": "shaper",
+          "drive_db": 6
+        }
+      ]
+    },
+    {
+      "id": "rattle",
+      "start_ms": 25,
+      "source": {
+        "type": "particles",
+        "kind": "ping",
+        "rate_hz": {
+          "env": [
+            [
+              0,
+              130
+            ],
+            [
+              400,
+              1
+            ]
+          ],
+          "curve": "exp"
+        },
+        "hz": [
+          1897,
+          7746
+        ],
+        "decay_ms": [
+          20,
+          180
+        ]
+      },
+      "amp": {
+        "env": [
+          [
+            0,
+            1
+          ],
+          [
+            550,
+            0
+          ]
+        ],
+        "curve": "exp"
+      },
+      "gain_db": -14
+    }
+  ],
+  "master": {
+    "fx": [
+      {
+        "type": "transient",
+        "attack_db": 5
+      },
+      {
+        "type": "shaper",
+        "drive_db": 4,
+        "mix": 0.5
+      },
+      {
+        "type": "reverb",
+        "size": 0.3,
+        "decay_ms": 360,
+        "damping": 0.45,
+        "predelay_ms": 6,
+        "mix": 0.09
+      },
+      {
+        "type": "limiter"
+      }
+    ],
+    "normalize": {
+      "lufs": -16
+    }
+  }
+}

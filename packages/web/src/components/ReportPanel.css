@@ -1,0 +1,39 @@
+@reference "../theme.css";
+
+.report-stats {
+  @apply grid grid-cols-3 gap-2;
+}
+.report-stat {
+  @apply flex flex-col rounded-md bg-raised px-2 py-1.5;
+}
+.report-stat-value {
+  /* not `text-base`: the theme has a colour called "base", so that utility would set the colour */
+  @apply text-[15px] font-semibold text-ink tabular-nums;
+}
+.report-stat-label {
+  @apply text-[11px] text-dim;
+}
+.report-bands {
+  @apply flex h-20 items-end gap-1;
+}
+.report-band {
+  @apply flex h-full min-w-0 flex-1 flex-col items-center justify-end gap-1;
+}
+.report-band-bar {
+  @apply w-full rounded-sm bg-accent/70;
+}
+.report-band-label {
+  @apply w-full truncate text-center text-[10px] text-dim;
+}
+.report-layers {
+  @apply w-full border-collapse text-xs;
+}
+.report-layers-cell {
+  @apply border-t border-line px-1 py-1 text-left tabular-nums;
+}
+.report-layers-head {
+  @apply px-1 pb-1 text-left text-[11px] font-medium text-dim;
+}
+.report-section {
+  @apply mt-1 text-[11px] font-semibold tracking-wide text-dim uppercase;
+}

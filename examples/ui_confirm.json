@@ -1,0 +1,141 @@
+{
+  "name": "ui_confirm",
+  "seed": 1,
+  "layers": [
+    {
+      "id": "first",
+      "start_ms": 0,
+      "source": {
+        "type": "fm",
+        "hz": 660,
+        "ratio": 2.005,
+        "index": {
+          "env": [
+            [
+              0,
+              2.9
+            ],
+            [
+              102,
+              0.35
+            ]
+          ],
+          "curve": "exp"
+        },
+        "feedback": 0.2
+      },
+      "amp": {
+        "env": [
+          [
+            0,
+            0
+          ],
+          [
+            3,
+            1
+          ],
+          [
+            170,
+            0
+          ]
+        ],
+        "curve": "exp"
+      },
+      "gain_db": 0
+    },
+    {
+      "id": "second",
+      "start_ms": 85,
+      "source": {
+        "type": "fm",
+        "hz": 990,
+        "ratio": 2.005,
+        "index": {
+          "env": [
+            [
+              0,
+              2.9
+            ],
+            [
+              192,
+              0.35
+            ]
+          ],
+          "curve": "exp"
+        },
+        "feedback": 0.2
+      },
+      "amp": {
+        "env": [
+          [
+            0,
+            0
+          ],
+          [
+            3,
+            1
+          ],
+          [
+            320,
+            0
+          ]
+        ],
+        "curve": "exp"
+      },
+      "gain_db": 0
+    },
+    {
+      "id": "tick",
+      "start_ms": 0,
+      "source": {
+        "type": "noise",
+        "color": "white"
+      },
+      "amp": {
+        "env": [
+          [
+            0,
+            1
+          ],
+          [
+            5,
+            0
+          ]
+        ],
+        "curve": "exp"
+      },
+      "gain_db": -10,
+      "fx": [
+        {
+          "type": "filter",
+          "mode": "bandpass",
+          "hz": 5000,
+          "q": 1.2
+        }
+      ]
+    }
+  ],
+  "master": {
+    "fx": [
+      {
+        "type": "eq",
+        "high_db": 0,
+        "low_db": -2
+      },
+      {
+        "type": "reverb",
+        "size": 0.3,
+        "decay_ms": 405,
+        "damping": 0.45,
+        "predelay_ms": 6,
+        "mix": 0.068
+      },
+      {
+        "type": "limiter"
+      }
+    ],
+    "normalize": {
+      "lufs": -20
+    }
+  }
+}

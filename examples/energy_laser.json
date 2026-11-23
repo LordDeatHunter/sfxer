@@ -1,0 +1,255 @@
+{
+  "name": "energy_laser",
+  "seed": 1,
+  "layers": [
+    {
+      "id": "beam",
+      "source": {
+        "type": "fm",
+        "hz": 824.1,
+        "pitch_semitones": {
+          "env": [
+            [
+              0,
+              12
+            ],
+            [
+              224,
+              -22
+            ]
+          ],
+          "curve": "exp"
+        },
+        "ratio": 1.5,
+        "index": {
+          "env": [
+            [
+              0,
+              4
+            ],
+            [
+              320,
+              0.5
+            ]
+          ],
+          "curve": "exp"
+        },
+        "feedback": 0.25
+      },
+      "amp": {
+        "env": [
+          [
+            0,
+            0
+          ],
+          [
+            2,
+            1
+          ],
+          [
+            320,
+            0
+          ]
+        ],
+        "curve": "exp"
+      },
+      "fx": [
+        {
+          "type": "comb",
+          "hz": {
+            "env": [
+              [
+                0,
+                1648
+              ],
+              [
+                224,
+                262
+              ]
+            ],
+            "curve": "exp"
+          },
+          "feedback": 0.6,
+          "mix": 0.35
+        },
+        {
+          "type": "shaper",
+          "drive_db": 13
+        }
+      ]
+    },
+    {
+      "id": "body",
+      "source": {
+        "type": "osc",
+        "shape": "saw",
+        "hz": 329.6,
+        "pitch_semitones": {
+          "env": [
+            [
+              0,
+              7
+            ],
+            [
+              192,
+              -19
+            ]
+          ],
+          "curve": "exp"
+        },
+        "unison": 5,
+        "detune_cents": 28
+      },
+      "amp": {
+        "env": [
+          [
+            0,
+            0
+          ],
+          [
+            3,
+            1
+          ],
+          [
+            288,
+            0
+          ]
+        ],
+        "curve": "exp"
+      },
+      "gain_db": -7,
+      "fx": [
+        {
+          "type": "filter",
+          "hz": {
+            "env": [
+              [
+                0,
+                8455
+              ],
+              [
+                256,
+                500
+              ]
+            ],
+            "curve": "exp"
+          },
+          "q": 1.8
+        }
+      ]
+    },
+    {
+      "id": "blast",
+      "source": {
+        "type": "noise",
+        "color": "white"
+      },
+      "amp": {
+        "env": [
+          [
+            0,
+            1
+          ],
+          [
+            70,
+            0
+          ]
+        ],
+        "curve": "exp"
+      },
+      "gain_db": -6,
+      "fx": [
+        {
+          "type": "filter",
+          "mode": "bandpass",
+          "hz": {
+            "env": [
+              [
+                0,
+                6000
+              ],
+              [
+                70,
+                1200
+              ]
+            ],
+            "curve": "exp"
+          },
+          "q": 0.9
+        }
+      ]
+    },
+    {
+      "id": "kick",
+      "source": {
+        "type": "osc",
+        "hz": {
+          "env": [
+            [
+              0,
+              204
+            ],
+            [
+              50,
+              64
+            ]
+          ],
+          "curve": "exp"
+        }
+      },
+      "amp": {
+        "env": [
+          [
+            0,
+            0
+          ],
+          [
+            2,
+            1
+          ],
+          [
+            190,
+            0
+          ]
+        ],
+        "curve": "exp"
+      },
+      "gain_db": -9,
+      "fx": [
+        {
+          "type": "shaper",
+          "drive_db": 8
+        }
+      ]
+    }
+  ],
+  "master": {
+    "fx": [
+      {
+        "type": "compressor",
+        "threshold_db": -14,
+        "ratio": 3,
+        "attack_ms": 10,
+        "release_ms": 120
+      },
+      {
+        "type": "eq",
+        "high_db": 0.8
+      },
+      {
+        "type": "reverb",
+        "size": 0.45,
+        "decay_ms": 590,
+        "damping": 0.45,
+        "predelay_ms": 6,
+        "mix": 0.09
+      },
+      {
+        "type": "limiter"
+      }
+    ],
+    "normalize": {
+      "lufs": -16
+    }
+  }
+}

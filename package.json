@@ -1,0 +1,26 @@
+{
+  "name": "sfxer",
+  "private": true,
+  "type": "module",
+  "workspaces": [
+    "packages/core",
+    "packages/cli",
+    "packages/mcp",
+    "packages/web"
+  ],
+  "scripts": {
+    "dev": "bun run --filter @sfxer/web dev",
+    "start": "bun run --filter @sfxer/web build && bun run --filter @sfxer/web preview",
+    "build": "tsc -b packages/core packages/cli packages/mcp",
+    "build:web": "bun run --filter @sfxer/web build",
+    "test": "vitest run",
+    "check": "python scripts/check_all.py",
+    "sfx": "bun packages/cli/dist/main.js",
+    "mcp": "bun packages/mcp/dist/main.js"
+  },
+  "devDependencies": {
+    "@types/node": "^24.0.0",
+    "typescript": "~5.9.0",
+    "vitest": "^5.1.1"
+  }
+}

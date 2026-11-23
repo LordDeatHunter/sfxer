@@ -1,0 +1,280 @@
+{
+  "name": "door_knock",
+  "seed": 1,
+  "layers": [
+    {
+      "id": "knock1",
+      "start_ms": 0,
+      "source": {
+        "type": "modal",
+        "material": "wood",
+        "size": 0.8,
+        "damping": 0.15,
+        "strike": {
+          "hardness": 0.6,
+          "position": 0.2
+        },
+        "mode_count": 30
+      },
+      "gain_db": 0
+    },
+    {
+      "id": "knuckle1",
+      "start_ms": 0,
+      "source": {
+        "type": "noise",
+        "color": "pink"
+      },
+      "amp": {
+        "env": [
+          [
+            0,
+            1
+          ],
+          [
+            9,
+            0
+          ]
+        ],
+        "curve": "exp"
+      },
+      "gain_db": -4,
+      "fx": [
+        {
+          "type": "filter",
+          "mode": "bandpass",
+          "hz": 2117,
+          "q": 0.7
+        }
+      ]
+    },
+    {
+      "id": "panel1",
+      "start_ms": 0,
+      "source": {
+        "type": "osc",
+        "hz": {
+          "env": [
+            [
+              0,
+              144
+            ],
+            [
+              30,
+              84
+            ]
+          ],
+          "curve": "exp"
+        }
+      },
+      "amp": {
+        "env": [
+          [
+            0,
+            0
+          ],
+          [
+            2,
+            1
+          ],
+          [
+            108,
+            0
+          ]
+        ],
+        "curve": "exp"
+      },
+      "gain_db": -15
+    },
+    {
+      "id": "knock2",
+      "start_ms": 182,
+      "source": {
+        "type": "modal",
+        "material": "wood",
+        "size": 0.8,
+        "damping": 0.15,
+        "strike": {
+          "hardness": 0.6,
+          "position": 0.3
+        },
+        "mode_count": 30
+      },
+      "gain_db": -2.5
+    },
+    {
+      "id": "knuckle2",
+      "start_ms": 182,
+      "source": {
+        "type": "noise",
+        "color": "pink"
+      },
+      "amp": {
+        "env": [
+          [
+            0,
+            1
+          ],
+          [
+            9,
+            0
+          ]
+        ],
+        "curve": "exp"
+      },
+      "gain_db": -6.5,
+      "fx": [
+        {
+          "type": "filter",
+          "mode": "bandpass",
+          "hz": 2117,
+          "q": 0.7
+        }
+      ]
+    },
+    {
+      "id": "panel2",
+      "start_ms": 182,
+      "source": {
+        "type": "osc",
+        "hz": {
+          "env": [
+            [
+              0,
+              144
+            ],
+            [
+              30,
+              84
+            ]
+          ],
+          "curve": "exp"
+        }
+      },
+      "amp": {
+        "env": [
+          [
+            0,
+            0
+          ],
+          [
+            2,
+            1
+          ],
+          [
+            108,
+            0
+          ]
+        ],
+        "curve": "exp"
+      },
+      "gain_db": -17.5
+    },
+    {
+      "id": "knock3",
+      "start_ms": 340,
+      "source": {
+        "type": "modal",
+        "material": "wood",
+        "size": 0.8,
+        "damping": 0.15,
+        "strike": {
+          "hardness": 0.6,
+          "position": 0.3
+        },
+        "mode_count": 30
+      },
+      "gain_db": -1.5
+    },
+    {
+      "id": "knuckle3",
+      "start_ms": 340,
+      "source": {
+        "type": "noise",
+        "color": "pink"
+      },
+      "amp": {
+        "env": [
+          [
+            0,
+            1
+          ],
+          [
+            9,
+            0
+          ]
+        ],
+        "curve": "exp"
+      },
+      "gain_db": -5.5,
+      "fx": [
+        {
+          "type": "filter",
+          "mode": "bandpass",
+          "hz": 2117,
+          "q": 0.7
+        }
+      ]
+    },
+    {
+      "id": "panel3",
+      "start_ms": 340,
+      "source": {
+        "type": "osc",
+        "hz": {
+          "env": [
+            [
+              0,
+              144
+            ],
+            [
+              30,
+              84
+            ]
+          ],
+          "curve": "exp"
+        }
+      },
+      "amp": {
+        "env": [
+          [
+            0,
+            0
+          ],
+          [
+            2,
+            1
+          ],
+          [
+            108,
+            0
+          ]
+        ],
+        "curve": "exp"
+      },
+      "gain_db": -16.5
+    }
+  ],
+  "master": {
+    "fx": [
+      {
+        "type": "transient",
+        "attack_db": 4
+      },
+      {
+        "type": "reverb",
+        "size": 0.35,
+        "decay_ms": 575,
+        "damping": 0.45,
+        "predelay_ms": 6,
+        "mix": 0.113
+      },
+      {
+        "type": "limiter"
+      }
+    ],
+    "normalize": {
+      "lufs": -18
+    }
+  }
+}

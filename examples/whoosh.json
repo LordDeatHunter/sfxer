@@ -1,0 +1,219 @@
+{
+  "name": "whoosh",
+  "seed": 1,
+  "layers": [
+    {
+      "id": "air",
+      "source": {
+        "type": "noise",
+        "color": "pink"
+      },
+      "amp": {
+        "env": [
+          [
+            0,
+            0
+          ],
+          [
+            248,
+            1
+          ],
+          [
+            450,
+            0
+          ]
+        ],
+        "curve": "smooth"
+      },
+      "pan": {
+        "env": [
+          [
+            0,
+            -0.6
+          ],
+          [
+            450,
+            0.6
+          ]
+        ],
+        "curve": "smooth"
+      },
+      "fx": [
+        {
+          "type": "filter",
+          "mode": "bandpass",
+          "hz": {
+            "env": [
+              [
+                0,
+                354
+              ],
+              [
+                248,
+                2793
+              ],
+              [
+                450,
+                460
+              ]
+            ],
+            "curve": "exp"
+          },
+          "q": 1.8,
+          "slope": 12
+        },
+        {
+          "type": "comb",
+          "hz": {
+            "env": [
+              [
+                0,
+                212
+              ],
+              [
+                248,
+                977
+              ],
+              [
+                450,
+                177
+              ]
+            ],
+            "curve": "exp"
+          },
+          "feedback": 0.6,
+          "mix": 0.2
+        }
+      ]
+    },
+    {
+      "id": "hiss",
+      "source": {
+        "type": "noise",
+        "color": "white"
+      },
+      "amp": {
+        "env": [
+          [
+            68,
+            0
+          ],
+          [
+            248,
+            1
+          ],
+          [
+            383,
+            0
+          ]
+        ],
+        "curve": "smooth"
+      },
+      "gain_db": -14,
+      "pan": {
+        "env": [
+          [
+            0,
+            -0.6
+          ],
+          [
+            450,
+            0.6
+          ]
+        ],
+        "curve": "smooth"
+      },
+      "fx": [
+        {
+          "type": "filter",
+          "mode": "highpass",
+          "hz": {
+            "env": [
+              [
+                0,
+                2500
+              ],
+              [
+                248,
+                6000
+              ],
+              [
+                450,
+                3000
+              ]
+            ],
+            "curve": "exp"
+          },
+          "q": 0.8
+        }
+      ]
+    },
+    {
+      "id": "body",
+      "source": {
+        "type": "noise",
+        "color": "brown"
+      },
+      "amp": {
+        "env": [
+          [
+            0,
+            0
+          ],
+          [
+            248,
+            1
+          ],
+          [
+            450,
+            0
+          ]
+        ],
+        "curve": "smooth"
+      },
+      "gain_db": -7,
+      "fx": [
+        {
+          "type": "filter",
+          "mode": "lowpass",
+          "hz": {
+            "env": [
+              [
+                0,
+                150
+              ],
+              [
+                248,
+                561
+              ],
+              [
+                450,
+                120
+              ]
+            ],
+            "curve": "exp"
+          },
+          "q": 1.1
+        }
+      ]
+    }
+  ],
+  "master": {
+    "fx": [
+      {
+        "type": "reverb",
+        "size": 0.4,
+        "decay_ms": 635,
+        "damping": 0.45,
+        "predelay_ms": 6,
+        "mix": 0.068
+      },
+      {
+        "type": "limiter"
+      }
+    ],
+    "normalize": {
+      "lufs": -18
+    }
+  }
+}

@@ -1,0 +1,225 @@
+{
+  "name": "pickup_powerup",
+  "seed": 1,
+  "layers": [
+    {
+      "id": "rise",
+      "source": {
+        "type": "osc",
+        "shape": "saw",
+        "hz": 196,
+        "pitch_semitones": {
+          "env": [
+            [
+              0,
+              0
+            ],
+            [
+              420,
+              19
+            ]
+          ],
+          "curve": "smooth"
+        },
+        "unison": 5,
+        "detune_cents": 22
+      },
+      "amp": {
+        "env": [
+          [
+            0,
+            0
+          ],
+          [
+            30,
+            0.8
+          ],
+          [
+            380,
+            1
+          ],
+          [
+            560,
+            0
+          ]
+        ],
+        "curve": "smooth"
+      },
+      "gain_db": -4,
+      "fx": [
+        {
+          "type": "filter",
+          "hz": {
+            "env": [
+              [
+                0,
+                500
+              ],
+              [
+                420,
+                6168
+              ]
+            ],
+            "curve": "exp"
+          },
+          "q": 2.2
+        },
+        {
+          "type": "chorus",
+          "mix": 0.4
+        }
+      ]
+    },
+    {
+      "id": "bell",
+      "start_ms": 400,
+      "source": {
+        "type": "fm",
+        "hz": 1175,
+        "ratio": 3.01,
+        "index": {
+          "env": [
+            [
+              0,
+              3
+            ],
+            [
+              300,
+              0.2
+            ]
+          ],
+          "curve": "exp"
+        }
+      },
+      "amp": {
+        "env": [
+          [
+            0,
+            0
+          ],
+          [
+            2,
+            1
+          ],
+          [
+            650,
+            0
+          ]
+        ],
+        "curve": "exp"
+      },
+      "gain_db": -5
+    },
+    {
+      "id": "air",
+      "source": {
+        "type": "noise",
+        "color": "pink"
+      },
+      "amp": {
+        "env": [
+          [
+            0,
+            0
+          ],
+          [
+            400,
+            1
+          ],
+          [
+            520,
+            0
+          ]
+        ],
+        "curve": "smooth"
+      },
+      "gain_db": -14,
+      "fx": [
+        {
+          "type": "filter",
+          "mode": "bandpass",
+          "hz": {
+            "env": [
+              [
+                0,
+                800
+              ],
+              [
+                420,
+                7000
+              ]
+            ],
+            "curve": "exp"
+          },
+          "q": 2
+        }
+      ]
+    },
+    {
+      "id": "sparkle",
+      "start_ms": 380,
+      "source": {
+        "type": "particles",
+        "kind": "ping",
+        "rate_hz": {
+          "env": [
+            [
+              0,
+              65
+            ],
+            [
+              700,
+              2
+            ]
+          ],
+          "curve": "exp"
+        },
+        "hz": [
+          3000,
+          12000
+        ],
+        "decay_ms": [
+          30,
+          220
+        ],
+        "spread": 0.9
+      },
+      "amp": {
+        "env": [
+          [
+            0,
+            1
+          ],
+          [
+            700,
+            0
+          ]
+        ],
+        "curve": "linear"
+      },
+      "gain_db": -18
+    }
+  ],
+  "master": {
+    "fx": [
+      {
+        "type": "eq",
+        "high_db": 0.8
+      },
+      {
+        "type": "reverb",
+        "size": 0.35,
+        "decay_ms": 625,
+        "damping": 0.45,
+        "predelay_ms": 6,
+        "mix": 0.113
+      },
+      {
+        "type": "limiter"
+      }
+    ],
+    "normalize": {
+      "lufs": -18
+    }
+  }
+}

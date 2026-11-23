@@ -1,0 +1,104 @@
+{
+  "name": "ambience_rain",
+  "seed": 1,
+  "duration": 6000,
+  "layers": [
+    {
+      "id": "wash",
+      "source": {
+        "type": "noise",
+        "color": "white"
+      },
+      "gain_db": -6,
+      "fx": [
+        {
+          "type": "filter",
+          "mode": "highpass",
+          "hz": 1800
+        },
+        {
+          "type": "filter",
+          "hz": 8485
+        },
+        {
+          "type": "width",
+          "amount": 1,
+          "haas_ms": 11
+        }
+      ]
+    },
+    {
+      "id": "drops",
+      "source": {
+        "type": "particles",
+        "kind": "burst",
+        "rate_hz": 232,
+        "hz": [
+          1800,
+          9000
+        ],
+        "decay_ms": [
+          1.5,
+          12
+        ],
+        "gain_jitter_db": 20,
+        "q": 2,
+        "spread": 1
+      }
+    },
+    {
+      "id": "drips",
+      "source": {
+        "type": "particles",
+        "kind": "ping",
+        "rate_hz": 4.6,
+        "hz": [
+          500,
+          1800
+        ],
+        "decay_ms": [
+          20,
+          70
+        ],
+        "gain_jitter_db": 14,
+        "spread": 0.9
+      },
+      "gain_db": -12
+    },
+    {
+      "id": "low",
+      "source": {
+        "type": "noise",
+        "color": "brown"
+      },
+      "gain_db": -17,
+      "fx": [
+        {
+          "type": "filter",
+          "hz": 350
+        }
+      ]
+    }
+  ],
+  "master": {
+    "fx": [
+      {
+        "type": "eq",
+        "high_db": 0
+      },
+      {
+        "type": "reverb",
+        "size": 0.6,
+        "decay_ms": 1200,
+        "damping": 0.45,
+        "predelay_ms": 6,
+        "mix": 0.045
+      }
+    ],
+    "loop": true,
+    "normalize": {
+      "lufs": -22,
+      "peak_db": -3
+    }
+  }
+}

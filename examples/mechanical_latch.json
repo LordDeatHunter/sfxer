@@ -1,0 +1,131 @@
+{
+  "name": "mechanical_latch",
+  "seed": 1,
+  "layers": [
+    {
+      "id": "catch",
+      "start_ms": 0,
+      "source": {
+        "type": "modal",
+        "material": "metal",
+        "hz": 1523,
+        "size": 0.2,
+        "damping": 0.55,
+        "strike": {
+          "hardness": 0.85
+        }
+      },
+      "gain_db": 0
+    },
+    {
+      "id": "seat",
+      "start_ms": 38,
+      "source": {
+        "type": "modal",
+        "material": "metal",
+        "hz": 944,
+        "size": 0.2,
+        "damping": 0.5,
+        "strike": {
+          "hardness": 0.85
+        }
+      },
+      "gain_db": -2
+    },
+    {
+      "id": "snap",
+      "start_ms": 0,
+      "source": {
+        "type": "noise",
+        "color": "white"
+      },
+      "amp": {
+        "env": [
+          [
+            0,
+            1
+          ],
+          [
+            6,
+            0
+          ]
+        ],
+        "curve": "exp"
+      },
+      "gain_db": -9,
+      "fx": [
+        {
+          "type": "filter",
+          "mode": "bandpass",
+          "hz": 3046,
+          "q": 1
+        }
+      ]
+    },
+    {
+      "id": "thud",
+      "start_ms": 36,
+      "source": {
+        "type": "osc",
+        "hz": {
+          "env": [
+            [
+              0,
+              203
+            ],
+            [
+              30,
+              86
+            ]
+          ],
+          "curve": "exp"
+        }
+      },
+      "amp": {
+        "env": [
+          [
+            0,
+            0
+          ],
+          [
+            2,
+            1
+          ],
+          [
+            70,
+            0
+          ]
+        ],
+        "curve": "exp"
+      },
+      "gain_db": -10
+    }
+  ],
+  "master": {
+    "fx": [
+      {
+        "type": "convolve",
+        "ir": "box",
+        "mix": 0.25
+      },
+      {
+        "type": "eq",
+        "high_db": 0
+      },
+      {
+        "type": "reverb",
+        "size": 0.3,
+        "decay_ms": 355,
+        "damping": 0.45,
+        "predelay_ms": 6,
+        "mix": 0.068
+      },
+      {
+        "type": "limiter"
+      }
+    ],
+    "normalize": {
+      "lufs": -22
+    }
+  }
+}
